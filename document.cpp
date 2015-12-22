@@ -329,7 +329,7 @@ CWaveform::CWaveform (QWidget *parent): QWidget (parent)
 
   minmaxes = 0;
   
-  fb = new CFloatBuffer (1, settings->value ("def_channels", 1).toInt());
+  fb = new CFloatBuffer (32, settings->value ("def_channels", 1).toInt());
   fb->samplerate = settings->value ("def_samplerate", 44100).toInt();
   
   set_cursor_value (0);
@@ -391,10 +391,7 @@ void CWaveform::recalc_view()
 
   if (! fb)
      return;
-
- if (! fb->buffer[0])
-     return;
-
+ 
   /*
   size_t cursor_frames = cursor_position * frames_per_section;
 
@@ -415,7 +412,7 @@ void CWaveform::recalc_view()
 
   //qDebug() << "sel_start_frames = " << sel_start_frames;
   //qDebug() << "sel_end_frames = " << sel_end_frames;
-  qDebug() << "frames_per_section = " << frames_per_section;
+  qDebug() << "frames_per_section == " << frames_per_section;
 
   //qDebug() << "cursor_frames = " << cursor_frames;
 
@@ -431,7 +428,10 @@ void CWaveform::scale (int delta)
 {
  //qDebug() << "CWaveform::scale - start";
 
- if (! fb)
+  if (! fb)
+     return;
+
+  if (frames_per_section == 0)
      return;
 
   int old_section_from = section_from;
@@ -740,47 +740,18 @@ void CWaveform::copy_selected()
 
 void CWaveform::paste()
 {
-qDebug() << "CWaveform::paste() - start";
-
   if (! sound_clipboard)
      {
       qDebug() << "no sound data in clipboard"; 
       return;
      } 
   
-  qDebug() << "1";
-  
-  if (! fb)
-     {
-     qDebug() << "1.5";
-  
-      fb->copy_from (sound_clipboard);
-      
-      recalc_view();
-      prepare_image();
-
-      init_state = false;
-      timeruler->init_state = false;
-    
-      timeruler->update();
-      update();
-  
-      return;
-     }
-
-qDebug() << "2";
-  
   undo_take_shot (UNDO_PASTE);
-
-  qDebug() << "fb->samplerate: " << fb->samplerate;
 
   fb->paste_at (sound_clipboard, fb->offset);
   deselect();
-      
+     
   magic_update();
-  
-  qDebug() << "CWaveform::paste() - end";
-
 }
 
 
@@ -2619,12 +2590,10 @@ void CWaveform::prepare_image()
       qDebug() << "! sound_buffer";
       return;
      } 
-  
-  if (! fb->buffer[0])
-     {
-      qDebug() << "! sound_buffer->float_buffer";
-      return;
-     } 
+
+
+  if (frames_per_section == 0)
+     return;
 
  // qDebug() << "sb buffer size: " << sound_buffer->buffer_size;
 

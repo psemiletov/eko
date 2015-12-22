@@ -451,8 +451,7 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
   else
   if (channels == other->channels)
      temp_buffer = other->clone();
-
-  
+ 
 
   size_t new_buffer_frames_count = temp_buffer->length_frames + length_frames;
   
@@ -487,15 +486,11 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
                buffer[ch] + pos_frames, 
                tail * sizeof (float));
       }
-
           
   copy_from (sum);   
 
-
   delete sum;
   delete temp_buffer;
-  
-  qDebug() << "final samplerate: " << samplerate;
   
   offset = pos_frames;
   

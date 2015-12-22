@@ -838,7 +838,16 @@ void CEKO::newFile()
        pa_stream_in = 0;
      }
 
-  documents->create_new();
+  CDocument *new_document = documents->create_new();
+  
+  new_document->wave_edit->waveform->recalc_view();
+  new_document->wave_edit->waveform->prepare_image();
+  
+  new_document->wave_edit->waveform->init_state = false;
+  new_document->wave_edit->timeruler->init_state = false;
+  
+  new_document->wave_edit->waveform->update();
+
   
   main_tab_widget->setCurrentIndex (idx_tab_edit);
 }
@@ -1534,8 +1543,9 @@ void CEKO::ed_paste()
      return;
   
   CDocument *d = documents->get_current();
+    
   if (d)
-     d->wave_edit->waveform->paste();
+      d->wave_edit->waveform->paste();
 }
 
 
