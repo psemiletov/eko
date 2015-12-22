@@ -735,9 +735,6 @@ void CWaveform::copy_selected()
      delete sound_clipboard;
      
   sound_clipboard = fb->copy (frames_start(), frames_end() - frames_start());
-  
-  qDebug() << "sound_clipboard->samplerate: " << sound_clipboard->samplerate;
-  
 }
 
 

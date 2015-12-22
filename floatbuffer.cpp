@@ -377,12 +377,16 @@ void CFloatBuffer::copy_from (CFloatBuffer *other)
   if (! other)
     return;
 
+  for (size_t ch = 0; ch < channels; ch++)
+      {
+       delete [] buffer[ch]; 
+      } 
+
   copy_params (other);
 
   for (size_t ch = 0; ch < channels; ch++)
       {
-       delete [] buffer[ch]; 
-       buffer[ch] = new float [other->length_frames];
+       buffer[ch] = new float [length_frames];
       } 
 
   other->copy_to (this, 0, other->length_frames);
@@ -472,8 +476,6 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
                temp_buffer->length_frames * sizeof (float));
       }
 
-
-
  //перематываем новый в позицию position_in_frames + temp_buffer->float_buffer->length_frames и
  // копируем в него остаток старого буфера
 
@@ -486,12 +488,8 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
                tail * sizeof (float));
       }
 
-     
-
-     
+          
   copy_from (sum);   
-
-qDebug() << "5 srate: " << samplerate;
 
 
   delete sum;

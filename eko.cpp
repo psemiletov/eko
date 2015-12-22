@@ -3588,6 +3588,7 @@ void CEKO::slot_transport_stop()
 }
 
 
+//пашет вроде
 void CEKO::ed_copy_to_new()
 {
   CDocument *d = documents->get_current(); 
@@ -3617,6 +3618,7 @@ void CEKO::ed_copy_to_new()
 }
 
 
+//ВЫЛЕТ
 void CEKO::ed_copy_to_new_fmt()
 {
   CDocument *d = documents->get_current();
@@ -3628,7 +3630,7 @@ void CEKO::ed_copy_to_new_fmt()
 
   d->wave_edit->waveform->copy_selected();
 
-  if (! sound_clipboard || ! sound_clipboard->buffer[0])
+  if (! sound_clipboard)
      return;
 
   CDocument *new_document = documents->create_new();
