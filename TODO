@@ -1,0 +1,60 @@
+to do or to fix:
+
+
+вставить в новый, стерео в стерео, одна частота, в конец файла попадает черт знает что
+вставить в новый, моно в моно, одна частота, в конец файла попадает черт знает что
+
+
+если петля на весь файл, и есть выделение, то петлевание не пашет
+"вставить в новый С ФОРМАТОМ ПО УМОЛЧАНИЮ" не работает
+
+
+
+вынести код огибающей в отдельный модуль
+
+* сделать все крутилки и фэйдеры нелинейными
+
+* эко не открывает файлы из командной строки - исправить
+* игрища с OpenMP
+
+* создавать в темпе отдельный подкаталог под эко
+* вернуть старый нормализатор под именем Normalize auto
+* так ли нужно создавать три точки автоматически?
+* CTinyPlayer - disk-based player for the audio preview at FM page 
+* добавить возникновение выделение по курсор-шифт, курсор-алт
+* при петле, автоскроллинг не пашет туда-сюда
+* починить шкалу dB слева от волновой формы (два нуля, два столбика)
+* caching subsystem
+* zoom to selection
+* перенести код открытия/сохранения из документа в CSoundBuffer
+* EQ is buggy
+* fix search via FIF
+* fix profiles engine //?
+* level meter < -26 dB
+* inspect fn_detect_average_value
+* noise gate realtime effect
+* fix the scrolling
+* dc offset functions - check stereo support
+* add space when FXRack apply needs more file length //test with pitch shifter
+* 10-th seconds timeruler markers when > 1 min
+* fix Import RAW
+* implement Export RAW
+* add data modification status
+* rewrite fx internal data to save/load presets
+* FX rack presets
+* FX presets
+* reorder fx via drag'n'drop
+* looped play is not loop-range accurate?
+* level meter with precise time-based peaks falloff
+* paste with (mix)
+* redo
+* UI for RAW files
+* add warning on flush_undo()
+* mixer for channels > 2
+* time ruler redraw and palette
+* markers per file
+* noise, fm synthesis for testing purposes
+* big/little endian at file format window?
+* stop playback on offline effect
+
+* disk cache? save temp float file - mmap - memcpy the window?

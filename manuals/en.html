@@ -1,0 +1,291 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>EKO Manual</title>
+</head>
+<body>
+<h1>EKO Manual</h1>
+<br>
+<h2>Table of contents</h2>
+<br><br>
+
+<a href="#mni_intro">Why EKO?</a><br>
+<a href="#mni_mp3">MP3 and video files support.</a><br>
+<a href="#mni_start">Basics</a><br>
+<a href="#mni_go">Playback and looping</a><br>
+<a href="#mni_record">Recording</a><br>
+<a href="#mni_mixer">Mixer</a><br>
+<a href="#mni_interface">Interface</a><br>
+<a href="#mni_manager">File manager</a><br>
+Menus:<br>
+<a href="#mni_file">File</a><br>
+<a href="#mni_edit">Edit</a><br>
+<a href="#mni_markup">Markup</a><br>
+<a href="#mni_search">Search</a><br>
+<a href="#mni_functions">Functions</a><br>
+<a href="#mni_nav">Nav</a><br>
+<a href="#mni_fm">Fm</a><br>
+<a href="#mni_view">View</a><br>
+<a href="#mni_prefs">Tune tab (Preferences)</a><br>
+<a href="#mni_notes">Notes</a><br>
+<a href="#mni_author">Other author's projects</a><br>
+<a href="#mni_donate">Donate</a>
+
+<br>
+
+
+<a name="mni_intro"></a>
+<h3>Why "EKO"?</h3>
+
+<p>There are two reasons behind this. The first one is that "eko" is sounds just like "echo", thus related to the sound domain. And another reason was the idea of animal rights promotion. I don't know how exactly EKO can help with that, but is is obviously for me that the freedom of software or music just a one step to the more global freedom, the freedom of the personality - and not just a human personality, but also of all animals. From the my point of view there is no difference of the life value between the human or a small mouse. They are equal.</p>
+
+<a name="mni_mp3"></a>
+<h3>MP3, videofiles, etc.</h3>
+
+<p>Yes, EKO can open MP3, import the sound from videofiles, and export the sound to MP3. There are not so much FOSS developers who like to deal with sofware  patents, etc., so we like to use the external tools like lame, ffmpeg and others.</p>
+
+<p>EKO needs <a href="https://www.ffmpeg.org/">FFMPEG</a> or <a href="https://www.mplayerhq.hu/design7/news.html">Mplayer</a> to open MP3 and videofiles. Linux users can install them from the distribution software repository. Windows users need to download them and put the binary (exe) files (ffmpeg.exe or/and mplayer.exe) to the directory there the eko.exe is installed. Windows version of Mplayer is available <a href="http://mplayerwin.sourceforge.net/downloads.html">here</a> and <a href="http://oss.netfarm.it/mplayer/">here</a>. If you want to use FFMPEG with EKO, then download FFMPEG 32bit static build at <a href="http://ffmpeg.zeranoe.com/builds/">this page</a>.
+</p>
+
+<p>To MP3 export, EKO need <a href="http://lame.sourceforge.net/">LAME</a>. Some Linux distros includes this encoder. Some does not. But LAME is very simple to compile from the source. Of course, Windows users needs the binary lame.exe. It can be build from the source using MinGW, or obtaine <a href="http://lame.buanzo.org">from here</a>. Just download Lame_VERSION_for_Windows.exe, install it, then copy lame.exe from the installation directory to the EKO folder, where the eko.exe.
+</p>
+
+<p>It is really sad that I'm afraid to distribute ffmpeg.exe and lame.exe with EKO...</p>
+
+<a name="mni_start"></a>
+<h3>Basics</h3>
+
+<p>EKO is a very simple sound editor. Unlike some other editors, it has no disk caching system, so all files will be loaded directly into the memory. It means that EKO needs a lot of memory if you work with a large files or with many files simultaneously.</p>
+
+<p>EKO internals is 32 bit floating point mixing and DSP engine. All recording and playback uses Portaudio library to access the underlying sound system (ALSA, ASIO, etc.). Before using EKO, set up input and output devices/ports at <b>Tune - Sound devices</b> page. If recording or playback does not work, try another option.
+</p>
+
+
+<br>
+<a name="mni_go"></a>
+<h3>Playback and looping</h3>
+
+<p>EKO is different. EKO doesn't have tons of options of playback. When you press the magic key Space, EKO starts to play the current file. If you press the Space again, EKO pauses, not stops. To stop, you can press the Stop button on the toolbar. The "Stop" stops the sound and moves the cursor to the beginning of the file.</p>
+
+<p>There also a "Looped" checkbox at the toolbar. When it is checked, EKO plays the current selection (if some area is selected) or the while file. That's how it works.</p>
+
+<p>TEA always align the current selection border (that is moved by mouse or keyboard) to the sound system buffer size. You can change that parameter at the <b>Tune - Sound devices - Buffer size (in frames)</b>. Also, the smaller size means the smaller latency.</p>
+
+<p>You can select sound data by the mouse, and, in addition to that, move the selection border using Shift-cursor or Alt-cursor (move right or left border). The "[" and "]" sets the left or right selection border to the cursor position. To deselect, just click somewhere out of the selection</p>
+
+<br>
+<a name="mni_recording"></a>
+<h3>Recording</h3>
+
+<p>To record a sound file, use <b>File - Record</b>, Press "Stop" button when done. To set up sound format, go to the <b>Tune - Common</b> page, and there press "Set default format for new files" button. Due to some Portaudio features, EKO opens the input sound device in stereo mode. But then, if the "mono recording" option is selected, EKO mixes both channels to one, or takes just one channel, left or right. Customize this on <b>Tune - Sound devices</b>.
+</p>
+
+<p>When recording, EKO uses temporary file at the temporary directory, system's by default. You can redefine EKO temp directory at <b>Tune - Common</b>. So the maximum length of the recording depends on the free space of the disk partition where your temporary directory is located.</p>
+
+<p>To hear what you record while recording turn on the <b>Tune - Sound devices - Monitor input</b> option.</p>
+
+<br>
+<a name="mni_mixer"></a>
+<h3>Mixer</h3>
+
+<p>EKO has the rack for realtime effects, combined with a simple mixer. Here you can add or delete some effects. They can be tweaked in the realtime and it will sounds. When you'll decide to apply them "offline" to the selected area or the whole file, press the "Apply" button at the middle of Mixer. Also you can rearrange effects via "up" and "down". The "Apply" button, after all data has been processed, sets all effects to the bypass state. </p>
+
+<p>Currently there are no so much built-in realtime effects. The external plugins will be supported in the future. Probably maybe.</p>
+
+<p>The "Volume" and "Pan" knobs are virtual, i.e. their settings sounds, but not renders when you push "Apply". The Panner settings can be changed at <b>Tune - Common - Panner</b> option.</p>
+
+
+<br>
+<a name="mni_interface"></a>
+<h3>Interface</h3>
+
+<p>From the top to bottom, there are:</p>
+
+<p>1. <b>The main menu</b>. Note that you can tear submenus off and place them somewhere over the desktop. Menu items are depended on the current task or even editor mode. Some menus can be visible or hidden according to the task (editing, file browsing, etc.).</p>
+
+<p>2. <b>The toolbars area</b>. Actually, toolbars can be parked at the any side of EKO window. Positions are saved between sessions. To turn the toolbar on and off, use the context menu for the toolbar (right click on the toolbar). If no toolbar is visible, do the right click on the menu bar.</p>
+
+<p>3. <b>The tabbed area</b>. It contains four main tabs - <b>edit</b>, <b>manage</b>, <b>tune</b> and <b>learn</b>. <b>Edit</b> - that where you see opened documents. <b>Manage</b> - a built-in file manager. <b>Tune</b> - here you can change EKO preferences. All changes will be applied immediately. <b>Learn</b> - the built-in User manual. This, this one.</p>
+
+<p>4. <b>Logmemo</b>. It is a notification area. Destination: all warnings, information messages, etc.</p>
+
+<p>5. <b>The Famous input field</b> (FIF). An input text field that is used for Find (read about a <b>Search</b> menu for details). FIF has three buttons - <b>Find</b>, <b>Find previous</b> and <b>Find next</b>. FIF is used also for a search in the EKO manual, menu items list (at the hotkeys customization page) and even the built-in file manager.</p>
+
+<p>6. <b>The status bar</b>.</p>
+
+<br>
+<a name="mni_manager"></a>
+<h3>File manager</h3>
+
+<p>The EKO's file manager is hidden under the <b>manage</b> tab. It is not an additional bloatware tool, but the essential part of the editor. It replaces the standard File save/open dialogs (by the way, you can bring them back using <b>Tune &gt; Interface &gt; Use traditional File Save/Open dialogs</b> option).</p>
+
+<p>Let's see on the shining force of EKO's file manager.</p>
+
+<p>At the top the directory bar is located. There are an entry with the current directory path, and a nice toolbar with following weird-looking buttons:</p>
+
+<p><b>Go</b> - navigates to the directory with the path from the text entry.</p>
+
+<p><b>Home</b> - teleports you to your cozy home directory.</p>
+
+<p><b>Refresh</b> - refreshes the files list.</p>
+
+<p><b>File operations</b> button with submenu. It contains some utility actions such as <b>Create new directory</b>, <b>Rename</b> and <b>Delete file</b>. Please note that EKO does not delete the directories.</p>
+
+<p>The <b>right panel</b> of the file manager.</p>
+
+<p>At the top you see the file name field. Here you can name a file to open or save it. To save the current file under some name, just put the filename into the <b>Name</b> text entry and press the <b>Save as</b> button. To open a file,  double click on the file name at the files list, or put the file name into the <b>Name</b> entry and press the <b>Open</b> button. You can use the Enter key inside of this input field. The action is related to the menu item  (File open or Save as) that you used to open the file manager tab.<p>
+
+<p>You can also select multiply files (Ctrl-click) and then press the <b>Open</b> button.</p>
+
+<p><b>Bookmarks</b> list. You can easily add and remove the directory bookmarks using the "+" and "-" buttons. The "+" button adds a bookmark to the file system tree's current directory. The "-"  button removes the selected bookmark. To activate the bookmark and navigate to the according directory, double click on the bookmark.</p>
+
+
+<br>
+<a name="mni_file"></a>
+<h3>File</h3>
+
+<p><b>New</b>. This menu item creates an empty file with parameters those defined under  <b>Tune - Common - Set default format for new files</b>. EKO holds internally all sound data at 32-bit floating point sample values, and external conversion to other formats happens on saving or loading.</p>
+
+<p><b>Open</b> - if you are using the build-in file manager, read the <a href="#mni_manager">File manager</a> chapter. Otherwise, use the standard "File open" dialog window.</p>
+
+<p>EKO supports many sound formats using the libsndfile library: WAV, AIFF, AU, RAW, PAF, SVX, NIST, VOC, IRCAM, W64, MAT4, MAT5, PVF, XI, HTK, SDS, AVR, SD2, FLAC, CAF, WVE, OGG and others. WAV PCM is supported from signed 8 bit up to up to 64 bit double, with any sample rate.</p>
+
+<p>EKO can open, at the read-only mode, MP3 and videofiles (as audio tracks). EKO uses the external tools for that, FFMPEG or Mplayer. You can select the decoder engine at <b>Tune - Common - MP3 and video decoder</b>. FFMPEG is faster. When opening such files, EKO uses the temporary wav-file at the temporary directory that you need to set up at <b>Tune - Common - Temp directory</b>, so there are must be enough of available free space.
+</p>
+
+<p>Opening the large videofiles consumes a much of time, because the decoder will decode, and EKO will calculate the sound peak data. So be patient.</p>
+
+<p><b>Save</b> - if your file is already saved, this menu item saves it again. That is how it works. But, if the file is not saved, you shall see a <a href="#mni_manager">File manager</a>. There, put the file name into to the <b>Name</b> entry and press the <b>Save as</b> button.</p>
+
+<p>To save a file in a different format and file name use <b>File - Change format</b> window, choose some format, then do <b>Save As</b>. To save a file under the same filename with the different format, use <b>File - Change format</b>, and then <b>Save</b>. In this case, if the file extension is not the extension of the selected format, the proper extension will be given to the resulting file name.</p>
+
+<p>Some examples:</p>
+
+<p>Let's assume that you have WAV at 16 bit PCM, test.wav. If you select the AIFF format at then <b>Save</b>, you'll get the "test.aiff" file.</p>
+
+<p>If you have a new file and try to save it without the file extension, EKO add the file extension according to the file format.</p>
+
+<p><b>Last closed file</b> - opens the last closed file. </p>
+
+<p><b>Save as different &gt; Save timestamped version</b> - saves a content of the current document with name, where the timestamp is added. So you shall know the date and time related to the saved version. Note about timestamp format. Is is yyyy-MM-dd-hh-mm-ss. So the first comes a year, then a month, then days, hours, minutes and seconds.</p>
+
+<p><b>Import/Export &gt; Import from RAW</b> - allows to open any file as the sound data, using the manually selected data format.</p>
+
+<p><b>Import/Export &gt; Export to MP3</b> - encodes current document's sound data to the MP3-file using the external encoder defined by the command at <b>Tune - Common - MP3 encode command</b> parameter. LAME is used by default.</p>
+
+<p><b>Recent files</b>. From here you can open one of the dozen recently opened files.</p>
+
+<p><b>Sessions</b> - at this menu sessions are available. The session is a simple list of opened files. To load them all, just choose the session name. To save the session use <b>File  &gt;  Save different  &gt;  Save session</b>. At the preferences <b>Common</b> page you can check the <b>Restore the last session on start-up</b> option. If this option is turned on, EKO will save the session on exit (under the name <i>def-session-777</i>), and then load this session when starting.</p>
+
+<p><b>File actions</b> submenu. <b>Reload</b> is a function to reload the current file's content from the disk.</p>
+
+<p><b>Exit</b> - closes EKO. To reduce the annoyance, EKO doesn't ask to confirm it.</p>
+
+
+<br><br>
+<a name="mni_edit"></a>
+<h3>Edit</h3>
+
+<p><b>Cut, Copy, Paste</b> - works similar as in any other sound editor. When you paste sound data into the other file, the data from clipboard will be resampled to the destination file sample rate and channels count will be reduced or expanded according to the destination file channels count.</p>
+
+<p><b>Copy to new</b>  - copy the selected data to the new file. The new file will have sound format as the source data.</p>
+
+<p><b>Copy to new (default format)</b>  - copy the selected data to the new file. The new file will have sound format as the default sound format for a new file (you can set it at the <b>Tune - Common</b>).</p>
+
+
+<br><br>
+<a name="mni_search"></a>
+<h3>Search</h3>
+
+<p>EKO has no dialog windows for the search. EKO uses the Famous input field (FIF) and menu-driven interface. FIF works in <b>Tune - Keyboard</b> and the manual panel. Type + enter = search, F3 - search next from the cursor position.</p>
+
+<br>
+<a name="mni_functions"></a>
+<h3>Functions</h3>
+
+<p>This menu holds "offline"-processing functions such as reverse, fade, RMS calculation, channel management and others.</p>
+
+<p><b>Dynamics - Apply volume envelope</b> - applies the off-line volume automation envelope that you can create with right-clicking on the waveform. The volume envelope effect is not heard when playing. You need to create the envelope and then apply it.
+</p>
+
+<p>The right-click creates the new envelope point. Shift + left click on the point sets its value to zero. Ctrl + left click deletes the point.
+</p>
+
+<p>There are two automatically created point at the beginning and the end of the envelope. You cannot delete them. The ending point if always has the value of the nearest point before. And the starting point has the same value as the next point. So to change values of the "bordering" points you need to create some additional points.
+</p>
+
+<p>The dynamic range of the envelope is from -90 db (when the point is under the axis) to +6 dB (if the point is below). To make sound louder, move the point higher, and vice versa. With the volume envelope you can control the volume precisely. The envelope time range is the whole file, not the selection.
+</p>
+
+<p>To delete the envelope, use the <b>Remove volume envelope</b> menu item.</p>
+
+<p><b>DC offset</b> - this menu contains functions to fix the DC offset. In most cases you can use <b>Fix DC offset auto</b> and you can do it multiply times on the same portion of data to get the correct DC. Another way is to apply two functions - <b>Detect DC offset</b> first, then copy offset value from Logmemo, then use <b>Fix DC offset manually</b> and enter that offset value into the input entry. The best result for <b>Detect DC offset</b> is calculate when you scan the shifted "silence" (which looks like a completely solid waveform).</p>
+
+<br>
+<a name="mni_nav"></a>
+<h3>Nav</h3>
+
+
+<br>
+<a name="mni_fm"></a>
+<h3>Fm</h3>
+
+<p><b>Fm</b> is meaning the <b>File manager</b>. This menu contains functions those related to EKO file manager and visible when the <b>browse</b> tab is active.</p>
+
+<p><b>Fm &gt; Select by regexp/Deselect by regexp</b> - use this functions to select or deselect files by regexp pattern. For example, to select all txt-files at the current dir, put the following regexps into the FIF:"<i>.*\.txt$</i>" (without quotes!). Then, use <b>Select by regexp</b>. Then you can press Open button to open all selected files.</p>
+
+
+<br>
+<a name="mni_view"></a>
+<h3>View</h3>
+
+<p><b>Themes</b> - EKO has some built-in GUI themes.</p>
+
+<p><b>Palettes</b> - from this submenu you can select the color scheme that affects the wave editing area.</p>
+
+<p><b>Profiles</b> - this menu allows you to switch between view profiles (they includes parameters such as window position, size, etc.). So you can save your current settings via <b>Save profile</b> function, and named profile will appear at the <b>Profiles</b> menu. In any time you can select it to recall saved settings.</p>
+
+
+<br>
+<a name="mni_prefs"></a>
+<h3>Tune tab (Preferences)</h3>
+
+<p>On <b>Keyboard</b> tab you can assign the shortcuts with the menu items. To set a new hotkey, select a menu item from the list, then press some hotkey combination at the entry to the right from the list, and press the <b>Assign</b> button. To remove a hotkey, select the menu item from the list and press <b>Remove</b> button. To re-assign the hotkey that already in use, do <b>Remove</b> for this shortcut first.</p>
+
+
+<br>
+<a name="mni_notes"></a>
+<h3>Notes</h3>
+
+<p>This manual and all EKO media stuff (palettes, images, etc) is the public domain. EKO source code is licensed under GPL v3.</p>
+
+
+<br>
+<a name="mni_author"></a>
+<h3>Other author's projects</h3>
+
+<p><a href="http://semiletov.org/tea">TEA</a>- small text editor with hundreds of functions.</p>
+
+<p><a href="http://semiletov.org/">My home page with the prose and other things.</a></p>
+
+<p><a href="http://www.jamendo.com/en/artist/Atomnaya_Smena/">Atomnaya Smena</a> - my one-person music project. Rock/Indietronica/Neoclassics/Psytrance. All music is in the public domain.</p>
+
+<p><a href="http://www.jamendo.com/en/artist/Nesmeyana">Nesmeyana</a> - the band where I am one of the members. All music is in the public domain.</p>
+
+<p><a href="http://www.jamendo.com/en/artist/Kostny_Mozg">Kostny Mozg</a> - the indie/hip-hop/techno band, where I am one of the members. Public domain and Artistic License.</p>
+
+<p><a href="http://code.google.com/p/roxtonegen/">Roxtonegen</a> - MIDP 2 (Java ME) midlet for the guitar tuning via Java-powered cellphone. Public domain.
+</p>
+
+<p><a href="https://sites.google.com/site/studiadrymba/home">Drymba studio</a> - the indie film studio that make ultra-low-budget movies and clay/3D cartoons. I'm one of the creators. Public domain.</p>
+
+<br>
+<a name="mni_donate"></a>
+<h3>Donate</h3>
+
+<p>   If you want to support EKO with donation, better support the Ukrainian dog shelter Lyubas House - <a href="http://www.ukraineanimalrescue.org/#!lyubas-house/cxfj/">www.ukraineanimalrescue.org/#!lyubas-house/cxfj</a>. There are lot of dogs with disabilities, and they need help more than EKO.</p>
+
+
+</body>
+</html>

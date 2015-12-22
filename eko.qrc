@@ -1,0 +1,66 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+
+    <file>icons/file-new.png</file>
+    <file>icons/file-open.png</file>
+    <file>icons/file-open-active.png</file>
+
+    <file>icons/file-save.png</file>
+    <file>icons/file-save-active.png</file>
+
+    
+    <file>icons/file-save-as.png</file>
+
+    <file>icons/edit-copy.png</file>
+    <file>icons/edit-copy-active.png</file>
+    
+    <file>icons/edit-cut.png</file>
+    <file>icons/edit-cut-active.png</file>
+
+    <file>icons/edit-paste.png</file>
+    <file>icons/edit-paste-active.png</file>
+
+    <file>icons/create-dir.png</file>
+    <file>icons/home.png</file>
+    <file>icons/refresh.png</file>
+    <file>icons/go.png</file>
+
+    <file>icons/play.png</file>
+    <file>icons/pause.png</file>
+    <file>icons/stop.png</file>
+    <file>icons/search_find.png</file>
+
+    <file>icons/eko_icon.png</file>
+
+    <file>translations/eko_ru.qm</file>
+    <file>translations/eko_cs.qm</file>
+
+
+    <file>manuals/en.html</file>
+    <file>manuals/ru.html</file>
+
+    <file>palettes/EKO</file>
+    <file>palettes/Vinyl</file>
+    <file>palettes/Grey</file>
+    <file>palettes/Spring</file>
+    <file>palettes/Winter</file>
+
+    <file>themes/TEA/stylesheet.css</file>
+    <file>themes/Cotton/stylesheet.css</file>
+    <file>themes/Plum/stylesheet.css</file>
+    <file>themes/Smaragd/stylesheet.css</file>
+    <file>themes/Turbo/stylesheet.css</file>
+    <file>themes/Vegan/stylesheet.css</file>
+
+    
+    <file>INSTALL</file>
+    <file>README</file>
+    <file>NEWS</file>
+    <file>TODO</file>
+    <file>NEWS-RU</file>
+    <file>COPYING</file>
+    <file>AUTHORS</file>
+    <file>ChangeLog</file>
+
+</qresource>
+</RCC>
