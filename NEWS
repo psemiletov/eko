@@ -1,0 +1,17 @@
+=====NEWS ABOUT EKO====
+EKO 4.0.0, November 2015
+---------------------------------------
+http://semiletov.org/eko
+---------------------------------------
+
+   Hi.
+   First of all, this release fixes all bugs those I knew. It includes the multilply (> 2) channels processing, fading, selections and many more.
+   The "Normalize" function now takes the parameter in dB.
+   Now you can monitor the input signal (Tune - Sound devices - Monitor input option).
+   The volume can be adjusted dynamically using the volume (or dynamics) automation envelope and "Functions - Dynamics" menu.
+
+   With the 4.0.0 I'm afraid (yes) to introduce the initial Win32 build that I didn't test much.
+
+   Stay tuned.
+
+   Peter Semiletov, tea@list.ru

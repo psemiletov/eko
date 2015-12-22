@@ -1,0 +1,66 @@
+2015 nov
+* envelope code fixes
+
+2015 oct
++ initial win32 port
+* Normalize function rewritten
++ Tune - Sound devices - Monitor input
+* Functions - Amplification = renamed to Dynamics
++ Help - System check
++ sound dynamics envelope
+
+* envelope - Shift-Click sets env point to the center, Ctrl-Click to delete the point
+
+2015/sept, oct
++ FXRack changed to Mixer
+* selection fixes
++ MP3 and video files loading via FFMPEG or Mplayer
++ Alt-cursor, Shift-cursor - move selection border left/right
++ MP3 export using LAME
+* undo engine improvement
+etc
+
+2015/july
+* math fixes
+
+2015
+Qt5/Portaudio port
+
+
+2014/may
++ Qt5 full support
+* GUI fixes
+
+2013/may
+
+* Qt5 compatibility
++ FX rack per file
++ Simple delay effect
+
+2013/04/08
+* non-visible fixes
+
+2013/march
++ File manager from TEA //sync
+* UI fixes
+
+2012/07/14
++ Qt5 port
+* large files opening fixes
+* time rules fixes
+
+2012/03/14
+* fix for Unicode file names
+* some other fixes
+
+
+2011/01/12
++ Edit - Copy to new (default format) //copy the data to new file with DEFAULT format
+
+2011/01/06
+* aiff support fixes
++ simple pitch shifter realtime effect
+* SimpleAmp tweaks
+
+2011/01/03 - editor focus fixes
+2010/09/02 - smooth scrolling works
