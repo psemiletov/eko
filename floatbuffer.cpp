@@ -189,6 +189,36 @@ void CFloatBuffer::copy_to_pos (CFloatBuffer *other, size_t offset_from, size_t 
       {
        memcpy (other->buffer[ch] + offset_to, buffer[ch] + offset_from, size * sizeof (float));
       }     
+}
+
+
+void CFloatBuffer::copy_to_pos_with_rate (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to, size_t rate)
+{
+  if (size > length_frames)
+     return;
+      
+  if (offset_from > length_frames)
+     return;
+
+  size_t reminder = length_frames - offset_from;
+  if (reminder < size)
+     return;
+  
+  for (size_t ch = 0; ch < channels; ch++) 
+      {
+       size_t c = 0;
+       size_t i = 0;
+             
+       float *p_dest_buffer = other->buffer[ch] + offset_to;
+       float *p_source_buffer = buffer[ch] + offset_from;      
+             
+       while (i < size)
+             {
+              p_dest_buffer[c++] = p_source_buffer[(size_t)floor (i * rate)];
+              i++;
+             }
+      }          
+}
 
 
 void CFloatBuffer::pbuffer_reset()
