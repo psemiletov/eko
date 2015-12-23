@@ -46,6 +46,7 @@ public:
   
   CFloatBuffer* copy (size_t offset_from, size_t size); //frames
   void copy_to (CFloatBuffer *other, size_t offset_from, size_t size); //frames
+  void copy_to_pos (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to); //frames
   
   
   void overwrite_at (CFloatBuffer *other, size_t pos_frames);
