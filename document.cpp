@@ -38,7 +38,7 @@
 
 #include "logmemo.h"
 
-
+#define FRAMES_PER_SECT_MAX 16
 
 enum EMultiChannelMappingWAV //wav, flac, mp3
 {
@@ -412,7 +412,12 @@ void CWaveform::recalc_view()
 
   //qDebug() << "sel_start_frames = " << sel_start_frames;
   //qDebug() << "sel_end_frames = " << sel_end_frames;
-  qDebug() << "frames_per_section == " << frames_per_section;
+ 
+
+  if (frames_per_section < FRAMES_PER_SECT_MAX)
+     frames_per_section = FRAMES_PER_SECT_MAX;
+     
+      qDebug() << "frames_per_section == " << frames_per_section;
 
   //qDebug() << "cursor_frames = " << cursor_frames;
 
@@ -431,8 +436,8 @@ void CWaveform::scale (int delta)
   if (! fb)
      return;
 
-  if (frames_per_section == 0)
-     return;
+ // if (frames_per_section == 0)
+   //  return;
 
   int old_section_from = section_from;
   int old_frame_from = old_section_from * frames_per_section;
