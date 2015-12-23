@@ -210,6 +210,7 @@ AFx* CFxSimpleAmp::self_create (size_t srate)
 
 size_t CFxSimpleAmp::execute (float **input, float **output, size_t frames)
 {
+  qDebug() << "CFxSimpleAmp::execute ";
   for (size_t ch = 0; ch < channels; ch++)
       {
        for (size_t i = 0; i < frames; i++)

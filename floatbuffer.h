@@ -17,6 +17,7 @@ public:
   
   float **pbuffer;
 
+
   float *buffer_interleaved; //for mapping from buffer
 
   size_t samplerate;
@@ -35,7 +36,7 @@ public:
   void pbuffer_reset();
   void pbuffer_inc (size_t val);
   void settozero();
-  
+
   void allocate_interleaved();
   void fill_interleaved();
   

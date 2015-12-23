@@ -1997,41 +1997,38 @@ void CFxRackWindow::apply_fx()
 }
 
 
+//ГЛЮЧИТ!!!
 //process the whole file or the selection
 bool CDSP::process_whole_document (CDocument *d)
 {
   if (! d)
      return false;
 
-//  qDebug() << "CDSP::process_whole_document";
-
-
 //here we work with short buffer to process it and output to it
   
   d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
 
-  size_t portion_size = buffer_size_frames;
+  //size_t portion_size = buffer_size_frames;
 
   //qDebug() << "portion_size =" << portion_size;
 
   size_t frames_start = d->wave_edit->waveform->frames_start();
   size_t frames_end = d->wave_edit->waveform->frames_end();
+  
+  //qDebug() << "frames_start: " << frames_start;
+  //qDebug() << "frames_end: " << frames_end;
 
-  size_t nframes = d->wave_edit->waveform->fb->length_frames;
+  //size_t nframes = d->wave_edit->waveform->fb->length_frames;
   
   d->wave_edit->waveform->fb->pbuffer_reset();
     
-
-  //float *buf = d->wave_edit->waveform->sound_buffer->buffer;
-
-  //size_t offset = 0;
 
 //FIXIT!!! CHECK IF sample_end > sample_start
 
   if (d->wave_edit->waveform->selected)
      {
-      nframes = frames_end - frames_start;
-      d->wave_edit->waveform->fb->offset = frames_start;
+      //nframes = frames_end - frames_start;
+      //d->wave_edit->waveform->fb->offset = frames_start;
      }
 
   
@@ -2043,15 +2040,17 @@ bool CDSP::process_whole_document (CDocument *d)
 
   ////////////call fx chain
 
-  d->wave_edit->waveform->fb->offset = 0;
+  //d->wave_edit->waveform->fb->offset = frames_start;
 
-  while (d->wave_edit->waveform->fb->offset < nframes)
+  d->wave_edit->waveform->fb->pbuffer_inc (frames_start); 
+
+  while (d->wave_edit->waveform->fb->offset < frames_end)
         {
-         //qDebug() << "offset = " << offset;
+         //qDebug() << "offset = " << d->wave_edit->waveform->fb->offset;
 
-         size_t diff = nframes - d->wave_edit->waveform->fb->offset;
-         if (diff < portion_size)
-            portion_size = diff;
+         //size_t diff = nframes - d->wave_edit->waveform->fb->offset;
+         //if (diff < portion_size)
+           // portion_size = diff;
 
          for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); i++)
              {
@@ -2062,13 +2061,18 @@ bool CDSP::process_whole_document (CDocument *d)
                   wnd_fxrack->fx_rack->effects[i]->channels = d->wave_edit->waveform->fb->channels;
                   wnd_fxrack->fx_rack->effects[i]->samplerate = d->wave_edit->waveform->fb->samplerate;
                   
+                  //wnd_fxrack->fx_rack->effects[i]->execute (d->wave_edit->waveform->fb->pbuffer,
+                    //                                        d->wave_edit->waveform->fb->pbuffer, 
+                      //                                      buffer_size_frames);
                   wnd_fxrack->fx_rack->effects[i]->execute (d->wave_edit->waveform->fb->pbuffer,
-                                                            d->wave_edit->waveform->fb->pbuffer, portion_size);
+                                                            d->wave_edit->waveform->fb->pbuffer, 
+                                                            buffer_size_frames);
+                     
                  }
              }
 
-         d->wave_edit->waveform->fb->pbuffer_inc (portion_size);  
-  }
+         d->wave_edit->waveform->fb->pbuffer_inc (buffer_size_frames);  
+        }
 
 
   for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); i++)
@@ -2077,6 +2081,8 @@ bool CDSP::process_whole_document (CDocument *d)
            wnd_fxrack->fx_rack->effects[i]->bypass = true;
       }
 
+
+  d->wave_edit->waveform->fb->offset = 0;
   d->wave_edit->waveform->magic_update();
 
   return true;

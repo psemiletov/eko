@@ -10,6 +10,7 @@
 
 CFloatBuffer::CFloatBuffer (size_t len, size_t channels_count)
 {
+  pbuffer = 0;
   channels = channels_count;
   length_frames = len;
   buffer_interleaved = 0;
@@ -30,6 +31,8 @@ CFloatBuffer::CFloatBuffer (size_t len, size_t channels_count)
 
 CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len)
 {
+  pbuffer = 0;
+  
   channels = 1;
   length_frames = len;
   buffer_interleaved = 0;
@@ -44,6 +47,8 @@ CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len, size_t channe
 {
 //  qDebug() << "CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count)  -1";
 
+  pbuffer = 0;
+  
   channels = channels_count;
   length_frames = len;
   buffer_interleaved = 0;
@@ -149,7 +154,6 @@ CFloatBuffer* CFloatBuffer::copy (size_t offset_from, size_t size)
 }
 
 
-
 void CFloatBuffer::copy_to (CFloatBuffer *other, size_t offset_from, size_t size)
 {
   if (size > length_frames)
@@ -172,7 +176,18 @@ void CFloatBuffer::copy_to (CFloatBuffer *other, size_t offset_from, size_t size
 void CFloatBuffer::pbuffer_reset()
 {
   offset = 0;
-  pbuffer = buffer;
+//  pbuffer = buffer;
+  
+  if (pbuffer)
+     delete pbuffer;
+  
+   pbuffer = new float* [length_frames];
+  
+   for (size_t ch = 0; ch < channels; ch++)
+      {
+       pbuffer[ch] = buffer[ch];
+      }
+
 }
 
 
