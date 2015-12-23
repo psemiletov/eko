@@ -181,7 +181,7 @@ void CFloatBuffer::pbuffer_reset()
   if (pbuffer)
      delete pbuffer;
   
-   pbuffer = new float* [length_frames];
+   pbuffer = new float* [channels];
   
    for (size_t ch = 0; ch < channels; ch++)
       {
