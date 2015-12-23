@@ -126,9 +126,18 @@ bool CTioPlainAudio::save (const QString &fname)
 
   //qDebug() << "ogg_q = " << ogg_q;
 
-  float *interleavedbuf = float_input_buffer->to_interleaved();
-
-  sf_count_t zzz = sf_writef_float (hfile, interleavedbuf, float_input_buffer->length_frames);
+  if (float_input_buffer->channels == 1)
+     {
+      sf_writef_float (hfile, float_input_buffer->buffer[0], float_input_buffer->length_frames);
+     }
+  else
+      {
+       float *interleavedbuf = float_input_buffer->to_interleaved();
+       sf_writef_float (hfile, interleavedbuf, float_input_buffer->length_frames);
+       delete [] interleavedbuf;
+      } 
+  
+  
   sf_close (hfile);
 
   return true;
@@ -473,14 +482,20 @@ bool CTioPlainAudio::save_16bit_pcm (const QString &fname)
 
   size_t buflen = float_input_buffer->length_frames * sf.channels;
   
-  float *interleavedbuf = float_input_buffer->to_interleaved();
+  float *flbuf;
+    
+  if (float_input_buffer->channels == 1) 
+     {
+      flbuf = float_input_buffer->buffer[0];
+     }
+  else  
+      flbuf = float_input_buffer->to_interleaved();
   
   short int *buf = new short int [buflen];
-  
-  
+    
   for (size_t i = 0; i < buflen; i++)
       {
-       float f = interleavedbuf[i];
+       float f = flbuf[i];
 
        if (f >= 1.0)
           buf[i] = f * 32767;
@@ -490,12 +505,14 @@ bool CTioPlainAudio::save_16bit_pcm (const QString &fname)
    
   SNDFILE *file = sf_open (fname.toUtf8(), SFM_WRITE, &sf);
   
-  sf_count_t zzz = sf_writef_short (file, buf, float_input_buffer->length_frames);
+  sf_writef_short (file, buf, float_input_buffer->length_frames);
   
   sf_close (file);
 
   delete [] buf;
-  delete [] interleavedbuf;
+  
+  if (float_input_buffer->channels != 1) 
+     delete [] flbuf;
 
   return true;
 }
