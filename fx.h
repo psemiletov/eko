@@ -158,6 +158,8 @@ public:
 
   QLabel *label;
   
+  CFloatBuffer *fb;  
+  
   double ratio;
 
   CFxPitchShift (size_t srate);
@@ -166,6 +168,8 @@ public:
   AFx* self_create (size_t srate);
 
   size_t execute (float **input, float **output, size_t frames);
+  void reset_params (size_t srate, size_t channels);
+
 
 public slots:
 

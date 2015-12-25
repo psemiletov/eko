@@ -2448,9 +2448,9 @@ size_t CDSP::process (size_t nframes)
    
   //just copy
   
-  documents->current->wave_edit->waveform->fb->copy_to (
+  documents->current->wave_edit->waveform->fb->copy_to_pos (
                      temp_float_buffer,
-                     documents->current->wave_edit->waveform->fb->offset, frames);
+                     documents->current->wave_edit->waveform->fb->offset, frames, 0);
   
   
   //memcpy (temp_buffer, psource, nsamples * sizeof (float));

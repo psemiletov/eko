@@ -440,6 +440,9 @@ void AFx::set_state (FxState s)
 CFxPitchShift::CFxPitchShift (size_t srate): AFx (srate)
 {
   name = "FxPitchShift";
+  
+  fb = 0;
+  
   wnd_ui = new QWidget();
 
   wnd_ui->setWindowTitle (tr ("Simple Pitchshifter"));
@@ -470,6 +473,8 @@ void CFxPitchShift::spb_ratio_changed (double value)
 
 CFxPitchShift::~CFxPitchShift()
 {
+  if (fb)
+     delete fb;
 }
 
 
@@ -478,7 +483,7 @@ AFx* CFxPitchShift::self_create (size_t srate)
   return new CFxPitchShift (srate);
 }
 
-//ПЕРЕПИСАТЬ СО СТАТИЧНЫМ БУФЕРОМ
+
 size_t CFxPitchShift::execute (float **input, float **output, size_t frames)
 {
   for (size_t ch = 0; ch < channels; ch++)
@@ -490,10 +495,15 @@ size_t CFxPitchShift::execute (float **input, float **output, size_t frames)
        data.input_frames = frames;
        data.output_frames = frames;
 
-       float *data_in = new float [frames];
-       memcpy (data_in, input[ch], frames * sizeof (float));
+       //float *data_in = new float [frames];
+       
+       size_t bsize = frames * sizeof (float);
+       
+       memset (fb->buffer[ch], 0, bsize);
+       
+       memcpy (fb->buffer[ch], input[ch], bsize);
 
-       data.data_in = data_in;
+       data.data_in = fb->buffer[ch];
        data.data_out = output[ch];
 
        int q;
@@ -507,11 +517,11 @@ size_t CFxPitchShift::execute (float **input, float **output, size_t frames)
        if (error)
           {
            qDebug() << src_strerror (error);
-           delete data_in;
+           //delete data_in;
            return 0;
           }
 
-       delete [] data_in;
+       //delete [] data_in;
       }
   
   return frames;
@@ -520,6 +530,20 @@ size_t CFxPitchShift::execute (float **input, float **output, size_t frames)
 
 void AFx::reset_params (size_t srate, size_t chann)
 {
+  qDebug() << "AFx::reset_params";
+
   samplerate = srate;
   channels = chann;
+}
+
+
+void CFxPitchShift::reset_params (size_t srate, size_t channels)
+{
+  qDebug() << "CFxPitchShift::reset_params";
+  AFx::reset_params (srate, channels);
+ 
+  if (fb)
+     delete fb;
+     
+  fb = new CFloatBuffer (4096, channels);
 }

@@ -1,3 +1,5 @@
+//VER 2
+
 #include <iostream>
 
 #include <sndfile.h>
@@ -153,7 +155,7 @@ CFloatBuffer* CFloatBuffer::copy (size_t offset_from, size_t size)
   return fb;
 }
 
-
+/*
 void CFloatBuffer::copy_to (CFloatBuffer *other, size_t offset_from, size_t size)
 {
   if (size > length_frames)
@@ -171,7 +173,7 @@ void CFloatBuffer::copy_to (CFloatBuffer *other, size_t offset_from, size_t size
        memcpy (other->buffer[ch], buffer[ch] + offset_from, size * sizeof (float));
       }     
 }
-
+*/
 
 void CFloatBuffer::copy_to_pos (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to)
 {
@@ -452,7 +454,7 @@ void CFloatBuffer::copy_from (CFloatBuffer *other)
        buffer[ch] = new float [length_frames];
       } 
 
-  other->copy_to (this, 0, other->length_frames);
+  other->copy_to_pos (this, 0, other->length_frames, 0);
 }
 
 

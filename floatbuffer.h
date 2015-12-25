@@ -2,7 +2,7 @@
 #define FLOATBUFFER_H
 
 
-//VER 1
+//VER 2
 
 using namespace std;
 
@@ -48,7 +48,7 @@ public:
   CFloatBuffer* clone();
   
   CFloatBuffer* copy (size_t offset_from, size_t size); //frames
-  void copy_to (CFloatBuffer *other, size_t offset_from, size_t size); //frames
+ // void copy_to (CFloatBuffer *other, size_t offset_from, size_t size); //frames
   void copy_to_pos (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to); //frames
   void copy_to_pos_with_rate (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to, size_t rate); //frames
   

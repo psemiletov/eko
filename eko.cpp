@@ -259,7 +259,7 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
      {
       if (! d->wave_edit->waveform->selected)
          {
-          qDebug() << "l1";
+          //qDebug() << "l1";
            if (d->wave_edit->waveform->fb->offset >= 
                d->wave_edit->waveform->fb->length_frames - frameCount) 
               {
@@ -268,7 +268,7 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
           }
       else //looped, but selected
            {
-            qDebug() << "l2";
+           // qDebug() << "l2";
 
             if (d->wave_edit->waveform->fb->offset >= d->wave_edit->waveform->frames_end()) 
                 d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->frames_start();
@@ -1179,7 +1179,7 @@ void CEKO::createMenus()
   fileMenu = menuBar()->addMenu (tr ("File"));
   fileMenu->setTearOffEnabled (true);
 
-  fileMenu->addAction (act_test);
+  //fileMenu->addAction (act_test);
 
   fileMenu->addAction (newAct);
   
