@@ -2458,7 +2458,7 @@ size_t CDSP::process (size_t nframes)
     
 ////////////call fx chain
 
-  temp_float_buffer->pbuffer_reset();
+  //temp_float_buffer->pbuffer_reset();
 
   if (! bypass_mixer && documents->current)
   for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); i++)
@@ -2468,7 +2468,7 @@ size_t CDSP::process (size_t nframes)
            wnd_fxrack->fx_rack->effects[i]->realtime = true;
            wnd_fxrack->fx_rack->effects[i]->channels = documents->current->wave_edit->waveform->fb->channels;
            wnd_fxrack->fx_rack->effects[i]->samplerate = documents->current->wave_edit->waveform->fb->samplerate;
-           wnd_fxrack->fx_rack->effects[i]->execute (temp_float_buffer->pbuffer, temp_float_buffer->pbuffer, frames);
+           wnd_fxrack->fx_rack->effects[i]->execute (temp_float_buffer->buffer, temp_float_buffer->buffer, frames);
           }
       }
 
@@ -3185,7 +3185,8 @@ CDSP::CDSP (QObject *parent): QObject (parent)
   pan = 0.5f;
   panner = settings->value ("panner", 0).toInt();
   
-  temp_float_buffer = 0; new CFloatBuffer (buffer_size_frames, 2);
+//  temp_float_buffer = 0; 
+  temp_float_buffer = new CFloatBuffer (buffer_size_frames, 2);
 }
 
 

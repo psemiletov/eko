@@ -13,6 +13,10 @@
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+
 
 #include "fx.h"
 #include "utils.h"
@@ -122,6 +126,8 @@ CFxList::CFxList()
   list.append (new CFxSimpleEQ (1));
   list.append (new CFxSimpleOverdrive (1));
   list.append (new CFxPitchShift (1));
+  list.append (new CFxSimpleLowPass (1));
+
 }
 
 
@@ -441,8 +447,8 @@ CFxPitchShift::CFxPitchShift (size_t srate): AFx (srate)
 {
   name = "FxPitchShift";
   
-  fb = 0;
-  
+  fb = new CFloatBuffer (4096, 8);
+
   wnd_ui = new QWidget();
 
   wnd_ui->setWindowTitle (tr ("Simple Pitchshifter"));
@@ -495,8 +501,6 @@ size_t CFxPitchShift::execute (float **input, float **output, size_t frames)
        data.input_frames = frames;
        data.output_frames = frames;
 
-       //float *data_in = new float [frames];
-       
        size_t bsize = frames * sizeof (float);
        
        memset (fb->buffer[ch], 0, bsize);
@@ -547,3 +551,149 @@ void CFxPitchShift::reset_params (size_t srate, size_t channels)
      
   fb = new CFloatBuffer (4096, channels);
 }
+
+
+CFxSimpleLowPass::CFxSimpleLowPass (size_t srate): AFx (srate)
+{
+  name = "CFxSimpleLowPass";
+  wnd_ui = new QWidget();
+
+  wnd_ui->setWindowTitle (tr ("Simple Overdrive"));
+
+ /* gain = 1.0f;
+
+  QVBoxLayout *v_box = new QVBoxLayout;
+  wnd_ui->setLayout (v_box);
+
+  QLabel *l = new QLabel (tr ("Gain"));
+  QDial *dial_gain = new QDial;
+  dial_gain->setWrapping (false);
+  connect (dial_gain, SIGNAL(valueChanged(int)), this, SLOT(dial_gain_valueChanged(int)));
+  dial_gain->setRange (1, 600);
+
+  dial_gain->setValue (1);
+
+  v_box->addWidget (l);
+  v_box->addWidget (dial_gain);*/
+}
+
+
+AFx* CFxSimpleLowPass::self_create (size_t srate)
+{
+  return new CFxSimpleLowPass (srate);
+}
+
+
+/* C function implementing the simplest lowpass:
+ *
+ *      y(n) = x(n) + x(n-1)
+ *
+ */
+float simplp (float *x, float *y,
+              size_t M, float xm1)
+{
+  y[0] = x[0] + xm1;
+  
+  for (size_t n = 1; n < M ; n++) 
+       {
+        y[n] =  x[n]  + x[n-1];
+       } 
+       
+  return x[M-1];
+}
+
+/*
+size_t CFxSimpleLowPass::execute (float **input, float **output, size_t frames)
+{
+  float xm1 = 0.0f;
+  float M = frames;
+
+  for (size_t ch = 0; ch < channels; ch++)
+      {
+      float xm1 = 0.0f;
+  
+      // for (size_t i = 0; i < frames; i++)
+            xm1 = simplp (input[ch], output[ch], M, xm1);
+      }
+
+  return frames;
+}
+*/
+
+#define CUTOFF 22000
+
+size_t CFxSimpleLowPass::execute (float **input, float **output, size_t frames)
+{
+  float x = 2 * M_PI * CUTOFF / samplerate;
+  
+  for (size_t ch = 0; ch < channels; ch++)
+      {
+        for (size_t i = 0; i < frames; i++)
+            {
+             float p = (2 - cos (x)) - sqrt (pow(2-cos(x),2) - 1.f);
+             output[ch][i] = (1-p)*input[ch][i];
+             output[ch][i] += p*output[ch][i];
+            }
+        
+      }
+
+  return frames;
+}
+
+
+/*
+
+
+One pole LP and HP
+
+References : Posted by Bram
+Code :
+LP:
+recursion: tmp = (1-p)*in + p*tmp with output = tmp
+coefficient: p = (2-cos(x)) - sqrt((2-cos(x))^2 - 1) with x = 2*pi*cutoff/samplerate
+coeficient approximation: p = (1 - 2*cutoff/samplerate)^2
+
+HP:
+recursion: tmp = (p-1)*in - p*tmp with output = tmp
+coefficient: p = (2+cos(x)) - sqrt((2+cos(x))^2 - 1) with x = 2*pi*cutoff/samplerate
+coeficient approximation: p = (2*cutoff/samplerate)^2
+
+
+*/
+
+
+/*
+
+LP and HP filter
+
+Type : biquad, tweaked butterworth
+References : Posted by Patrice Tarrabia
+Code :
+r  = rez amount, from sqrt(2) to ~ 0.1
+f  = cutoff frequency
+(from ~0 Hz to SampleRate/2 - though many
+synths seem to filter only  up to SampleRate/4)
+
+The filter algo:
+out(n) = a1 * in + a2 * in(n-1) + a3 * in(n-2) - b1*out(n-1) - b2*out(n-2)
+
+Lowpass:
+      c = 1.0 / tan(pi * f / sample_rate);
+
+      a1 = 1.0 / ( 1.0 + r * c + c * c);
+      a2 = 2* a1;
+      a3 = a1;
+      b1 = 2.0 * ( 1.0 - c*c) * a1;
+      b2 = ( 1.0 - r * c + c * c) * a1;
+
+Hipass:
+      c = tan(pi * f / sample_rate);
+
+      a1 = 1.0 / ( 1.0 + r * c + c * c);
+      a2 = -2*a1;
+      a3 = a1;
+      b1 = 2.0 * ( c*c - 1.0) * a1;
+      b2 = ( 1.0 - r * c + c * c) * a1;
+
+*/
+

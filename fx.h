@@ -177,6 +177,29 @@ public slots:
 };
 
 
+class CFxSimpleLowPass: public AFx
+{
+  Q_OBJECT
+
+public:
+
+  float gain;
+
+  CFxSimpleLowPass (size_t srate);
+ // ~CFxSimpleAmp();
+
+  QLabel *label;
+
+  AFx* self_create (size_t srate);
+
+  size_t execute (float **input, float **output, size_t frames);
+
+public slots:
+
+//  void dial_gain_valueChanged (int value);
+};
+
+
 //available fx
 class CFxList: public QObject
 {
