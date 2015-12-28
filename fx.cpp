@@ -560,6 +560,17 @@ CFxSimpleLowPass::CFxSimpleLowPass (size_t srate): AFx (srate)
 
   wnd_ui->setWindowTitle (tr ("Simple Overdrive"));
 
+ // mFilter.setFilterMode (1);
+ 
+  //float cut_off_freq = 1 / (2 * M_PI * 11500);
+  
+  float cut_off_freq = (float) 11500 / samplerate;
+  
+  qDebug() << "cut_off_freq: " << cut_off_freq; 
+ 
+  filter.set_cutoff (cut_off_freq);
+  //mFilter.setResonance (0.50);
+
  /* gain = 1.0f;
 
   QVBoxLayout *v_box = new QVBoxLayout;
@@ -620,24 +631,41 @@ size_t CFxSimpleLowPass::execute (float **input, float **output, size_t frames)
 }
 */
 
-#define CUTOFF 22000
+#define CUTOFF 12000
+
+float del[2]={0.f, 0.f}, del1[2]={0.f,0.f};
+
+
+float lowpass(float* sig, float freq, float *del,
+int vecsize, float sr){
+double costh, coef;
+costh = 2. - cos(2* M_PI * freq/sr);
+coef = sqrt(costh*costh - 1.) - costh;
+for(int i =0; i < vecsize; i++){
+sig[i] = (float) (sig[i]*(1 + coef) - *del*coef);
+*del = sig[i];
+}
+return *sig;
+}
+
 
 size_t CFxSimpleLowPass::execute (float **input, float **output, size_t frames)
 {
-  float x = 2 * M_PI * CUTOFF / samplerate;
-  
-  for (size_t ch = 0; ch < channels; ch++)
+ 
+for (size_t ch = 0; ch < channels; ch++)
       {
+        //lowpass (input[ch], 20, del, frames, samplerate);
+         
         for (size_t i = 0; i < frames; i++)
-            {
-             float p = (2 - cos (x)) - sqrt (pow(2-cos(x),2) - 1.f);
-             output[ch][i] = (1-p)*input[ch][i];
-             output[ch][i] += p*output[ch][i];
-            }
-        
+          {
+           input[ch][i] = filter.process (input[ch][i], ch);
+
+         
+          }
       }
 
   return frames;
+
 }
 
 

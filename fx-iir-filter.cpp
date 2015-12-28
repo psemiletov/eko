@@ -1,0 +1,75 @@
+#include "fx-iir-filter.h"
+
+
+float CIIRFilter::process (float sample, size_t channel)
+{
+  if (channel == 0)
+     {
+      bufl0 += cutoff * (sample - bufl0 + feedback_amount * (bufl0 - bufl1)); //add reso
+      bufl1 += cutoff * (bufl0 - bufl1);
+   
+      bufl2 += cutoff * (bufl1 - bufl2);
+      bufl3 += cutoff * (bufl2 - bufl3);
+   
+      switch (mode) 
+             {
+              case IIR_FILTER_MODE_LOWPASS:
+                    return bufl1;
+                    
+              case IIR_FILTER_MODE_HIGHPASS:
+                   return sample - bufl0;
+                   
+              case IIR_FILTER_MODE_BANDPASS:
+                   return bufl0 - bufl3;
+                   
+               default:
+                       return 0.0f;
+             }
+     }  
+  else
+      {
+       bufr0 += cutoff * (sample - bufr0 + feedback_amount * (bufr0 - bufr1)); //add reso
+       bufr1 += cutoff * (bufr0 - bufr1);
+   
+       bufr2 += cutoff * (bufr1 - bufr2);
+       bufr3 += cutoff * (bufr2 - bufr3);
+   
+       switch (mode) 
+          {
+           case IIR_FILTER_MODE_LOWPASS:
+                return bufr1;
+                
+           case IIR_FILTER_MODE_HIGHPASS:
+                return sample - bufr0;
+                
+           case IIR_FILTER_MODE_BANDPASS:
+                return bufr0 - bufr3;
+                
+           default:
+             return 0.0f;
+         }
+         
+       }  
+   
+   return 0.0f;      
+}
+
+
+CIIRFilter::CIIRFilter()
+{
+  cutoff = 0.99f;
+  resonance = 0.0f;
+  mode = IIR_FILTER_MODE_LOWPASS;
+  
+  bufl0 = 0.0f;
+  bufl1 = 0.0f;
+  bufl2 = 0.0f;
+  bufl3 = 0.0f;
+  bufr0 = 0.0f;
+  bufr1 = 0.0f;
+  bufr2 = 0.0f;
+  bufr3 = 0.0f;
+  
+  calc_feedback_amount();
+}
+

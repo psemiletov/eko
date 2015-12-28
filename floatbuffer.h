@@ -1,8 +1,7 @@
 #ifndef FLOATBUFFER_H
 #define FLOATBUFFER_H
 
-
-//VER 3
+//VER 5
 
 using namespace std;
 
@@ -53,7 +52,7 @@ public:
   void copy_channel_to_pos (CFloatBuffer *other, size_t ch_from, size_t ch_to,
                             size_t offset_from, size_t size, size_t offset_to); //frames
   
-  void copy_to_pos_with_rate (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to, size_t rate); //frames
+  void copy_to_pos_with_rate (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to, float rate); //frames
   
   
   void overwrite_at (CFloatBuffer *other, size_t pos_frames);

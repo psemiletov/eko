@@ -12,12 +12,15 @@
 
 #include "floatbuffer.h"
 #include "3pass_eq.h"
+#include "fx-iir-filter.h"
+
 
 enum FxState {
               FXS_STOP,
               FXS_RUN,
               FXS_PAUSE
               };
+
 
 
 class CRingbuffer
@@ -149,7 +152,6 @@ public slots:
 };
 
 
-
 class CFxPitchShift: public AFx
 {
   Q_OBJECT
@@ -185,6 +187,8 @@ public:
 
   float gain;
 
+  CIIRFilter filter;
+
   CFxSimpleLowPass (size_t srate);
  // ~CFxSimpleAmp();
 
@@ -215,39 +219,5 @@ public:
 };
 
 
-
-//panning functions
-
-//linear panner, law: -6 dB
-inline void pan_linear6 (float &l, float& r, float p)
-{
-  l = 1 - p;
-  r = p;
-}
-
-
-//linear panner, law: 0 dB
-inline void pan_linear0 (float &l, float& r, float p)
-{
-  l = 0.5 + (1 - p);
-  r = 0.5 + p;
-}
-
-
-//square root panner, law: -3 dB
-inline void pan_sqrt (float &l, float& r, float p)
-{
-  l = sqrt (1 - p); 
-  r = sqrt (p);
-}
-
-
-//sin/cos panner, law: -3 dB
-inline void pan_sincos (float &l, float& r, float p)
-{
-  float pan = 0.5 * M_PI * p;
-  l = cos (pan);
-  r = sin (pan);
-}
 
 #endif // FX_H
