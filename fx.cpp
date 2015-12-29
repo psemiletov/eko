@@ -126,7 +126,7 @@ CFxList::CFxList()
   list.append (new CFxSimpleEQ (1));
   list.append (new CFxSimpleOverdrive (1));
   list.append (new CFxPitchShift (1));
-  list.append (new CFxSimpleLowPass (1));
+  list.append (new CFxSimpleFilter (1));
 
 }
 
@@ -541,10 +541,10 @@ void AFx::reset_params (size_t srate, size_t chann)
 }
 
 
-void CFxPitchShift::reset_params (size_t srate, size_t channels)
+void CFxPitchShift::reset_params (size_t srate, size_t ch)
 {
   qDebug() << "CFxPitchShift::reset_params";
-  AFx::reset_params (srate, channels);
+  AFx::reset_params (srate, ch);
  
   if (fb)
      delete fb;
@@ -553,22 +553,87 @@ void CFxPitchShift::reset_params (size_t srate, size_t channels)
 }
 
 
-CFxSimpleLowPass::CFxSimpleLowPass (size_t srate): AFx (srate)
+void CFxSimpleFilter::cmb_filter_mode_currentIndexChanged (int index)
 {
-  name = "CFxSimpleLowPass";
+  filter.mode = index;
+}
+
+
+void CFxSimpleFilter::dsb_cutoff_valueChanged (double d)
+{
+  filter.set_cutoff ((float) d / samplerate);
+}
+
+void CFxSimpleFilter::dsb_reso_valueChanged (double d)
+{
+  filter.set_resonance (d);
+}
+
+
+CFxSimpleFilter::CFxSimpleFilter (size_t srate): AFx (srate)
+{
+  name = "CFxSimpleFilter";
   wnd_ui = new QWidget();
 
-  wnd_ui->setWindowTitle (tr ("Simple Overdrive"));
+  wnd_ui->setWindowTitle (tr ("Simple Filter"));
 
- // mFilter.setFilterMode (1);
- 
-  //float cut_off_freq = 1 / (2 * M_PI * 11500);
   
-  float cut_off_freq = (float) 11500 / samplerate;
+//  float cut_off_freq = (float) 11500 / samplerate;
   
-  qDebug() << "cut_off_freq: " << cut_off_freq; 
+//  qDebug() << "cut_off_freq: " << cut_off_freq; 
  
-  filter.set_cutoff (cut_off_freq);
+//  filter.set_cutoff (cut_off_freq);
+  
+  
+  QVBoxLayout *v_box = new QVBoxLayout;
+  wnd_ui->setLayout (v_box);
+
+  cmb_filter_mode = new QComboBox;
+  cmb_filter_mode->addItem (tr ("Lowpass"));
+  cmb_filter_mode->addItem (tr ("Highpass"));
+  cmb_filter_mode->addItem (tr ("Bandpass"));
+
+  connect (cmb_filter_mode, SIGNAL(currentIndexChanged (int)),
+           this, SLOT(cmb_filter_mode_currentIndexChanged (int)));
+
+  v_box->addWidget (cmb_filter_mode);
+  
+  
+  QHBoxLayout *h_box_cutoff = new QHBoxLayout;
+  
+  QLabel *l_cutoff_freq = new QLabel (tr ("Cut-off freq (hZ)"));
+  dsb_cutoff_freq = new QDoubleSpinBox;
+  h_box_cutoff->addWidget (l_cutoff_freq);
+  h_box_cutoff->addWidget (dsb_cutoff_freq);
+
+  dsb_cutoff_freq->setDecimals (2); 
+  dsb_cutoff_freq->setRange (1, 48000);
+  dsb_cutoff_freq->setSingleStep (0.01);
+ 
+    
+  connect (dsb_cutoff_freq, SIGNAL(valueChanged(double)), this, SLOT(dsb_cutoff_valueChanged(double)));
+  dsb_cutoff_freq->setValue (22100);
+   
+  v_box->addLayout (h_box_cutoff);
+
+  QHBoxLayout *h_box_reso = new QHBoxLayout;
+  
+  QLabel *l_dsb_reso = new QLabel (tr ("Resonance"));
+  dsb_reso = new QDoubleSpinBox;
+  h_box_reso->addWidget (l_dsb_reso);
+  h_box_reso->addWidget (dsb_reso);
+  
+  connect (dsb_reso, SIGNAL(valueChanged(double)), this, SLOT(dsb_reso_valueChanged(double)));
+  dsb_reso->setDecimals (3); 
+  dsb_reso->setRange (0.001f, 1.0f);
+  dsb_reso->setSingleStep (0.001f);
+  
+  dsb_reso->setValue (0.01f);
+   
+  v_box->addLayout (h_box_reso);
+
+  
+  
   //mFilter.setResonance (0.50);
 
  /* gain = 1.0f;
@@ -589,9 +654,9 @@ CFxSimpleLowPass::CFxSimpleLowPass (size_t srate): AFx (srate)
 }
 
 
-AFx* CFxSimpleLowPass::self_create (size_t srate)
+AFx* CFxSimpleFilter::self_create (size_t srate)
 {
-  return new CFxSimpleLowPass (srate);
+  return new CFxSimpleFilter (srate);
 }
 
 
@@ -614,7 +679,7 @@ float simplp (float *x, float *y,
 }
 
 /*
-size_t CFxSimpleLowPass::execute (float **input, float **output, size_t frames)
+size_t CFxSimpleFilter::execute (float **input, float **output, size_t frames)
 {
   float xm1 = 0.0f;
   float M = frames;
@@ -649,7 +714,7 @@ return *sig;
 }
 
 
-size_t CFxSimpleLowPass::execute (float **input, float **output, size_t frames)
+size_t CFxSimpleFilter::execute (float **input, float **output, size_t frames)
 {
  
 for (size_t ch = 0; ch < channels; ch++)
@@ -724,4 +789,12 @@ Hipass:
       b2 = ( 1.0 - r * c + c * c) * a1;
 
 */
+
+
+void CFxSimpleFilter::reset_params (size_t srate, size_t ch)
+{
+  AFx::reset_params (srate, ch);
+  filter.reset();
+}
+
 

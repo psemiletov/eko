@@ -7,12 +7,14 @@
 #include <QStandardItemModel>
 #include <QModelIndex>
 #include <QTreeView>
+#include <QDoubleSpinBox>
+#include <QComboBox>
 
 #include <cmath>
 
 #include "floatbuffer.h"
 #include "3pass_eq.h"
-#include "fx-iir-filter.h"
+#include "fx-filter.h"
 
 
 enum FxState {
@@ -70,7 +72,7 @@ public:
 
   virtual size_t execute (float **input, float **output, size_t frames) = 0;
   virtual void set_state (FxState s);
-  virtual void reset_params (size_t srate, size_t channels);
+  virtual void reset_params (size_t srate, size_t ch);
 
   void show_ui();
 
@@ -170,7 +172,7 @@ public:
   AFx* self_create (size_t srate);
 
   size_t execute (float **input, float **output, size_t frames);
-  void reset_params (size_t srate, size_t channels);
+  void reset_params (size_t srate, size_t ch);
 
 
 public slots:
@@ -179,27 +181,34 @@ public slots:
 };
 
 
-class CFxSimpleLowPass: public AFx
+class CFxSimpleFilter: public AFx
 {
   Q_OBJECT
 
 public:
 
-  float gain;
+  QDoubleSpinBox *dsb_cutoff_freq;
+  QDoubleSpinBox *dsb_reso;
+  QComboBox *cmb_filter_mode;
+
 
   CIIRFilter filter;
 
-  CFxSimpleLowPass (size_t srate);
+  CFxSimpleFilter (size_t srate);
  // ~CFxSimpleAmp();
 
-  QLabel *label;
 
   AFx* self_create (size_t srate);
 
   size_t execute (float **input, float **output, size_t frames);
+  void reset_params (size_t srate, size_t ch);
 
 public slots:
 
+ void cmb_filter_mode_currentIndexChanged (int index);
+ void dsb_cutoff_valueChanged (double d);
+ void dsb_reso_valueChanged (double d);
+ 
 //  void dial_gain_valueChanged (int value);
 };
 

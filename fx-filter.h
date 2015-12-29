@@ -10,10 +10,10 @@ by Paul Kellett http://www.musicdsp.org/showone.php?id=29
 
 #include <cstring>
 
-enum IIR_filter_mode {
-        IIR_FILTER_MODE_LOWPASS = 0,
-        IIR_FILTER_MODE_HIGHPASS,
-        IIR_FILTER_MODE_BANDPASS
+enum filter_mode {
+        FILTER_MODE_LOWPASS = 0,
+        FILTER_MODE_HIGHPASS,
+        FILTER_MODE_BANDPASS
       };
 
 class CIIRFilter 
@@ -36,9 +36,10 @@ public:
     
    CIIRFilter();
     
+   void reset(); 
    float process (float sample, size_t channel);
-   inline void set_cutoff (float v) {  cutoff = v;  calc_feedback_amount(); };
-   inline void set_resonance (float v) {  resonance = v;  calc_feedback_amount(); };
+   inline void set_cutoff (float v) {cutoff = v;  calc_feedback_amount();};
+   inline void set_resonance (float v) {resonance = v;  calc_feedback_amount();};
    inline void calc_feedback_amount() {feedback_amount = resonance + resonance / (1.0 - cutoff);}; 
 
 };

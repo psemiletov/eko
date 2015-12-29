@@ -35,9 +35,8 @@ SOURCES += eko.cpp \
     gui_utils.cpp \
     libretta_interpolator.cpp \ 
     floatbuffer.cpp \
-#    sound_buffer.cpp \
     envelope.cpp \
-    fx-iir-filter.cpp \
+    fx-filter.cpp \
     fx-panners.cpp
 #    tinyplayer.cpp
 
@@ -53,9 +52,8 @@ HEADERS += eko.h \
     gui_utils.h \
     libretta_interpolator.h \
     floatbuffer.h \
-#    sound_buffer.h \
     envelope.h \
-    fx-iir-filter.h \
+    fx-filter.h \
     fx-panners.h
 #    tinyplayer.h
 

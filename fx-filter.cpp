@@ -1,4 +1,4 @@
-#include "fx-iir-filter.h"
+#include "fx-filter.h"
 
 
 float CIIRFilter::process (float sample, size_t channel)
@@ -13,13 +13,13 @@ float CIIRFilter::process (float sample, size_t channel)
    
       switch (mode) 
              {
-              case IIR_FILTER_MODE_LOWPASS:
+              case FILTER_MODE_LOWPASS:
                     return bufl1;
                     
-              case IIR_FILTER_MODE_HIGHPASS:
+              case FILTER_MODE_HIGHPASS:
                    return sample - bufl0;
                    
-              case IIR_FILTER_MODE_BANDPASS:
+              case FILTER_MODE_BANDPASS:
                    return bufl0 - bufl3;
                    
                default:
@@ -36,13 +36,13 @@ float CIIRFilter::process (float sample, size_t channel)
    
        switch (mode) 
           {
-           case IIR_FILTER_MODE_LOWPASS:
+           case FILTER_MODE_LOWPASS:
                 return bufr1;
                 
-           case IIR_FILTER_MODE_HIGHPASS:
+           case FILTER_MODE_HIGHPASS:
                 return sample - bufr0;
                 
-           case IIR_FILTER_MODE_BANDPASS:
+           case FILTER_MODE_BANDPASS:
                 return bufr0 - bufr3;
                 
            default:
@@ -59,7 +59,7 @@ CIIRFilter::CIIRFilter()
 {
   cutoff = 0.99f;
   resonance = 0.0f;
-  mode = IIR_FILTER_MODE_LOWPASS;
+  mode = FILTER_MODE_LOWPASS;
   
   bufl0 = 0.0f;
   bufl1 = 0.0f;
@@ -73,3 +73,16 @@ CIIRFilter::CIIRFilter()
   calc_feedback_amount();
 }
 
+void CIIRFilter::reset()
+{
+ bufl0 = 0.0f;
+  bufl1 = 0.0f;
+  bufl2 = 0.0f;
+  bufl3 = 0.0f;
+  bufr0 = 0.0f;
+  bufr1 = 0.0f;
+  bufr2 = 0.0f;
+  bufr3 = 0.0f;
+  
+  calc_feedback_amount();
+} 
