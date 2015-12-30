@@ -34,5 +34,12 @@ inline void pan_sincos (float &l, float& r, float p)
   r = sin (pan);
 }
 
+inline void pan_sincos_v2 (float &l, float& r, float p)
+{
+  float pan = p * M_PI / 2;
+  l = l * sin (pan);
+  r = r * cos (pan);
+}
+
 
 #endif // FXPANNERS_H

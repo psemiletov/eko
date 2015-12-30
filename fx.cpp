@@ -20,7 +20,7 @@
 
 #include "fx.h"
 #include "utils.h"
-#include "3pass_eq.h"
+//#include "3pass_eq.h"
 
 
 void CRingbuffer::put (float f)
@@ -123,7 +123,7 @@ void AFx::show_ui()
 CFxList::CFxList()
 {
   list.append (new CFxSimpleAmp (1));
-  list.append (new CFxSimpleEQ (1));
+  //list.append (new CFxSimpleEQ (1));
   list.append (new CFxSimpleOverdrive (1));
   list.append (new CFxPitchShift (1));
   list.append (new CFxSimpleFilter (1));
@@ -226,7 +226,7 @@ size_t CFxSimpleAmp::execute (float **input, float **output, size_t frames)
   return frames;
 }
 
-
+/*
 size_t CFxSimpleEQ::execute (float **input, float **output, size_t frames)
 {
   
@@ -369,7 +369,7 @@ void CFxSimpleEQ::dial_hi_valueChanged (int value)
    eq_state_ch00.hg = f;
    eq_state_ch01.hg = f;
 }
-
+*/
 
 CFxSimpleOverdrive::CFxSimpleOverdrive (size_t srate): AFx (srate)
 {

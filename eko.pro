@@ -31,7 +31,6 @@ SOURCES += eko.cpp \
     logmemo.cpp \
     tio.cpp \
     fx.cpp \
-    3pass_eq.cpp \
     gui_utils.cpp \
     libretta_interpolator.cpp \ 
     floatbuffer.cpp \
@@ -48,7 +47,6 @@ HEADERS += eko.h \
     logmemo.h \
     tio.h \
     fx.h \
-    3pass_eq.h \
     gui_utils.h \
     libretta_interpolator.h \
     floatbuffer.h \

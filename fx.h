@@ -13,7 +13,7 @@
 #include <cmath>
 
 #include "floatbuffer.h"
-#include "3pass_eq.h"
+//#include "3pass_eq.h"
 #include "fx-filter.h"
 
 
@@ -81,7 +81,7 @@ public:
   virtual AFx* self_create (size_t srate) = 0;
 };
 
-
+/*
 class CFxSimpleEQ: public AFx
 {
  Q_OBJECT
@@ -108,7 +108,7 @@ public slots:
   //QString save_to_string()  {};
 
 };
-
+*/
 
 class CFxSimpleAmp: public AFx
 {
