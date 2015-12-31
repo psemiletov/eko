@@ -345,6 +345,10 @@ QStringList get_sound_devices()
       {   
        const PaDeviceInfo *di = Pa_GetDeviceInfo (i);
        
+      /* qDebug() << "str_from_locale (di->name): " << str_from_locale (di->name);
+       qDebug() << "in: " << di->maxInputChannels;
+       qDebug() << "out: " << di->maxOutputChannels;
+       */
        #if defined(Q_OS_WIN) || defined(Q_OS_OS2)
        
        l.append (str_from_locale (di->name));
@@ -3489,6 +3493,7 @@ void CEKO::slot_transport_play()
     
           
       wnd_fxrack->fx_rack->set_state_all (FXS_RUN);
+      wnd_fxrack->fx_rack->reset_all_fx (d->wave_edit->waveform->fb->samplerate, d->wave_edit->waveform->fb->channels);
       d->wave_edit->waveform->timer.start();
       wnd_fxrack->level_meter->init_state = false;
       wnd_fxrack->tm_level_meter.start();

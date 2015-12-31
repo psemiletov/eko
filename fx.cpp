@@ -585,8 +585,13 @@ CFxSimpleFilter::CFxSimpleFilter (size_t srate): AFx (srate)
 //  filter.set_cutoff (cut_off_freq);
   
   
+  
   QVBoxLayout *v_box = new QVBoxLayout;
   wnd_ui->setLayout (v_box);
+
+  QHBoxLayout *h_box_filter_mode = new QHBoxLayout;
+  
+  QLabel *l_filter_mode = new QLabel (tr ("Mode:"));
 
   cmb_filter_mode = new QComboBox;
   cmb_filter_mode->addItem (tr ("Lowpass"));
@@ -596,7 +601,11 @@ CFxSimpleFilter::CFxSimpleFilter (size_t srate): AFx (srate)
   connect (cmb_filter_mode, SIGNAL(currentIndexChanged (int)),
            this, SLOT(cmb_filter_mode_currentIndexChanged (int)));
 
-  v_box->addWidget (cmb_filter_mode);
+
+  h_box_filter_mode->addWidget (l_filter_mode);
+  h_box_filter_mode->addWidget (cmb_filter_mode);
+  
+  v_box->addLayout (h_box_filter_mode);
   
   
   QHBoxLayout *h_box_cutoff = new QHBoxLayout;
@@ -632,25 +641,8 @@ CFxSimpleFilter::CFxSimpleFilter (size_t srate): AFx (srate)
    
   v_box->addLayout (h_box_reso);
 
-  
-  
-  //mFilter.setResonance (0.50);
-
- /* gain = 1.0f;
-
-  QVBoxLayout *v_box = new QVBoxLayout;
-  wnd_ui->setLayout (v_box);
-
-  QLabel *l = new QLabel (tr ("Gain"));
-  QDial *dial_gain = new QDial;
-  dial_gain->setWrapping (false);
-  connect (dial_gain, SIGNAL(valueChanged(int)), this, SLOT(dial_gain_valueChanged(int)));
-  dial_gain->setRange (1, 600);
-
-  dial_gain->setValue (1);
-
-  v_box->addWidget (l);
-  v_box->addWidget (dial_gain);*/
+   
+ 
 }
 
 

@@ -1,5 +1,7 @@
 to do or to fix:
 
+написать об Invalid number of channels в документации и при запуске Эко
+
 проверить запись с микрофона на встроенной звуковухе, сработает ли стерео
 
 
@@ -27,8 +29,7 @@ to do or to fix:
 * починить шкалу dB слева от волновой формы (два нуля, два столбика)
 * caching subsystem
 * zoom to selection
-* перенести код открытия/сохранения из документа в CSoundBuffer
-* EQ is buggy
+
 * fix search via FIF
 * fix profiles engine //?
 * level meter < -26 dB

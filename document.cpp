@@ -1957,21 +1957,9 @@ CFxRackWindow::CFxRackWindow()
   v_vol->addWidget (l_vol);
   v_vol->addWidget (dial_volume);
   
-/*
-  QVBoxLayout *v_pan = new QVBoxLayout;
-  QLabel *l_pan = new QLabel (tr ("Pan"));
-  QDial *dial_pan = new QDial;
-  dial_pan->setWrapping (false);
-  connect (dial_pan, SIGNAL(valueChanged(int)), this, SLOT(dial_pan_valueChanged(int)));
-  dial_pan->setRange (-100, 100);
 
-  
-  v_pan->addWidget (l_pan);
-  v_pan->addWidget (dial_pan);
-  */
   QHBoxLayout *h_volpan = new QHBoxLayout;
   h_volpan->addLayout (v_vol);
-  //h_volpan->addLayout (v_pan);
     
   v_box->addLayout (h_volpan);
 
@@ -2137,21 +2125,22 @@ void CFxRack::ins_entry (AFx *f)
                   Qt::ItemIsDropEnabled);
 
 
+  AFx *tfx = f->self_create (44100);
+
   int i = get_sel_index();
   if (i == -1)
      {
       model->appendRow (item);
-//      effects.append (f->self_create (d->wave_edit->waveform->sound_buffer->samplerate, d->wave_edit->waveform->sound_buffer->channels));
-      effects.append (f->self_create (44100)); //def vals
+      effects.append (tfx); //def vals
 
      }
   else
       {
        model->insertRow (i, item);
-//       effects.insert (i, f->self_create (d->wave_edit->waveform->sound_buffer->samplerate, d->wave_edit->waveform->sound_buffer->channels));
-       effects.insert (i, f->self_create (44100));
-
+       effects.insert (i, tfx);
       }
+      
+  tfx->show_ui();    
 }
 
 //FIXME!!!
@@ -2413,6 +2402,15 @@ void CFxRack::set_state_all (FxState state)
   foreach (AFx *f, effects)
           {
            f->set_state (state);
+          }
+}
+
+
+void CFxRack::reset_all_fx (size_t srate, size_t ch)
+{
+  foreach (AFx *f, effects)
+          {
+           f->reset_params (srate, ch);
           }
 }
 

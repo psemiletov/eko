@@ -642,6 +642,7 @@ public:
 
   void bypass_all (bool mode = true);
   void set_state_all (FxState state);
+  void reset_all_fx (size_t srate, size_t ch);
 
   QString get_sel_fname();
   void print_fx_list();
