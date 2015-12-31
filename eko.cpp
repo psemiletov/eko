@@ -392,7 +392,6 @@ void CEKO::init_styles()
 }
 
 
-
 void pa_init (CEKO *pe)
 {
   PaError err = Pa_Initialize();

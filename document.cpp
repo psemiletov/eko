@@ -168,9 +168,16 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
       return; 
      }
 
-if (! waveform && ! waveform->fb)
+  if (! waveform && ! waveform->fb)
      {
-      qDebug() << "! waveform";
+      qDebug() << "! waveform && ! waveform->fb";
+      event->accept();
+      return;
+     }
+     
+  if (waveform->frames_per_section == 0)   
+     {
+      qDebug() << "waveform->frames_per_section == 0";
       event->accept();
       return;
      }
@@ -183,7 +190,6 @@ if (! waveform && ! waveform->fb)
 
   painter.setBrush (background_color);
   painter.drawRect (0, 0, width(), height());
-
   
   size_t sections = waveform->section_to - waveform->section_from;
   float sections_per_second = (float) waveform->fb->samplerate / waveform->frames_per_section;
@@ -286,19 +292,32 @@ void CWaveform::paintEvent (QPaintEvent *event)
 
 void CWaveform::timer_timeout()
 {
-  if (play_looped) 
-  if (fb->offset > sel_end_frames) 
-     {
-      /*qDebug() << "buffer_offset: " << fb->offset;
-      qDebug() << "sel_end_samples: " << sel_end_frames;
-      qDebug() << "diff: " << fb->offset - sel_end_frames;*/
-     }
+  /*if (play_looped) 
+     if (fb->offset > sel_end_frames) 
+       {
+        qDebug() << "buffer_offset: " << fb->offset;
+        qDebug() << "sel_end_samples: " << sel_end_frames;
+        qDebug() << "diff: " << fb->offset - sel_end_frames;
+       }*/
    
-  if (get_cursor_position_sections() > section_to) 
-     {
-      scrollbar->setValue (scrollbar->value() + width());
-     }
-  else 
+  int cursor_pos_sections = get_cursor_position_sections();
+   
+ /* qDebug() << "cursor_pos_sections: " << cursor_pos_sections; 
+  qDebug() << "scrollbar->value(): " << scrollbar->value(); 
+  qDebug() << "section_from: " << section_from; 
+  qDebug() << "section_to: " << section_to; 
+   */
+  //if (cursor_pos_sections > section_to) //скачем на следующий экран
+    // scrollbar->setValue (scrollbar->value() + width());
+  
+  if (cursor_pos_sections >= section_to) //скачем на следующий экран
+     scrollbar->setValue (scrollbar->value() + width());
+  
+  //не пашет
+  if (cursor_pos_sections >= get_selection_end_sections())
+    scrollbar->setValue (get_selection_start_sections());
+    
+  //else //иначе всё в ажуре, в пределах видимости
       update();
       
   set_cursorpos_text();
