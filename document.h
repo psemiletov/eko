@@ -319,7 +319,6 @@ public:
 
   void magic_update();
   void fix_selection_bounds();
-  void fix_selection_bounds_release();
   
   void deselect();
   void select_all();

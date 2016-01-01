@@ -84,6 +84,18 @@ int transport_state = 0;
 
 
 
+inline bool x_nearby (int x, int pos, int width)
+{
+  int a = pos - width;
+  int b = pos + width; 
+
+  if (x >= a && x <= b)
+     return true;
+     
+  return false;
+}
+
+
 CUndoElement::CUndoElement()
 {
   fb = 0;
@@ -302,23 +314,13 @@ void CWaveform::timer_timeout()
    
   int cursor_pos_sections = get_cursor_position_sections();
    
- /* qDebug() << "cursor_pos_sections: " << cursor_pos_sections; 
-  qDebug() << "scrollbar->value(): " << scrollbar->value(); 
-  qDebug() << "section_from: " << section_from; 
-  qDebug() << "section_to: " << section_to; 
-   */
-  //if (cursor_pos_sections > section_to) //скачем на следующий экран
-    // scrollbar->setValue (scrollbar->value() + width());
-  
   if (cursor_pos_sections >= section_to) //скачем на следующий экран
      scrollbar->setValue (scrollbar->value() + width());
   
-  //не пашет
   if (cursor_pos_sections >= get_selection_end_sections())
-    scrollbar->setValue (get_selection_start_sections());
+     scrollbar->setValue (get_selection_start_sections()); //скачем к началу выделения
     
-  //else //иначе всё в ажуре, в пределах видимости
-      update();
+  update();
       
   set_cursorpos_text();
 }  
@@ -356,7 +358,7 @@ CWaveform::CWaveform (QWidget *parent): QWidget (parent)
   set_selend_value (0);
 
   connect(&timer, SIGNAL(timeout()), this, SLOT(timer_timeout()));
-  timer.setInterval (50); //сделать зависимым от текущего масштаба! was 40
+  timer.setInterval (50); //сделать зависимым от текущего масштаба?
 }
 
 
@@ -378,18 +380,6 @@ void CWaveform::flush_undos()
 {
   foreach (CUndoElement *el, undos)
            delete el;
-}
-
-
-inline bool x_nearby (int x, int pos, int width)
-{
-  int a = pos - width;
-  int b = pos + width; 
-
-  if (x >= a && x <= b)
-     return true;
-     
-  return false;
 }
 
 
@@ -424,27 +414,22 @@ void CWaveform::recalc_view()
   qDebug() << "cursor_frames = " << cursor_frames;
 */
   sections_total = width() * scale_factor;
+  
+  if (sections_total == 0)
+     return;
 
   frames_per_section = ceil (fb->length_frames / sections_total);
   
-  
-
-  //qDebug() << "sel_start_frames = " << sel_start_frames;
-  //qDebug() << "sel_end_frames = " << sel_end_frames;
- 
-
   if (frames_per_section < FRAMES_PER_SECT_MAX)
      frames_per_section = FRAMES_PER_SECT_MAX;
      
-      qDebug() << "frames_per_section == " << frames_per_section;
-
+  //qDebug() << "frames_per_section == " << frames_per_section;
   //qDebug() << "cursor_frames = " << cursor_frames;
 
   scrollbar->setMinimum (0);
   scrollbar->setMaximum (sections_total - width());
 
   // << "CWaveform::recalc_view() - end";
-
 }
 
 
@@ -455,8 +440,8 @@ void CWaveform::scale (int delta)
   if (! fb)
      return;
 
- // if (frames_per_section == 0)
-   //  return;
+  if (frames_per_section == 0)
+     return;
 
   int old_section_from = section_from;
   int old_frame_from = old_section_from * frames_per_section;
@@ -469,7 +454,7 @@ void CWaveform::scale (int delta)
   if (scale_factor < 1.0f)
      scale_factor = 1.0f;
 
-  if ((width() * scale_factor) == fb->length_frames - 1) //can be scale factor so large?
+  if ((width() * scale_factor) >= fb->length_frames - 1) //can be scale factor so large?
       return;
 
   recalc_view();
@@ -515,6 +500,8 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
   if (event->key() == Qt::Key_Delete)
      {
       wave_edit->waveform->delete_selected();
+      set_statusbar_text();
+      
       event->accept();
       return;
      }
@@ -532,6 +519,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
   if (event->key() == Qt::Key_Return)
      {
       wave_edit->doc->holder->transport_control->call_stop();
+      
       event->accept();   
       return;
      }
@@ -540,7 +528,6 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
   if (event->key() == Qt::Key_Home)
      {
       set_cursor_value (0);
-
       scrollbar->setValue (0);         
              
       if (event->modifiers() & Qt::ShiftModifier)  
@@ -550,9 +537,9 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
          }
      
       update();
-
       set_cursorpos_text();
-     
+      set_statusbar_text();
+      
       event->accept();   
       return;
      }
@@ -561,7 +548,6 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
   if (event->key() == Qt::Key_End)
      {
       set_cursor_value (sections_total - 1);
-  
       scrollbar->setValue (sections_total - width());         
          
       if (event->modifiers() & Qt::ShiftModifier)  
@@ -571,9 +557,9 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
          }
      
        update();
-
        set_cursorpos_text();
-     
+       set_statusbar_text();
+           
        event->accept();   
        return;
       }
@@ -589,7 +575,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
           if (scrollbar->value() != scrollbar->minimum())
              scrollbar->setValue (scrollbar->value() - 1);         
              
-          event->accept();   
+          event->accept();  
           return;
          }  
 
@@ -619,7 +605,8 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
       update();
 
       set_cursorpos_text();
-     
+      set_statusbar_text();
+      
       event->accept();   
       return;
      }
@@ -666,9 +653,9 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
           }
      
        update();
-
        set_cursorpos_text();
-     
+       set_statusbar_text();
+      
        event->accept();   
        return;
       }
@@ -693,8 +680,10 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
   if (event->key() == Qt::Key_Delete)
      {
       delete_selected();
-      event->accept();
       set_cursorpos_text();
+      set_statusbar_text();
+      
+      event->accept();
       return;
      }
  
@@ -708,6 +697,10 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
        update();
        
        event->accept();   
+       
+       set_cursorpos_text();
+       set_statusbar_text();
+
        return;
       }
    
@@ -720,7 +713,10 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
 
        selected = true;
        update();
-             
+ 
+       set_cursorpos_text();
+       set_statusbar_text();
+            
        event->accept();   
        return;
       }
@@ -744,7 +740,7 @@ size_t CWaveform::frames_end()
      return 0;
 
   if (! selected)
-     return fb->length_frames/* - 1*/;
+     return fb->length_frames;
 
   return sel_end_frames;
 }
@@ -833,16 +829,8 @@ void CWaveform::fix_selection_bounds()
       sel_end_frames = t;
       selection_selected = 1;
      }
-  
-  
-  //size_t buffer_size_samples = buffer_size_frames * sound_buffer->channels;
-
+ 
  //выравнивание по размеру буфера, той или иной границы выделения
-  
-    //qDebug() << "sel_start_samples " << sel_start_samples;
-    //qDebug() << "sel_end_samples " << sel_end_samples;
-    //qDebug() << "total " << sound_buffer->samples_total;
-  
     
   if (selection_selected == 2)  
      {
@@ -859,12 +847,6 @@ void CWaveform::fix_selection_bounds()
         
           sel_start_frames = i + buffer_size_frames;
 
-            
-           //  qDebug() << "fixed:";   
-
-          //qDebug() << "sel_start_samples: " << sel_start_samples;
-          //qDebug() << "sel_end_samples: " << sel_end_samples;
-            
           return;
          }
       
@@ -881,7 +863,6 @@ void CWaveform::fix_selection_bounds()
   else    
   if (selection_selected == 1)
      {
-        
       if (sel_start_frames <= buffer_size_frames) //у начала
          {
           sel_start_frames = 0;
@@ -909,43 +890,8 @@ void CWaveform::fix_selection_bounds()
             }
         
       sel_start_frames = i + buffer_size_frames;
-   
-      //qDebug() << sel_start_samples;
      }
 }
-
-
-void CWaveform::fix_selection_bounds_release()
-{
-  //round to
-  
-//  size_t buffer_size_samples = buffer_size_frames * sound_buffer->channels;
-    
-  if (selection_selected == 2)  
-     {
-      size_t i = sel_start_frames;
-  
-      while (i <= sel_end_frames)
-            {
-             i += buffer_size_frames;
-            }
-        
-      sel_end_frames = i - buffer_size_frames;
-     }
-  else    
-  if (selection_selected == 1)  
-     {
-      size_t i = sel_end_frames;
-  
-      while (i >= sel_start_frames)
-            {
-             i -= buffer_size_frames;
-            }
-        
-      sel_start_frames = i + buffer_size_frames;
-     }
-}
-
 
 
 void CWaveform::select_all()
@@ -960,9 +906,8 @@ void CWaveform::select_all()
 
 void CWaveform::undo_take_shot (int type, int param)
 {
-  qDebug() << "CWaveform::undo_take_shot - 1";
-
   CUndoElement *el = new CUndoElement;
+
   if (undos.count() == max_undos)
     {
      delete undos.at (undos.count() - 1);  
@@ -978,24 +923,6 @@ void CWaveform::undo_take_shot (int type, int param)
   el->cursor_frames = fb->offset;
   el->frames_per_section = frames_per_section;
 
-  /*
-  if (type == UNDO_WHOLE)
-     el->sound_buffer = sound_buffer->copy_to (0, sound_buffer->float_buffer->length_frames - 1);
-
-  if (type == UNDO_DELETE)
-     el->sound_buffer = sound_buffer->copy_to (frames_start(), frames_end());
-
-  if (type == UNDO_MODIFY)
-     el->sound_buffer = sound_buffer->copy_to (frames_start(), frames_end());
-
-  if (type == UNDO_PASTE)
-     {
-      el->start_frames = sound_buffer->float_buffer->offset;
-      el->end_frames = el->start_frames + sound_clipboard->float_buffer->length_frames - 1;
-     }
-*/
-
-
   if (type == UNDO_WHOLE)
      el->fb = fb->copy (0, fb->length_frames);
 
@@ -1005,14 +932,12 @@ void CWaveform::undo_take_shot (int type, int param)
   if (type == UNDO_MODIFY)
      el->fb = fb->copy (frames_start(), frames_end() - frames_start());
 
-//странно
   if (type == UNDO_PASTE)
      {
       el->start_frames = fb->offset;
       el->end_frames = el->start_frames + sound_clipboard->length_frames/* - 1*/;
      } 
 
-//странно
   if (type == UNDO_INSERT)
      {
       el->start_frames = fb->offset;
@@ -1020,9 +945,6 @@ void CWaveform::undo_take_shot (int type, int param)
      }
 
   undos.prepend (el);
-  
-  qDebug() << "CWaveform::undo_take_shot - 2";
-
 } 
 
 
@@ -1050,9 +972,6 @@ void CWaveform::redo()
 
 void CWaveform::undo_top()
 {
-
-qDebug() << "void CWaveform::undo_top() - 1";
-
   if (undos.count() == 0)
      return;
     
@@ -1095,7 +1014,6 @@ qDebug() << "void CWaveform::undo_top() - 1";
   sel_end_frames = el->end_frames;
  
   if (fb)
-     //set_cursor_value (el->sample_cursor * frames_per_section * sound_buffer->channels);
      fb->offset = el->cursor_frames;
 
   prepare_image();
@@ -1104,11 +1022,6 @@ qDebug() << "void CWaveform::undo_top() - 1";
 
   undos.removeAt (0);
   delete el;
-  
-  qDebug() << "undos.count() " << undos.count(); 
-  
-  qDebug() << "void CWaveform::undo_top() - 2";
-
 }
 
 
@@ -1121,8 +1034,6 @@ void CWaveform::set_cursor_to_frames (size_t frame)
 
 void CWaveform::set_statusbar_text()
 {
-  //qDebug() << "CWaveform::set_statusbar_text()";
-
   if (frames_per_section == 0)
      return;
 
@@ -1130,9 +1041,6 @@ void CWaveform::set_statusbar_text()
 
   int framesstart = frames_start();
   int framesend = frames_end();
-
-  //qDebug() << "framesstart: " << framesstart; 
-  //qDebug() << "framesend: " << framesstart; 
 
   float msecs_selstart = (float) framesstart / fb->samplerate * 1000;
   float msecs_selend = (float) framesend / fb->samplerate * 1000;
