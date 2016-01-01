@@ -116,10 +116,12 @@ AFx::AFx (size_t srate)
   vbl_caption->addWidget (l_caption);
   vbl_caption->addWidget (l_subcaption);
 
-  QString qstl = "QWidget {"
+  QString qstl = "QWidget#w_caption{"
     "border-radius: 15px;"
     "background-color: grey;}";
   
+  
+  w_caption->setObjectName ("w_caption");
   w_caption->setStyleSheet (qstl);
 }
 
@@ -208,17 +210,21 @@ CFxSimpleAmp::CFxSimpleAmp (size_t srate): AFx (srate)
 
   gain = 1.0f;
 
-  label = new QLabel (tr ("Volume: 1 dB"));
+  QHBoxLayout *hbl_gain = new QHBoxLayout;
+
+  label = new QLabel (tr ("Input gain: "));
 
   QDial *dial_gain = new QDial;
   dial_gain->setWrapping (false);
   connect (dial_gain, SIGNAL(valueChanged(int)), this, SLOT(dial_gain_valueChanged(int)));
-  dial_gain->setRange (-90, 26);
+  dial_gain->setRange (0, 26);
 
-  dial_gain->setValue (0);
+  dial_gain->setValue (1);
 
-  vbl_main->addWidget (label);
-  vbl_main->addWidget (dial_gain);
+  hbl_gain->addWidget (label);
+  hbl_gain->addWidget (dial_gain);
+  
+  vbl_main->addLayout (hbl_gain);
 }
 
 
@@ -232,7 +238,21 @@ void CFxSimpleAmp::dial_gain_valueChanged (int value)
 
    gain = db2lin (value);
 
-   label->setText (tr ("Volume: %1 dB").arg (value));
+  // label->setText (tr ("Volume: %1 dB").arg (value));
+}
+
+
+void CFxSimpleOverdrive::dial_level_valueChanged (int value)
+{
+  if (value == 0)
+     {
+      level = 1.0f;
+      return;
+     }
+
+   level = db2lin (value);
+
+   //label->setText (tr ("Volume: %1 dB").arg (value));
 }
 
 
@@ -411,9 +431,13 @@ CFxSimpleOverdrive::CFxSimpleOverdrive (size_t srate): AFx (srate)
   
   wnd_ui->setWindowTitle (tr ("Simple Overdrive"));
 
-  set_caption (tr ("Simple Oderdrive"), tr ("Simple overdrive module"));
+  set_caption (tr ("Simple Overdrive"), tr ("Simple overdrive module"));
 
   gain = 1.0f;
+  level = db2lin (-12.f);
+
+  QHBoxLayout *hbl_gain = new QHBoxLayout;
+
   
   QLabel *l = new QLabel (tr ("Gain"));
   QDial *dial_gain = new QDial;
@@ -423,8 +447,27 @@ CFxSimpleOverdrive::CFxSimpleOverdrive (size_t srate): AFx (srate)
 
   dial_gain->setValue (1);
 
-  vbl_main->addWidget (l);
-  vbl_main->addWidget (dial_gain);
+  hbl_gain->addWidget (l);
+  hbl_gain->addWidget (dial_gain);
+  
+  vbl_main->addLayout (hbl_gain);
+  
+  QHBoxLayout *hbl_level = new QHBoxLayout;
+
+  QLabel *l_level = new QLabel (tr ("Output level: "));
+
+  QDial *dial_level = new QDial;
+  dial_level->setWrapping (false);
+  connect (dial_level, SIGNAL(valueChanged(int)), this, SLOT(dial_level_valueChanged(int)));
+  dial_level->setRange (-90, 0);
+
+  dial_level->setValue (-12);
+
+  hbl_level->addWidget (l_level);
+  hbl_level->addWidget (dial_level);
+  
+  vbl_main->addLayout (hbl_level);
+
 }
 
 
@@ -455,8 +498,6 @@ size_t CFxSimpleOverdrive::execute (float **input, float **output, size_t frames
       {
        for (size_t i = 0; i < frames; i++)
            {
-            float original = input[ch][i];
-            
             output[ch][i] = input[ch][i] * gain;
 
             if (float_greater_than (output[ch][i], 1.0f))
@@ -466,7 +507,7 @@ size_t CFxSimpleOverdrive::execute (float **input, float **output, size_t frames
                    output[ch][i] = -1.0f;
                    
                    
-           output[ch][i] *= 0.5;        
+           output[ch][i] *= level;        
           /*         
             if (output[ch][i] > 1.0f)
                output[ch][i] = 2 / 3;
@@ -825,10 +866,10 @@ CFxClassicOverdrive::CFxClassicOverdrive (size_t srate): AFx (srate)
   
   wnd_ui->setWindowTitle (tr ("Classic Overdrive"));
 
-  set_caption (tr ("Classic Oderdrive"), tr ("Classic overdrive module"));
+  set_caption (tr ("<b>Classic Oderdrive</b>"), tr ("<i>Classic overdrive module</i>"));
 
   gain = 1.0f;
-  //level = 1.0f;
+  level = db2lin (-12.0f);
   drive = 1.0f;
   tone = 1.0f;
 
@@ -854,7 +895,7 @@ CFxClassicOverdrive::CFxClassicOverdrive (size_t srate): AFx (srate)
   QDial *dial_drive = new QDial;
   dial_drive->setWrapping (false);
   connect (dial_drive, SIGNAL(valueChanged(int)), this, SLOT(dial_drive_valueChanged(int)));
-  dial_drive->setRange (1, 100);
+  dial_drive->setRange (1, 26);
 
   dial_drive->setValue (1);
 
@@ -878,6 +919,34 @@ CFxClassicOverdrive::CFxClassicOverdrive (size_t srate): AFx (srate)
   hbl_tone->addWidget (dial_tone);
   
   vbl_main->addLayout (hbl_tone);
+
+
+  QHBoxLayout *hbl_level = new QHBoxLayout;
+
+  QLabel *l_level = new QLabel (tr ("Output level"));
+
+  QDial *dial_level = new QDial;
+  dial_level->setWrapping (false);
+  connect (dial_level, SIGNAL(valueChanged(int)), this, SLOT(dial_level_valueChanged(int)));
+  dial_level->setRange (-90, 0);
+
+  dial_level->setValue (-12);
+
+  hbl_level->addWidget (l_level);
+  hbl_level->addWidget (dial_level);
+  
+  vbl_main->addLayout (hbl_level);
+
+  QString qstl = "QWidget#w_caption {"
+    "border-radius: 15px;"
+    "background: qlineargradient(x1:0, y1:0, x2:1, y2:1,"
+                "stop:0 #aa5500, stop:1 #aa0000);}";
+  
+  
+  w_caption->setStyleSheet (qstl);  
+  
+   
+  
   
 }
 
@@ -886,14 +955,15 @@ void CFxClassicOverdrive::dial_gain_valueChanged (int value)
 {
 //  gain = ((float)(value / 100) * 100) + 1;
 
+/*
   gain = (float) value / 100;
   gain *= 100;
-  gain += 1;
-
-/*  if (value == 0)
+  gain += 1.0;
+*/
+  if (value == 0)
       gain = 1.0f;
   else   
-      gain = db2lin (value / 10);*/
+      gain = db2lin (value);
 
 
    qDebug() << "gain:" << gain;
@@ -912,7 +982,7 @@ void CFxClassicOverdrive::dial_drive_valueChanged (int value)
   
   qDebug() << "a:" << a;
   
-  float k = 2 * a / (1 - a);
+  float k = 2 * cos (a) / (1 - a);
   
   qDebug() << "k:" << k;
   
@@ -925,18 +995,7 @@ void CFxClassicOverdrive::dial_drive_valueChanged (int value)
 
 void CFxClassicOverdrive::dial_tone_valueChanged (int value)
 {
-  /*if (value == 0)
-      gain = 1.0f;
-  else   
-      gain = db2lin (value / 10);*/
-      
-  qDebug() << "value" << value;    
-
   filter.set_cutoff ((float) value / samplerate);
-     
-  
-  qDebug() << "cutoff" << filter.cutoff;    
-   
 }
 
 
@@ -961,14 +1020,7 @@ size_t CFxClassicOverdrive::execute (float **input, float **output, size_t frame
             output[ch][i] = input[ch][i] * gain;
             output[ch][i] *= drive;
             output[ch][i] = filter.process (output[ch][i], ch);
-
-            
-/*
-            if (float_greater_than (output[ch][i], 1.0f))
-               output[ch][i] = 1.0f;
-            else
-               if (float_less_than (output[ch][i], -1.0f))
-                  output[ch][i] = -1.0f;*/
+            output[ch][i] *= level;  
            }       
       }
 
@@ -980,4 +1032,18 @@ void CFxClassicOverdrive::reset_params (size_t srate, size_t ch)
 {
   AFx::reset_params (srate, ch);
   filter.reset();
+}
+
+
+void CFxClassicOverdrive::dial_level_valueChanged (int value)
+{
+  if (value == 0)
+     {
+      level = 1.0f;
+      return;
+     }
+
+   level = db2lin (value);
+
+   //label->setText (tr ("Volume: %1 dB").arg (value));
 }

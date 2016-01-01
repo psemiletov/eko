@@ -147,6 +147,7 @@ class CFxSimpleOverdrive: public AFx
 public:
 
   float gain;
+  float level;
 
   CFxSimpleOverdrive (size_t srate);
   ~CFxSimpleOverdrive();
@@ -158,6 +159,7 @@ public:
 public slots:
 
   void dial_gain_valueChanged (int value);
+  void dial_level_valueChanged (int value);
 };
 
 
@@ -247,6 +249,7 @@ public:
   float gain;
   float drive;
   float tone;
+  float level;
 
   CFxClassicOverdrive (size_t srate);
   ~CFxClassicOverdrive();
@@ -261,6 +264,7 @@ public slots:
   void dial_gain_valueChanged (int value);
   void dial_drive_valueChanged (int value);
   void dial_tone_valueChanged (int value);
+  void dial_level_valueChanged (int value);
 };
 
 
