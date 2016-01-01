@@ -75,7 +75,7 @@ CIIRFilter::CIIRFilter()
 
 void CIIRFilter::reset()
 {
- bufl0 = 0.0f;
+  bufl0 = 0.0f;
   bufl1 = 0.0f;
   bufl2 = 0.0f;
   bufl3 = 0.0f;

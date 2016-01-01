@@ -36,7 +36,8 @@ SOURCES += eko.cpp \
     floatbuffer.cpp \
     envelope.cpp \
     fx-filter.cpp \
-    fx-panners.cpp
+    fx-panners.cpp \
+    cvlevelmeter.cpp
 #    tinyplayer.cpp
 
 HEADERS += eko.h \
@@ -52,7 +53,8 @@ HEADERS += eko.h \
     floatbuffer.h \
     envelope.h \
     fx-filter.h \
-    fx-panners.h
+    fx-panners.h \
+    cvlevelmeter.h
 #    tinyplayer.h
 
 

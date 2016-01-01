@@ -9,11 +9,11 @@
 #include <QTreeView>
 #include <QDoubleSpinBox>
 #include <QComboBox>
+#include <QVBoxLayout>
 
 #include <cmath>
 
 #include "floatbuffer.h"
-//#include "3pass_eq.h"
 #include "fx-filter.h"
 
 
@@ -64,6 +64,11 @@ public:
   size_t samplerate;
   
   QWidget *wnd_ui;
+  QVBoxLayout *vbl_main;
+  
+  QWidget *w_caption;
+  QLabel *l_caption;
+  QLabel *l_subcaption;
   
   QString name;
 
@@ -73,6 +78,8 @@ public:
   virtual size_t execute (float **input, float **output, size_t frames) = 0;
   virtual void set_state (FxState s);
   virtual void reset_params (size_t srate, size_t ch);
+
+  void set_caption (const QString &capt, const QString &subcapt);
 
   void show_ui();
 
@@ -227,6 +234,34 @@ public:
  QStringList names();
 };
 
+
+
+class CFxClassicOverdrive: public AFx
+{
+  Q_OBJECT
+
+public:
+
+  CIIRFilter filter;
+  
+  float gain;
+  float drive;
+  float tone;
+
+  CFxClassicOverdrive (size_t srate);
+  ~CFxClassicOverdrive();
+
+  AFx* self_create (size_t srate);
+
+  size_t execute (float **input, float **output, size_t frames);
+  void reset_params (size_t srate, size_t ch);
+
+public slots:
+
+  void dial_gain_valueChanged (int value);
+  void dial_drive_valueChanged (int value);
+  void dial_tone_valueChanged (int value);
+};
 
 
 #endif // FX_H

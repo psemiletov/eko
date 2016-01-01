@@ -40,8 +40,7 @@
 #include "tio.h"
 #include "floatbuffer.h"
 #include "envelope.h"
-
-
+#include "cvlevelmeter.h"
 #include "fx.h"
 
 
@@ -135,13 +134,6 @@ class CUndoElement: public QObject
   Q_OBJECT
 
 public:
-  
- // int sndfile_format;
-  //bool use_sndfile_format;
-  
-  //int channels;
-  
-  //int samplerate; 
   
   int type;
   bool selected;
@@ -332,7 +324,6 @@ public:
   size_t frames_start();
   size_t frames_end();   
 
- // size_t cursor_pos_sample();
   void set_cursor_to_frames (size_t frame);
 
 //undo/redo stuff
@@ -346,8 +337,6 @@ public:
   void flush_undos();
 
   void redo();
-  
- // void update_cursor_pos();  
   
   
 protected:
@@ -492,7 +481,6 @@ public:
   void load_from_session (const QString &fileName);
   void load_palette (const QString &fileName);
 
-  //void close_by_idx (int i);
   void close_current();
   void apply_settings();
   void apply_settings_single (CDocument *d);
@@ -506,7 +494,6 @@ public:
 
   void open_recent();
 };
-
 
 
 
@@ -528,9 +515,6 @@ public:
   float pan; 
   int panner; 
 
-//
-
-  //float temp_buffer [8192];
   CFloatBuffer *temp_float_buffer;
 
   CDSP (QObject *parent = 0);
@@ -539,37 +523,9 @@ public:
   bool process_whole_document (CDocument *d);
   size_t process (size_t nframes);
   size_t process_rec (float *buffer, size_t channels, size_t nframes);
-
 };
 
 
-class CVLevelMeter: public QWidget
-{
-  Q_OBJECT
-
-public:
-  
-  bool init_state;
-
-  QImage img_bar;
- 
-  int scale_width;
-  int bars_width;
-  
-  float peak_l;
-  float peak_r;
-  float pl;
-  float pr;
-
-  CVLevelMeter (QWidget *parent);
-
-  void update_scale_image();
-
-protected:
-
- void paintEvent (QPaintEvent *event);
- void resizeEvent(QResizeEvent *event);
-};
 
 
 class CFxRackWindow: public QWidget

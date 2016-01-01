@@ -88,18 +88,46 @@ CRingbuffer::~CRingbuffer()
 
 AFx::AFx (size_t srate)
 {
-//  qDebug() << "AFx::AFx";
-
   bypass = false;
   realtime = true;
   ui_visible = false;
   float_buffer = 0;
-  wnd_ui = 0;
+ 
   state = FXS_STOP;
   name = "AFx";
 
   samplerate = srate;
   channels = 1;//chann;
+  
+  wnd_ui = new QWidget();
+
+  vbl_main = new QVBoxLayout;
+  wnd_ui->setLayout (vbl_main);
+
+  w_caption = new QWidget; 
+  QVBoxLayout *vbl_caption = new QVBoxLayout;
+  w_caption->setLayout (vbl_caption);
+  
+  vbl_main->addWidget (w_caption);
+  
+  l_caption = new QLabel;
+  l_subcaption = new QLabel;
+
+  vbl_caption->addWidget (l_caption);
+  vbl_caption->addWidget (l_subcaption);
+
+  QString qstl = "QWidget {"
+    "border-radius: 15px;"
+    "background-color: grey;}";
+  
+  w_caption->setStyleSheet (qstl);
+}
+
+
+void AFx::set_caption (const QString &capt, const QString &subcapt)
+{
+  l_caption->setText (capt);
+  l_subcaption->setText (subcapt);
 }
 
 
@@ -123,11 +151,12 @@ void AFx::show_ui()
 CFxList::CFxList()
 {
   list.append (new CFxSimpleAmp (1));
-  //list.append (new CFxSimpleEQ (1));
   list.append (new CFxSimpleOverdrive (1));
   list.append (new CFxPitchShift (1));
   list.append (new CFxSimpleFilter (1));
-
+  list.append (new CFxClassicOverdrive (1));
+  
+  
 }
 
 
@@ -165,14 +194,19 @@ QStringList CFxList::names()
 CFxSimpleAmp::CFxSimpleAmp (size_t srate): AFx (srate)
 {
   name = "FxSimpleAmp";
-  wnd_ui = new QWidget();
 
   wnd_ui->setWindowTitle (tr ("Simple Amp"));
 
-  gain = 1.0f;
+  set_caption (tr ("Simple Amp"), tr ("Simple Ampifier"));
 
-  QVBoxLayout *v_box = new QVBoxLayout;
-  wnd_ui->setLayout (v_box);
+  QString qstl = "QWidget {"
+    "border-radius: 15px;"
+    "background-color: #ffaa00;}";
+  
+  w_caption->setStyleSheet (qstl);
+
+
+  gain = 1.0f;
 
   label = new QLabel (tr ("Volume: 1 dB"));
 
@@ -183,8 +217,8 @@ CFxSimpleAmp::CFxSimpleAmp (size_t srate): AFx (srate)
 
   dial_gain->setValue (0);
 
-  v_box->addWidget (label);
-  v_box->addWidget (dial_gain);
+  vbl_main->addWidget (label);
+  vbl_main->addWidget (dial_gain);
 }
 
 
@@ -374,15 +408,13 @@ void CFxSimpleEQ::dial_hi_valueChanged (int value)
 CFxSimpleOverdrive::CFxSimpleOverdrive (size_t srate): AFx (srate)
 {
   name = "FxSimpleOverdrive";
-  wnd_ui = new QWidget();
-
+  
   wnd_ui->setWindowTitle (tr ("Simple Overdrive"));
 
+  set_caption (tr ("Simple Oderdrive"), tr ("Simple overdrive module"));
+
   gain = 1.0f;
-
-  QVBoxLayout *v_box = new QVBoxLayout;
-  wnd_ui->setLayout (v_box);
-
+  
   QLabel *l = new QLabel (tr ("Gain"));
   QDial *dial_gain = new QDial;
   dial_gain->setWrapping (false);
@@ -391,8 +423,8 @@ CFxSimpleOverdrive::CFxSimpleOverdrive (size_t srate): AFx (srate)
 
   dial_gain->setValue (1);
 
-  v_box->addWidget (l);
-  v_box->addWidget (dial_gain);
+  vbl_main->addWidget (l);
+  vbl_main->addWidget (dial_gain);
 }
 
 
@@ -423,13 +455,28 @@ size_t CFxSimpleOverdrive::execute (float **input, float **output, size_t frames
       {
        for (size_t i = 0; i < frames; i++)
            {
+            float original = input[ch][i];
+            
             output[ch][i] = input[ch][i] * gain;
 
             if (float_greater_than (output[ch][i], 1.0f))
-               output[ch][i] = 1.0f;
+                output[ch][i] = 1.0f;
             else
                if (float_less_than (output[ch][i], -1.0f))
-                  output[ch][i] = -1.0f;
+                   output[ch][i] = -1.0f;
+                   
+                   
+           output[ch][i] *= 0.5;        
+          /*         
+            if (output[ch][i] > 1.0f)
+               output[ch][i] = 2 / 3;
+            else                 
+                if (output[ch][i] < 1.0f)
+                  output[ch][i] = (2 / 3) * -1;
+                else
+                    output[ch][i] = output[ch][i] - (pow (output[ch][i], 3) / 3 );  
+*/
+                   
            }       
       }
 
@@ -449,14 +496,10 @@ CFxPitchShift::CFxPitchShift (size_t srate): AFx (srate)
   
   fb = new CFloatBuffer (4096, 8);
 
-  wnd_ui = new QWidget();
-
   wnd_ui->setWindowTitle (tr ("Simple Pitchshifter"));
+  set_caption (tr ("Pitchshifter"), tr ("Pitchshifter module"));
 
   ratio = 1.0;
-
-  QVBoxLayout *v_box = new QVBoxLayout;
-  wnd_ui->setLayout (v_box);
 
   QLabel *label = new QLabel (tr ("Ratio: 1.0"));
 
@@ -466,8 +509,8 @@ CFxPitchShift::CFxPitchShift (size_t srate): AFx (srate)
   spb_ratio->setValue (1.0);
   connect (spb_ratio, SIGNAL(valueChanged (double )), this, SLOT(spb_ratio_changed (double )));
 
-  v_box->addWidget (label);
-  v_box->addWidget (spb_ratio);
+  vbl_main->addWidget (label);
+  vbl_main->addWidget (spb_ratio);
 }
 
 
@@ -573,22 +616,11 @@ void CFxSimpleFilter::dsb_reso_valueChanged (double d)
 CFxSimpleFilter::CFxSimpleFilter (size_t srate): AFx (srate)
 {
   name = "CFxSimpleFilter";
-  wnd_ui = new QWidget();
-
+  
   wnd_ui->setWindowTitle (tr ("Simple Filter"));
+  set_caption (tr ("Filter"), tr ("Multi-mode filter module"));
 
   
-//  float cut_off_freq = (float) 11500 / samplerate;
-  
-//  qDebug() << "cut_off_freq: " << cut_off_freq; 
- 
-//  filter.set_cutoff (cut_off_freq);
-  
-  
-  
-  QVBoxLayout *v_box = new QVBoxLayout;
-  wnd_ui->setLayout (v_box);
-
   QHBoxLayout *h_box_filter_mode = new QHBoxLayout;
   
   QLabel *l_filter_mode = new QLabel (tr ("Mode:"));
@@ -605,7 +637,7 @@ CFxSimpleFilter::CFxSimpleFilter (size_t srate): AFx (srate)
   h_box_filter_mode->addWidget (l_filter_mode);
   h_box_filter_mode->addWidget (cmb_filter_mode);
   
-  v_box->addLayout (h_box_filter_mode);
+  vbl_main->addLayout (h_box_filter_mode);
   
   
   QHBoxLayout *h_box_cutoff = new QHBoxLayout;
@@ -623,7 +655,7 @@ CFxSimpleFilter::CFxSimpleFilter (size_t srate): AFx (srate)
   connect (dsb_cutoff_freq, SIGNAL(valueChanged(double)), this, SLOT(dsb_cutoff_valueChanged(double)));
   dsb_cutoff_freq->setValue (22100);
    
-  v_box->addLayout (h_box_cutoff);
+  vbl_main->addLayout (h_box_cutoff);
 
   QHBoxLayout *h_box_reso = new QHBoxLayout;
   
@@ -639,10 +671,7 @@ CFxSimpleFilter::CFxSimpleFilter (size_t srate): AFx (srate)
   
   dsb_reso->setValue (0.01f);
    
-  v_box->addLayout (h_box_reso);
-
-   
- 
+  vbl_main->addLayout (h_box_reso);
 }
 
 
@@ -790,3 +819,165 @@ void CFxSimpleFilter::reset_params (size_t srate, size_t ch)
 }
 
 
+CFxClassicOverdrive::CFxClassicOverdrive (size_t srate): AFx (srate)
+{
+  name = "FxClassicOverdrive";
+  
+  wnd_ui->setWindowTitle (tr ("Classic Overdrive"));
+
+  set_caption (tr ("Classic Oderdrive"), tr ("Classic overdrive module"));
+
+  gain = 1.0f;
+  //level = 1.0f;
+  drive = 1.0f;
+  tone = 1.0f;
+
+  QHBoxLayout *hbl_gain = new QHBoxLayout;
+  
+  QLabel *l = new QLabel (tr ("Gain"));
+  QDial *dial_gain = new QDial;
+  dial_gain->setWrapping (false);
+  connect (dial_gain, SIGNAL(valueChanged(int)), this, SLOT(dial_gain_valueChanged(int)));
+  dial_gain->setRange (1, 100);
+
+  dial_gain->setValue (1);
+
+  hbl_gain->addWidget (l);
+  hbl_gain->addWidget (dial_gain);
+  
+  vbl_main->addLayout (hbl_gain);
+  
+  
+  QHBoxLayout *hbl_drive = new QHBoxLayout;
+  
+  l = new QLabel (tr ("Drive"));
+  QDial *dial_drive = new QDial;
+  dial_drive->setWrapping (false);
+  connect (dial_drive, SIGNAL(valueChanged(int)), this, SLOT(dial_drive_valueChanged(int)));
+  dial_drive->setRange (1, 100);
+
+  dial_drive->setValue (1);
+
+  hbl_drive->addWidget (l);
+  hbl_drive->addWidget (dial_drive);
+  
+  vbl_main->addLayout (hbl_drive);
+  
+  
+  QHBoxLayout *hbl_tone = new QHBoxLayout;
+  
+  l = new QLabel (tr ("Tone"));
+  QDial *dial_tone = new QDial;
+  dial_tone->setWrapping (false);
+  connect (dial_tone, SIGNAL(valueChanged(int)), this, SLOT(dial_tone_valueChanged(int)));
+  dial_tone->setRange (1000, 21000);
+
+  dial_tone->setValue (11500);
+
+  hbl_tone->addWidget (l);
+  hbl_tone->addWidget (dial_tone);
+  
+  vbl_main->addLayout (hbl_tone);
+  
+}
+
+
+void CFxClassicOverdrive::dial_gain_valueChanged (int value)
+{
+//  gain = ((float)(value / 100) * 100) + 1;
+
+  gain = (float) value / 100;
+  gain *= 100;
+  gain += 1;
+
+/*  if (value == 0)
+      gain = 1.0f;
+  else   
+      gain = db2lin (value / 10);*/
+
+
+   qDebug() << "gain:" << gain;
+
+}
+
+
+void CFxClassicOverdrive::dial_drive_valueChanged (int value)
+{
+ /* if (value == 0)
+      gain = 1.0f;
+  else   
+      gain = db2lin (value / 10);*/
+      
+  float a = sin (((drive + 1) / 101) * (M_PI / 2));
+  
+  qDebug() << "a:" << a;
+  
+  float k = 2 * a / (1 - a);
+  
+  qDebug() << "k:" << k;
+  
+  drive = (1 + k) * (value) / (1 + k * abs (value));
+  
+  qDebug() << "drive:" << drive;
+ 
+}
+
+
+void CFxClassicOverdrive::dial_tone_valueChanged (int value)
+{
+  /*if (value == 0)
+      gain = 1.0f;
+  else   
+      gain = db2lin (value / 10);*/
+      
+  qDebug() << "value" << value;    
+
+  filter.set_cutoff ((float) value / samplerate);
+     
+  
+  qDebug() << "cutoff" << filter.cutoff;    
+   
+}
+
+
+CFxClassicOverdrive::~CFxClassicOverdrive()
+{
+  //qDebug() << "~CFxSimpleOverdrive";
+}
+
+
+AFx* CFxClassicOverdrive::self_create (size_t srate)
+{
+  return new CFxClassicOverdrive (srate);
+}
+
+
+size_t CFxClassicOverdrive::execute (float **input, float **output, size_t frames)
+{
+  for (size_t ch = 0; ch < channels; ch++)
+      {
+       for (size_t i = 0; i < frames; i++)
+           {
+            output[ch][i] = input[ch][i] * gain;
+            output[ch][i] *= drive;
+            output[ch][i] = filter.process (output[ch][i], ch);
+
+            
+/*
+            if (float_greater_than (output[ch][i], 1.0f))
+               output[ch][i] = 1.0f;
+            else
+               if (float_less_than (output[ch][i], -1.0f))
+                  output[ch][i] = -1.0f;*/
+           }       
+      }
+
+  return frames;
+}
+
+
+void CFxClassicOverdrive::reset_params (size_t srate, size_t ch)
+{
+  AFx::reset_params (srate, ch);
+  filter.reset();
+}
