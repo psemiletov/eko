@@ -12,7 +12,7 @@
 
 <a href="#mni_intro">Why EKO?</a><br>
 <a href="#mni_mp3">MP3 and video files support.</a><br>
-<a href="#mni_start">Basics</a><br>
+<a href="#mni_start">Important! Basic setup</a><br>
 <a href="#mni_go">Playback and looping</a><br>
 <a href="#mni_record">Recording</a><br>
 <a href="#mni_mixer">Mixer</a><br>
@@ -54,12 +54,14 @@ Menus:<br>
 <p>It is really sad that I'm afraid to distribute ffmpeg.exe and lame.exe with EKO...</p>
 
 <a name="mni_start"></a>
-<h3>Basics</h3>
+<h3>Basic setup</h3>
+
+<p>Before using EKO, set up input and output devices/ports at <b>Tune - Sound devices</b> page. If recording or playback does not work (usually the error log is "Invalid number of channels"), try another option. It's important to choose the proper pair of the ports. They are must be on the same sound card, and use the same API. For example, on my M-Audio Audiophile 24/96 I use the ALSA API device "M-Audio Audio Audiophile 24/96: ICE1712 multi (hw:0,0)" as the input and the output device. On Win32 you can try, for example, MME API device "Sound Mapper - Input" and "Sound Mapper - Output", or some DirectX options.
+</p>
 
 <p>EKO is a very simple sound editor. Unlike some other editors, it has no disk caching system, so all files will be loaded directly into the memory. It means that EKO needs a lot of memory if you work with a large files or with many files simultaneously.</p>
 
-<p>EKO internals is 32 bit floating point mixing and DSP engine. All recording and playback uses Portaudio library to access the underlying sound system (ALSA, ASIO, etc.). Before using EKO, set up input and output devices/ports at <b>Tune - Sound devices</b> page. If recording or playback does not work, try another option.
-</p>
+<p>EKO internals is 32 bit floating point mixing and DSP engine. All recording and playback uses Portaudio library to access the underlying sound system (ALSA, ASIO, etc.).</p>
 
 
 <br>

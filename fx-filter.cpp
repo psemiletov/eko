@@ -1,7 +1,7 @@
 #include "fx-filter.h"
 
 
-float CIIRFilter::process (float sample, size_t channel)
+float CFilter::process (float sample, size_t channel)
 {
   if (channel == 0)
      {
@@ -55,7 +55,7 @@ float CIIRFilter::process (float sample, size_t channel)
 }
 
 
-CIIRFilter::CIIRFilter()
+CFilter::CFilter()
 {
   cutoff = 0.99f;
   resonance = 0.0f;
@@ -73,7 +73,7 @@ CIIRFilter::CIIRFilter()
   calc_feedback_amount();
 }
 
-void CIIRFilter::reset()
+void CFilter::reset()
 {
   bufl0 = 0.0f;
   bufl1 = 0.0f;

@@ -201,7 +201,7 @@ public:
   QComboBox *cmb_filter_mode;
 
 
-  CIIRFilter filter;
+  CFilter filter;
 
   CFxSimpleFilter (size_t srate);
  // ~CFxSimpleAmp();
@@ -244,7 +244,7 @@ class CFxClassicOverdrive: public AFx
 
 public:
 
-  CIIRFilter filter;
+  CFilter filter;
   
   float gain;
   float drive;

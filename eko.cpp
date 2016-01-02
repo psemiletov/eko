@@ -56,6 +56,7 @@ started at 25 July 2010
 
 
 #include "floatbuffer.h"
+#include "fxrack.h"
 
 
 #define FM_ENTRY_MODE_NONE 0

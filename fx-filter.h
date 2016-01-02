@@ -16,7 +16,7 @@ enum filter_mode {
         FILTER_MODE_BANDPASS
       };
 
-class CIIRFilter 
+class CFilter 
 {
 public:
 
@@ -34,7 +34,7 @@ public:
   float bufr2;
   float bufr3;
     
-   CIIRFilter();
+   CFilter();
     
    void reset(); 
    float process (float sample, size_t channel);

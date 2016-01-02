@@ -12,6 +12,7 @@ Peter Semiletov
 #include <QTextCodec>
 #include <QByteArray>
 
+#include "gui_utils.h"
 #include "utils.h"
 
 
