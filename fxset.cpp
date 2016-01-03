@@ -17,11 +17,8 @@
 
 #include <cmath>
 
-
-#include "fx.h"
+#include "fxset.h"
 #include "utils.h"
-//#include "3pass_eq.h"
-
 
 void CRingbuffer::put (float f)
 {
@@ -85,112 +82,6 @@ CRingbuffer::~CRingbuffer()
      delete buffer;
 }
 
-
-AFx::AFx (size_t srate)
-{
-  bypass = false;
-  realtime = true;
-  ui_visible = false;
-  float_buffer = 0;
- 
-  state = FXS_STOP;
-  name = "AFx";
-
-  samplerate = srate;
-  channels = 1;//chann;
-  
-  wnd_ui = new QWidget();
-
-  vbl_main = new QVBoxLayout;
-  wnd_ui->setLayout (vbl_main);
-
-  w_caption = new QWidget; 
-  QVBoxLayout *vbl_caption = new QVBoxLayout;
-  w_caption->setLayout (vbl_caption);
-  
-  vbl_main->addWidget (w_caption);
-  
-  l_caption = new QLabel;
-  l_subcaption = new QLabel;
-
-  vbl_caption->addWidget (l_caption);
-  vbl_caption->addWidget (l_subcaption);
-
-  QString qstl = "QWidget#w_caption{"
-    "border-radius: 15px;"
-    "background-color: grey;}";
-  
-  
-  w_caption->setObjectName ("w_caption");
-  w_caption->setStyleSheet (qstl);
-}
-
-
-void AFx::set_caption (const QString &capt, const QString &subcapt)
-{
-  l_caption->setText (capt);
-  l_subcaption->setText (subcapt);
-}
-
-
-AFx::~AFx()
-{
-  if (wnd_ui)
-     {
-      wnd_ui->close();
-      delete wnd_ui;
-     }
-}
-
-
-void AFx::show_ui()
-{
-  if (wnd_ui)
-     wnd_ui->setVisible (! wnd_ui->isVisible());
-}
-
-
-CFxList::CFxList()
-{
-  list.append (new CFxSimpleAmp (1));
-  list.append (new CFxSimpleOverdrive (1));
-  list.append (new CFxPitchShift (1));
-  list.append (new CFxSimpleFilter (1));
-  list.append (new CFxClassicOverdrive (1));
-  
-  
-}
-
-
-CFxList::~CFxList()
-{
-  foreach (AFx *f, list) 
-          {
-           delete f; 
-          }
-}
- 
-
-AFx *CFxList::find_by_name (const QString &fxname)
-{
-  for (int i = 0; i < list.size(); i++)
-      {
-       if (list[i]->name == fxname) 
-          return list[i];
-      }    
-
-  return 0;
-}
-
-
-
-QStringList CFxList::names()
-{
-  QStringList l;
-  foreach (AFx *f, list)
-          l.append (f->name);
-  return l;        
-}
 
 
 CFxSimpleAmp::CFxSimpleAmp (size_t srate): AFx (srate)
@@ -525,11 +416,6 @@ size_t CFxSimpleOverdrive::execute (float **input, float **output, size_t frames
 }
 
 
-void AFx::set_state (FxState s)
-{
-  state = s;
-}
-
 
 CFxPitchShift::CFxPitchShift (size_t srate): AFx (srate)
 {
@@ -615,14 +501,6 @@ size_t CFxPitchShift::execute (float **input, float **output, size_t frames)
   return frames;
 }
 
-
-void AFx::reset_params (size_t srate, size_t chann)
-{
-  qDebug() << "AFx::reset_params";
-
-  samplerate = srate;
-  channels = chann;
-}
 
 
 void CFxPitchShift::reset_params (size_t srate, size_t ch)

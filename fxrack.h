@@ -8,8 +8,11 @@
 #include <QList>
 #include <QModelIndex>
 #include <QString>
+#include <QStandardItemModel>
 
-#include "fx.h"
+#include "afx.h"
+#include "fxlist.h"
+
 
 class CFxTreeView;
 class CFxListInterface;

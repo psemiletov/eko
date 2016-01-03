@@ -15,13 +15,7 @@
 
 #include "floatbuffer.h"
 #include "fx-filter.h"
-
-
-enum FxState {
-              FXS_STOP,
-              FXS_RUN,
-              FXS_PAUSE
-              };
+#include "afx.h"
 
 
 
@@ -44,49 +38,6 @@ public:
    float get();
 };
 
-
-class AFx: public QObject
-{
-  Q_OBJECT
-
-public:
-  
-  FxState state;
-
-  bool bypass;
-  bool realtime;
-
-  bool ui_visible;
-  
-  CFloatBuffer *float_buffer;  //inner buffer for some purposes
-  
-  size_t channels;
-  size_t samplerate;
-  
-  QWidget *wnd_ui;
-  QVBoxLayout *vbl_main;
-  
-  QWidget *w_caption;
-  QLabel *l_caption;
-  QLabel *l_subcaption;
-  
-  QString name;
-
-  AFx (size_t srate);
-  virtual ~AFx();
-
-  virtual size_t execute (float **input, float **output, size_t frames) = 0;
-  virtual void set_state (FxState s);
-  virtual void reset_params (size_t srate, size_t ch);
-
-  void set_caption (const QString &capt, const QString &subcapt);
-
-  void show_ui();
-
-  //virtual void set_parameter (const QString &param, const QString &value) = 0;
-
-  virtual AFx* self_create (size_t srate) = 0;
-};
 
 /*
 class CFxSimpleEQ: public AFx
@@ -221,20 +172,6 @@ public slots:
 //  void dial_gain_valueChanged (int value);
 };
 
-
-//available fx
-class CFxList: public QObject
-{
-public:
-
- QList < AFx *> list;
-
- CFxList();
- ~CFxList();
- 
- AFx *find_by_name (const QString &fxname);
- QStringList names();
-};
 
 
 

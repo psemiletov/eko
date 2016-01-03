@@ -30,7 +30,7 @@ SOURCES += eko.cpp \
     shortcuts.cpp \
     logmemo.cpp \
     tio.cpp \
-    fx.cpp \
+    fxset.cpp \
     gui_utils.cpp \
     libretta_interpolator.cpp \ 
     floatbuffer.cpp \
@@ -38,7 +38,9 @@ SOURCES += eko.cpp \
     fx-filter.cpp \
     fx-panners.cpp \
     cvlevelmeter.cpp \
-    fxrack.cpp
+    fxrack.cpp \
+    afx.cpp \
+    fxlist.cpp
 #    tinyplayer.cpp
 
 HEADERS += eko.h \
@@ -48,7 +50,7 @@ HEADERS += eko.h \
     shortcuts.h \
     logmemo.h \
     tio.h \
-    fx.h \
+    fxset.h \
     gui_utils.h \
     libretta_interpolator.h \
     floatbuffer.h \
@@ -56,7 +58,9 @@ HEADERS += eko.h \
     fx-filter.h \
     fx-panners.h \
     cvlevelmeter.h \
-    fxrack.h
+    fxrack.h \
+    afx.h \
+    fxlist.h
 #    tinyplayer.h
 
 
