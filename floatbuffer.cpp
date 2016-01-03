@@ -245,17 +245,16 @@ void CFloatBuffer::copy_to_pos_with_rate (CFloatBuffer *other, size_t offset_fro
 void CFloatBuffer::pbuffer_reset()
 {
   offset = 0;
-//  pbuffer = buffer;
   
   if (pbuffer)
      delete pbuffer;
   
-   pbuffer = new float* [channels];
+  pbuffer = new float* [channels];
   
    for (size_t ch = 0; ch < channels; ch++)
-      {
-       pbuffer[ch] = buffer[ch];
-      }
+       {
+        pbuffer[ch] = buffer[ch];
+       }
 
 }
 

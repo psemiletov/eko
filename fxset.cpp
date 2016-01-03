@@ -531,16 +531,19 @@ void CFxSimpleFilter::reset_params (size_t srate, size_t ch)
 
 CFxClassicOverdrive::CFxClassicOverdrive()
 {
-  name = "FxClassicOverdrive";
+  name = "Metaluga";
   
-  wnd_ui->setWindowTitle (tr ("Classic Overdrive"));
+  wnd_ui->setWindowTitle (tr ("Metaluga"));
 
-  set_caption (tr ("<b>Classic Oderdrive</b>"), tr ("<i>Classic overdrive module</i>"));
+  set_caption (tr ("<b>Metaluga</b>"), tr ("<i>Soviet overdrive module</i>"));
 
   gain = 1.0f;
   level = db2lin (-12.0f);
   drive = 1.0f;
   tone = 1.0f;
+  
+  filter.mode = 2;
+  filter.set_resonance (0.5f);
 
   QHBoxLayout *hbl_gain = new QHBoxLayout;
   
@@ -631,7 +634,7 @@ void CFxClassicOverdrive::dial_gain_valueChanged (int value)
 void CFxClassicOverdrive::dial_drive_valueChanged (int value)
 {
   float a = sin (((drive + 1) / 101) * (M_PI / 2));
-  float k = 2 * cos (a) / (1 - a);
+  float k = 2 * /*cos*/ (a) / (1 - a);
   drive = (1 + k) * (value) / (1 + k * abs (value));
 }
 
@@ -661,7 +664,10 @@ size_t CFxClassicOverdrive::execute (float **input, float **output, size_t frame
        for (size_t i = 0; i < frames; i++)
            {
             output[ch][i] = input[ch][i] * gain;
-            output[ch][i] *= drive;
+            
+            output[ch][i] = (float) (atan(output[ch][i] * drive) / atan(drive));
+            
+           // output[ch][i] *= drive;
 
             output[ch][i] = filter.process (output[ch][i], ch);
 

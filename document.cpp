@@ -728,6 +728,9 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
 
 size_t CWaveform::frames_start()
 {
+  if (! fb)
+     return 0;
+     
   if (! selected)
      return 0;
 
@@ -1815,22 +1818,14 @@ bool CDSP::process_whole_document (CDocument *d)
   
   d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
 
-  //size_t portion_size = buffer_size_frames;
-
-  //qDebug() << "portion_size =" << portion_size;
-
+  wnd_fxrack->fx_rack->set_state_all (FXS_RUN);
+  wnd_fxrack->fx_rack->reset_all_fx (d->wave_edit->waveform->fb->samplerate, d->wave_edit->waveform->fb->channels);
+      
   size_t frames_start = d->wave_edit->waveform->frames_start();
   size_t frames_end = d->wave_edit->waveform->frames_end();
   
-  //qDebug() << "frames_start: " << frames_start;
-  //qDebug() << "frames_end: " << frames_end;
-
-  //size_t nframes = d->wave_edit->waveform->fb->length_frames;
-  
   d->wave_edit->waveform->fb->pbuffer_reset();
     
-
-//FIXIT!!! CHECK IF sample_end > sample_start
 
   if (d->wave_edit->waveform->selected)
      {
@@ -1838,16 +1833,11 @@ bool CDSP::process_whole_document (CDocument *d)
       //d->wave_edit->waveform->fb->offset = frames_start;
      }
 
-  
+ 
   //d->wave_edit->waveform->fb->pbuffer_inc (d->wave_edit->waveform->fb->offset);
   
 
-  //qDebug() << "offset = " << offset;
-  //qDebug() << "nsamples = " << nsamples;
-
   ////////////call fx chain
-
-  //d->wave_edit->waveform->fb->offset = frames_start;
 
   d->wave_edit->waveform->fb->pbuffer_inc (frames_start); 
 
@@ -1868,9 +1858,6 @@ bool CDSP::process_whole_document (CDocument *d)
                   wnd_fxrack->fx_rack->effects[i]->channels = d->wave_edit->waveform->fb->channels;
                   wnd_fxrack->fx_rack->effects[i]->samplerate = d->wave_edit->waveform->fb->samplerate;
                   
-                  //wnd_fxrack->fx_rack->effects[i]->execute (d->wave_edit->waveform->fb->pbuffer,
-                    //                                        d->wave_edit->waveform->fb->pbuffer, 
-                      //                                      buffer_size_frames);
                   wnd_fxrack->fx_rack->effects[i]->execute (d->wave_edit->waveform->fb->pbuffer,
                                                             d->wave_edit->waveform->fb->pbuffer, 
                                                             buffer_size_frames);
