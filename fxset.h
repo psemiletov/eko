@@ -10,6 +10,7 @@
 #include <QDoubleSpinBox>
 #include <QComboBox>
 #include <QVBoxLayout>
+#include <QDial>
 
 #include <cmath>
 
@@ -19,55 +20,6 @@
 
 
 
-class CRingbuffer
-{
-public:
-
-   float *buffer;
-   size_t samples_max; //buffer size in samples
-   size_t current_size; //how manu samples are in the buffer?
-   size_t head; //index
-   size_t tail; //index
-   size_t ret_value;
-   
-   CRingbuffer (size_t samples, float def_value = 0);
-   void prepare_buffer (size_t samples);
-   ~CRingbuffer();
-   
-   void put (float f);
-   float get();
-};
-
-
-/*
-class CFxSimpleEQ: public AFx
-{
- Q_OBJECT
-
-public:
-
-  EQSTATE eq_state_ch00;
-  EQSTATE eq_state_ch01;
-
-  CFxSimpleEQ (size_t srate);
-  ~CFxSimpleEQ();
-
-  AFx* self_create (size_t srate);
-
-  size_t execute (float **input, float **output, size_t frames);
-
-public slots:
-
-  void dial_low_valueChanged (int value);
-  void dial_mid_valueChanged (int value);
-  void dial_hi_valueChanged (int value);
-
- // void load_from_string (const QString &s) {};
-  //QString save_to_string()  {};
-
-};
-*/
-
 class CFxSimpleAmp: public AFx
 {
   Q_OBJECT
@@ -76,12 +28,12 @@ public:
 
   float gain;
 
-  CFxSimpleAmp (size_t srate);
+  CFxSimpleAmp();
   ~CFxSimpleAmp();
 
   QLabel *label;
 
-  AFx* self_create (size_t srate);
+  AFx* self_create();
 
   size_t execute (float **input, float **output, size_t frames);
 
@@ -100,10 +52,10 @@ public:
   float gain;
   float level;
 
-  CFxSimpleOverdrive (size_t srate);
+  CFxSimpleOverdrive();
   ~CFxSimpleOverdrive();
 
-  AFx* self_create (size_t srate);
+  AFx* self_create();
 
   size_t execute (float **input, float **output, size_t frames);
 
@@ -126,10 +78,10 @@ public:
   
   double ratio;
 
-  CFxPitchShift (size_t srate);
+  CFxPitchShift();
   ~CFxPitchShift();
 
-  AFx* self_create (size_t srate);
+  AFx* self_create();
 
   size_t execute (float **input, float **output, size_t frames);
   void reset_params (size_t srate, size_t ch);
@@ -154,11 +106,9 @@ public:
 
   CFilter filter;
 
-  CFxSimpleFilter (size_t srate);
- // ~CFxSimpleAmp();
+  CFxSimpleFilter();
 
-
-  AFx* self_create (size_t srate);
+  AFx* self_create();
 
   size_t execute (float **input, float **output, size_t frames);
   void reset_params (size_t srate, size_t ch);
@@ -168,11 +118,7 @@ public slots:
  void cmb_filter_mode_currentIndexChanged (int index);
  void dsb_cutoff_valueChanged (double d);
  void dsb_reso_valueChanged (double d);
- 
-//  void dial_gain_valueChanged (int value);
 };
-
-
 
 
 class CFxClassicOverdrive: public AFx
@@ -187,11 +133,13 @@ public:
   float drive;
   float tone;
   float level;
+  
+  QDial *dial_tone;
 
-  CFxClassicOverdrive (size_t srate);
+  CFxClassicOverdrive();
   ~CFxClassicOverdrive();
 
-  AFx* self_create (size_t srate);
+  AFx* self_create();
 
   size_t execute (float **input, float **output, size_t frames);
   void reset_params (size_t srate, size_t ch);

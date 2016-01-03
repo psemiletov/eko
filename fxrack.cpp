@@ -10,24 +10,13 @@
 #include "fxrack.h"
 
 
-const QModelIndex CFxRack::index_from_name (const QString &name)
-{
-  QList <QStandardItem *> lst = model->findItems (name);
-  if (lst.size() > 0)
-     return model->indexFromItem (lst[0]);
-  else
-      return QModelIndex();
-}
-
-
 void CFxRack::tv_activated (const QModelIndex &index)
 {
   emit fx_activated (index.data().toString());
-  //qDebug() << index.data().toString();
 
   int i = index.row();
   if (i != -1)
-     effects.at (i)->show_ui();
+     effects.at(i)->show_ui();
 }
 
 
@@ -57,15 +46,13 @@ void CFxRack::ins_entry (AFx *f)
                   Qt::ItemIsDragEnabled | Qt::ItemIsUserCheckable |
                   Qt::ItemIsDropEnabled);
 
-
-  AFx *tfx = f->self_create (44100);
+  AFx *tfx = f->self_create();
 
   int i = get_sel_index();
   if (i == -1)
      {
       model->appendRow (item);
-      effects.append (tfx); //def vals
-
+      effects.append (tfx);
      }
   else
       {
@@ -76,20 +63,19 @@ void CFxRack::ins_entry (AFx *f)
   tfx->show_ui();    
 }
 
-//FIXME!!!
+
 void CFxRack::bt_up_clicked()
 {
   if (! tree_view->selectionModel()->hasSelection())
      return;
 
   QModelIndex index = tree_view->selectionModel()->currentIndex();
+
   int row = index.row();
   if (row == 0)
      return;
 
   QList<QStandardItem *> l = model->takeRow (row);
-
-  //QStandardItem *item = model->takeItem (row);
 
   int new_row = row - 1;
 
@@ -99,7 +85,6 @@ void CFxRack::bt_up_clicked()
 }
 
 
-//FIXME!!!
 void CFxRack::bt_down_clicked()
 {
 
@@ -107,19 +92,16 @@ void CFxRack::bt_down_clicked()
      return;
 
   QModelIndex index = tree_view->selectionModel()->currentIndex();
+
   int row = index.row();
   if (row == model->rowCount() - 1)
      return;
 
   QList<QStandardItem *> l = model->takeRow (row);
 
-//  qDebug() << "before: " << model->rowCount();
-
   int new_row = row + 1 ;
 
   model->insertRow (new_row, l[0]);
-
-//  qDebug() << "after: " << model->rowCount();
 
   effects.swap (row, new_row);
 }
@@ -340,3 +322,13 @@ void CFxRack::reset_all_fx (size_t srate, size_t ch)
           }
 }
 
+/*
+const QModelIndex CFxRack::index_from_name (const QString &name)
+{
+  QList <QStandardItem *> lst = model->findItems (name);
+  if (lst.size() > 0)
+     return model->indexFromItem (lst[0]);
+  else
+      return QModelIndex();
+}
+*/

@@ -28,7 +28,6 @@ public:
 
   QList <AFx*> effects;
   
-
   QWidget *inserts; //inserts section for the mixer, the "external" widget
   CFxTreeView *tree_view; //inside of the inserts widget
 
@@ -40,7 +39,7 @@ public:
   void add_entry (AFx *f, bool checked = true);
   void ins_entry (AFx *f);
 
-  const QModelIndex index_from_name (const QString &name);
+  //const QModelIndex index_from_name (const QString &name);
   const QModelIndex index_from_idx (int idx);
   int get_sel_index();
 

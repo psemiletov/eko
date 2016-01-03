@@ -1,7 +1,7 @@
 #include "afx.h"
 
 
-AFx::AFx (size_t srate)
+AFx::AFx()
 {
   bypass = false;
   realtime = true;
@@ -11,7 +11,7 @@ AFx::AFx (size_t srate)
   state = FXS_STOP;
   name = "AFx";
 
-  samplerate = srate;
+  samplerate = 1;
   channels = 1;//chann;
   
   wnd_ui = new QWidget();

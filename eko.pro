@@ -16,7 +16,7 @@ useclang{
 
 useopencl{
     message ("OpenCL enabled")
-    LIBS+= -lOpenCL      
+    LIBS+= -lOpenCL
     QMAKE_CXXFLAGS += -std=c++0x
     PKGCONFIG += OpenCL
     DEFINES += OPENCL_ENABLE
@@ -82,7 +82,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 #QT += blah blah blah
    }
 
-QMAKE_CXXFLAGS += -fpermissive
+#QMAKE_CXXFLAGS += -fpermissive
 
 unix: {
 

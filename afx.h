@@ -48,7 +48,7 @@ public:
   
   QString name;
 
-  AFx (size_t srate);
+  AFx();
   virtual ~AFx();
 
   virtual size_t execute (float **input, float **output, size_t frames) = 0;
@@ -59,7 +59,7 @@ public:
 
   void show_ui();
 
-  virtual AFx* self_create (size_t srate) = 0;
+  virtual AFx* self_create() = 0;
 };
 
 

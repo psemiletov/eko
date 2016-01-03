@@ -4,13 +4,11 @@
 
 CFxList::CFxList()
 {
-  list.append (new CFxSimpleAmp (1));
-  list.append (new CFxSimpleOverdrive (1));
-  list.append (new CFxPitchShift (1));
-  list.append (new CFxSimpleFilter (1));
-  list.append (new CFxClassicOverdrive (1));
-  
-  
+  list.append (new CFxSimpleAmp);
+  list.append (new CFxSimpleOverdrive);
+  list.append (new CFxPitchShift);
+  list.append (new CFxSimpleFilter);
+  list.append (new CFxClassicOverdrive);
 }
 
 
