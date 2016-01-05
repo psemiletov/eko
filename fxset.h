@@ -121,7 +121,7 @@ public slots:
 };
 
 
-class CFxClassicOverdrive: public AFx
+class CMetaluga: public AFx
 {
   Q_OBJECT
 
@@ -136,8 +136,8 @@ public:
   
   QDial *dial_tone;
 
-  CFxClassicOverdrive();
-  ~CFxClassicOverdrive();
+  CMetaluga();
+  ~CMetaluga();
 
   AFx* self_create();
 

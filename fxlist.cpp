@@ -8,7 +8,7 @@ CFxList::CFxList()
   list.append (new CFxSimpleOverdrive);
   list.append (new CFxPitchShift);
   list.append (new CFxSimpleFilter);
-  list.append (new CFxClassicOverdrive);
+  list.append (new CMetaluga);
 }
 
 

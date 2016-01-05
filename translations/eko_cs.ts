@@ -4,27 +4,27 @@
 <context>
     <name>CAboutWindow</name>
     <message>
-        <location filename="../eko.cpp" line="2697"/>
+        <location filename="../eko.cpp" line="2652"/>
         <source>Code</source>
         <translation>Kód</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2698"/>
+        <location filename="../eko.cpp" line="2653"/>
         <source>Acknowledgements</source>
         <translation>Poděkování</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2699"/>
+        <location filename="../eko.cpp" line="2654"/>
         <source>Translations</source>
         <translation>Překlady</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2700"/>
+        <location filename="../eko.cpp" line="2655"/>
         <source>Packages</source>
         <translation>Balíčky</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2708"/>
+        <location filename="../eko.cpp" line="2663"/>
         <source>About</source>
         <translation>O programu</translation>
     </message>
@@ -32,37 +32,37 @@
 <context>
     <name>CChangeFormatWindow</name>
     <message>
-        <location filename="../eko.cpp" line="3783"/>
+        <location filename="../eko.cpp" line="3754"/>
         <source>Format</source>
         <translation>Formát</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3790"/>
+        <location filename="../eko.cpp" line="3761"/>
         <source>Subtype</source>
         <translation>Podtyp</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3797"/>
+        <location filename="../eko.cpp" line="3768"/>
         <source>Samplerate</source>
         <translation>Vzorkovací kmitočet</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3804"/>
+        <location filename="../eko.cpp" line="3775"/>
         <source>Channels</source>
         <translation>Kanály</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3812"/>
+        <location filename="../eko.cpp" line="3783"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3813"/>
+        <location filename="../eko.cpp" line="3784"/>
         <source>Exit</source>
         <translation>Ukončit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3824"/>
+        <location filename="../eko.cpp" line="3795"/>
         <source>Sound file format</source>
         <translation>Formát zvukového souboru</translation>
     </message>
@@ -70,44 +70,44 @@
 <context>
     <name>CDocument</name>
     <message>
-        <location filename="../document.cpp" line="1834"/>
+        <location filename="../document.cpp" line="1201"/>
         <source>file type of %1 is not supported</source>
         <translation>Souborový typ %1 není podporován</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1846"/>
+        <location filename="../document.cpp" line="1213"/>
         <source>cannot open %1 because of: %2</source>
         <translation>Nelze otevřít %1. Důvod: %2</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1869"/>
+        <location filename="../document.cpp" line="1238"/>
         <source>%1 is open</source>
         <translation>%1 je otevřen</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1889"/>
+        <location filename="../document.cpp" line="1259"/>
         <source>elapsed: %1 ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1903"/>
-        <location filename="../document.cpp" line="1939"/>
-        <location filename="../document.cpp" line="2055"/>
+        <location filename="../document.cpp" line="1274"/>
+        <location filename="../document.cpp" line="1306"/>
+        <location filename="../document.cpp" line="1414"/>
         <source>cannot save %1 because of: %2</source>
         <translation>Nelze uložit %1. Důvod: %2</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1953"/>
+        <location filename="../document.cpp" line="1320"/>
         <source>%1 is saved</source>
         <translation>%1 je uložen</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1954"/>
+        <location filename="../document.cpp" line="1321"/>
         <source>elapsed: %1 milliseconds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1970"/>
+        <location filename="../document.cpp" line="1334"/>
         <source>new[%1]</source>
         <translation>Nový [%1]</translation>
     </message>
@@ -115,12 +115,12 @@
 <context>
     <name>CEKO</name>
     <message>
-        <location filename="../eko.cpp" line="558"/>
+        <location filename="../eko.cpp" line="589"/>
         <source>edit</source>
         <translation>Úpravy</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="699"/>
+        <location filename="../eko.cpp" line="730"/>
         <source>text browser</source>
         <translation>Prohlížeč textu</translation>
     </message>
@@ -129,7 +129,7 @@
         <translation type="obsolete">&lt;b&gt;EKO %1 @ http://eko.sourceforge.net&lt;/b&gt;&lt;br&gt;od Petera Semiletova (peter.semiletov@gmail.com)&lt;br&gt;Přečtěte si příručku na kartě pro &lt;i&gt;učení&lt;/i&gt;!</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="719"/>
+        <location filename="../eko.cpp" line="749"/>
         <source>&lt;b&gt;EKO %1 @ http://semiletov.org/eko&lt;/b&gt;&lt;br&gt;by Peter Semiletov (tea@list.ru)&lt;br&gt;read the Manual under the &lt;i&gt;learn&lt;/i&gt; tab!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -138,436 +138,436 @@
         <translation type="obsolete">Vše (*);;Soubory WAV (*.wav);;Komprimované soubory (*.ogg *.flac)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="548"/>
+        <location filename="../eko.cpp" line="579"/>
         <source>FIF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="907"/>
+        <location filename="../eko.cpp" line="946"/>
         <source>All (*);;WAV files (*.wav);;Compressed files (*.ogg *.flac *.mp3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="946"/>
+        <location filename="../eko.cpp" line="985"/>
         <source>This file is open in the read-only mode. You can save it with another name using &lt;b&gt;Save as&lt;/b&gt;</source>
         <translation>Soubor je otevřen v režimu pouze pro čtení. Můžete jej uložit pod jiným názvem pomocí &lt;b&gt;Uložit jako&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1026"/>
-        <location filename="../eko.cpp" line="2727"/>
-        <location filename="../eko.cpp" line="5675"/>
+        <location filename="../eko.cpp" line="1065"/>
+        <location filename="../eko.cpp" line="2682"/>
+        <location filename="../eko.cpp" line="5337"/>
         <source>%1 already exists
 Do you want to overwrite?</source>
         <translation>%1 již existuje.
 Chcete jej přepsat?</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1061"/>
+        <location filename="../eko.cpp" line="1100"/>
         <source>Test</source>
         <translation>Zkouška</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1064"/>
+        <location filename="../eko.cpp" line="1103"/>
         <source>New</source>
         <translation>Nový</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1066"/>
+        <location filename="../eko.cpp" line="1105"/>
         <source>Create a new file</source>
         <translation>Vytvořit nový soubor</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1072"/>
+        <location filename="../eko.cpp" line="1111"/>
         <source>Open file</source>
         <translation>Otevřít soubor</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1073"/>
+        <location filename="../eko.cpp" line="1112"/>
         <source>Open an existing file</source>
         <translation>Otevřít stávající soubor</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1080"/>
+        <location filename="../eko.cpp" line="1119"/>
         <source>Save</source>
         <translation>Uložit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1082"/>
+        <location filename="../eko.cpp" line="1121"/>
         <source>Save the document to disk</source>
         <translation>Uložit dokument na disk</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1085"/>
+        <location filename="../eko.cpp" line="1124"/>
         <source>Save As</source>
         <translation>Uložit jako</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1086"/>
+        <location filename="../eko.cpp" line="1125"/>
         <source>Save the document under a new name</source>
         <translation>Uložit dokument pod jiným názvem</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1089"/>
+        <location filename="../eko.cpp" line="1128"/>
         <source>Exit</source>
         <translation>Ukončit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1091"/>
+        <location filename="../eko.cpp" line="1130"/>
         <source>Exit the application</source>
         <translation>Ukončit program</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1097"/>
+        <location filename="../eko.cpp" line="1136"/>
         <source>Cut</source>
         <translation>Vyjmout</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1099"/>
+        <location filename="../eko.cpp" line="1138"/>
         <source>Cut the current selection&apos;s contents to the clipboard</source>
         <translation>Vyjmout obsah nynějšího výběru do schránky</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1105"/>
+        <location filename="../eko.cpp" line="1144"/>
         <source>Copy</source>
         <translation>Kopírovat</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1107"/>
+        <location filename="../eko.cpp" line="1146"/>
         <source>Copy the current selection&apos;s contents to the clipboard</source>
         <translation>Kopírovat obsah nynějšího výběru do schránky</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1114"/>
+        <location filename="../eko.cpp" line="1153"/>
         <source>Paste</source>
         <translation>Vložit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1116"/>
+        <location filename="../eko.cpp" line="1155"/>
         <source>Paste the clipboard&apos;s contents into the current selection</source>
         <translation>Vložit obsah schránky do nynějšího výběru</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1119"/>
+        <location filename="../eko.cpp" line="1158"/>
         <source>Undo</source>
         <translation>Zpět</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1123"/>
+        <location filename="../eko.cpp" line="1162"/>
         <source>Redo</source>
         <translation>Znovu</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1126"/>
+        <location filename="../eko.cpp" line="1165"/>
         <source>About</source>
         <translation>O programu</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1129"/>
+        <location filename="../eko.cpp" line="1168"/>
         <source>About Qt</source>
         <translation>O Qt</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1132"/>
+        <location filename="../eko.cpp" line="1171"/>
         <source>Play/Pause (Space)</source>
         <translation>Přehrát/Pozastavit (Mezerník)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1133"/>
+        <location filename="../eko.cpp" line="1172"/>
         <source>Play/Pause</source>
         <translation>Přehrát/Pozastavit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1136"/>
-        <location filename="../eko.cpp" line="1137"/>
+        <location filename="../eko.cpp" line="1175"/>
+        <location filename="../eko.cpp" line="1176"/>
         <source>Stop</source>
         <translation>Zastavit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1144"/>
-        <location filename="../eko.cpp" line="1387"/>
+        <location filename="../eko.cpp" line="1183"/>
+        <location filename="../eko.cpp" line="1426"/>
         <source>File</source>
         <translation>Soubor</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1151"/>
+        <location filename="../eko.cpp" line="1190"/>
         <source>Record</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1152"/>
-        <location filename="../eko.cpp" line="3024"/>
+        <location filename="../eko.cpp" line="1191"/>
+        <location filename="../eko.cpp" line="2979"/>
         <source>Open</source>
         <translation>Otevřít</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1153"/>
+        <location filename="../eko.cpp" line="1192"/>
         <source>Last closed file</source>
         <translation>Poslední zavřený soubor</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1157"/>
+        <location filename="../eko.cpp" line="1196"/>
         <source>Change format</source>
         <translation>Změnit formát</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1158"/>
+        <location filename="../eko.cpp" line="1197"/>
         <source>File info</source>
         <translation>Informace o souboru</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1165"/>
+        <location filename="../eko.cpp" line="1204"/>
         <source>Save as different</source>
         <translation>Uložit jako jiný</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1168"/>
+        <location filename="../eko.cpp" line="1207"/>
         <source>Save timestamped version</source>
         <translation>Uložit verzi opatřenou časovým razítkem</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1169"/>
+        <location filename="../eko.cpp" line="1208"/>
         <source>Save session</source>
         <translation>Uložit sezení</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1173"/>
+        <location filename="../eko.cpp" line="1212"/>
         <source>Import/Export</source>
         <translation>Zavést/Vyvést</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1175"/>
+        <location filename="../eko.cpp" line="1214"/>
         <source>Import from RAW</source>
         <translation>Zavést z RAW</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1176"/>
+        <location filename="../eko.cpp" line="1215"/>
         <source>Export to MP3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1182"/>
+        <location filename="../eko.cpp" line="1221"/>
         <source>File actions</source>
         <translation>Činnosti pro soubor</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1183"/>
+        <location filename="../eko.cpp" line="1222"/>
         <source>Reload</source>
         <translation>Nahrát znovu</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1185"/>
+        <location filename="../eko.cpp" line="1224"/>
         <source>Recent files</source>
         <translation>Naposledy otevřené soubory</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1186"/>
+        <location filename="../eko.cpp" line="1225"/>
         <source>Sessions</source>
         <translation>Sezení</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1190"/>
+        <location filename="../eko.cpp" line="1229"/>
         <source>Close current</source>
         <translation>Zavřít nynější</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1195"/>
-        <location filename="../eko.cpp" line="1393"/>
+        <location filename="../eko.cpp" line="1234"/>
+        <location filename="../eko.cpp" line="1432"/>
         <source>Edit</source>
         <translation>Úpravy</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1202"/>
+        <location filename="../eko.cpp" line="1241"/>
         <source>Copy to new</source>
         <translation>Kopírovat do nového</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1203"/>
+        <location filename="../eko.cpp" line="1242"/>
         <source>Copy to new (default format)</source>
         <translation>Kopírovat do nového (výchozí formát)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1205"/>
+        <location filename="../eko.cpp" line="1244"/>
         <source>Delete (Del)</source>
         <translation>Smazat (Del)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1206"/>
+        <location filename="../eko.cpp" line="1245"/>
         <source>Trim</source>
         <translation>Ustřihnout</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1210"/>
+        <location filename="../eko.cpp" line="1249"/>
         <source>Copy current file name</source>
         <translation>Kopírovat název nynějšího souboru</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1214"/>
+        <location filename="../eko.cpp" line="1253"/>
         <source>Select all</source>
         <translation>Vybrat vše</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1215"/>
+        <location filename="../eko.cpp" line="1254"/>
         <source>Deselect</source>
         <translation>Zrušit výběr</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1223"/>
+        <location filename="../eko.cpp" line="1262"/>
         <source>Search</source>
         <translation>Hledání</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1226"/>
+        <location filename="../eko.cpp" line="1265"/>
         <source>Find</source>
         <translation>Najít</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1227"/>
+        <location filename="../eko.cpp" line="1266"/>
         <source>Find next</source>
         <translation>Najít další</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1228"/>
+        <location filename="../eko.cpp" line="1267"/>
         <source>Find previous</source>
         <translation>Najít předchozí</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1231"/>
+        <location filename="../eko.cpp" line="1270"/>
         <source>Functions</source>
         <translation>Funkce</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1235"/>
+        <location filename="../eko.cpp" line="1274"/>
         <source>Silence</source>
         <translation>Ticho</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1238"/>
+        <location filename="../eko.cpp" line="1277"/>
         <source>Insert silence</source>
         <translation>Vložit ticho</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1239"/>
+        <location filename="../eko.cpp" line="1278"/>
         <source>Silence selection</source>
         <translation>Výběr ticha</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1242"/>
+        <location filename="../eko.cpp" line="1281"/>
         <source>Generate</source>
         <translation>Vytvořit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1245"/>
+        <location filename="../eko.cpp" line="1284"/>
         <source>Sine wave</source>
         <translation>Sinusová vlna</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1246"/>
+        <location filename="../eko.cpp" line="1285"/>
         <source>Noise</source>
         <translation>Šum</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1249"/>
+        <location filename="../eko.cpp" line="1288"/>
         <source>Channels</source>
         <translation>Kanály</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1252"/>
+        <location filename="../eko.cpp" line="1291"/>
         <source>Stereo to mono</source>
         <translation>Stereo na mono</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1253"/>
+        <location filename="../eko.cpp" line="1292"/>
         <source>Mono to stereo 50%</source>
         <translation>Mono na stereo 50%</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1254"/>
+        <location filename="../eko.cpp" line="1293"/>
         <source>Mono to stereo full</source>
         <translation>Mono na stereo úplné</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1255"/>
+        <location filename="../eko.cpp" line="1294"/>
         <source>5.1 to stereo</source>
         <translation>5.1 na stereo</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1256"/>
+        <location filename="../eko.cpp" line="1295"/>
         <source>5.1 to stereo (another algorhythm)</source>
         <translation>5.1 na stereo (jiný algoritmus)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1259"/>
+        <location filename="../eko.cpp" line="1298"/>
         <source>Swap channels</source>
         <translation>Vyměnit kanály</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1260"/>
+        <location filename="../eko.cpp" line="1299"/>
         <source>Copy channel</source>
         <translation>Kopírovat kanál</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1261"/>
+        <location filename="../eko.cpp" line="1300"/>
         <source>Mute channel</source>
         <translation>Ztlumit kanál</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1264"/>
+        <location filename="../eko.cpp" line="1303"/>
         <source>Fade</source>
         <translation>Zesílit/Zeslabit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1267"/>
+        <location filename="../eko.cpp" line="1306"/>
         <source>Fade in</source>
         <translation>Postupné zesílení signálu</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1268"/>
+        <location filename="../eko.cpp" line="1307"/>
         <source>Fade out</source>
         <translation>Postupné zeslabení signálu</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1271"/>
+        <location filename="../eko.cpp" line="1310"/>
         <source>Dynamics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1276"/>
+        <location filename="../eko.cpp" line="1315"/>
         <source>Remove volume envelope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5859"/>
-        <location filename="../eko.cpp" line="5877"/>
+        <location filename="../eko.cpp" line="5499"/>
+        <location filename="../eko.cpp" line="5517"/>
         <source>FFMPEG is not installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5862"/>
-        <location filename="../eko.cpp" line="5880"/>
+        <location filename="../eko.cpp" line="5502"/>
+        <location filename="../eko.cpp" line="5520"/>
         <source>FFMPEG is installed, video files and MP3 import: enabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5867"/>
-        <location filename="../eko.cpp" line="5885"/>
+        <location filename="../eko.cpp" line="5507"/>
+        <location filename="../eko.cpp" line="5525"/>
         <source>Mplayer is not installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5870"/>
-        <location filename="../eko.cpp" line="5888"/>
+        <location filename="../eko.cpp" line="5510"/>
+        <location filename="../eko.cpp" line="5528"/>
         <source>Mplayer is installed, video files and MP3 import: enabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5900"/>
-        <location filename="../eko.cpp" line="5912"/>
+        <location filename="../eko.cpp" line="5540"/>
+        <location filename="../eko.cpp" line="5552"/>
         <source>Input latency: %1 ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5901"/>
-        <location filename="../eko.cpp" line="5913"/>
+        <location filename="../eko.cpp" line="5541"/>
+        <location filename="../eko.cpp" line="5553"/>
         <source>Output latency: %1 ms</source>
         <translation type="unfinished"></translation>
     </message>
@@ -576,67 +576,67 @@ Chcete jej přepsat?</translation>
         <translation type="obsolete">Zesílení</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1274"/>
+        <location filename="../eko.cpp" line="1313"/>
         <source>Normalize</source>
         <translation>Normalizovat</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1275"/>
+        <location filename="../eko.cpp" line="1314"/>
         <source>Apply volume envelope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1927"/>
+        <location filename="../eko.cpp" line="1950"/>
         <source>MP3 encode command</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1950"/>
+        <location filename="../eko.cpp" line="1973"/>
         <source>Panner:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1955"/>
+        <location filename="../eko.cpp" line="1978"/>
         <source>linear, law: -6 dB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1956"/>
+        <location filename="../eko.cpp" line="1979"/>
         <source>linear, law: 0 dB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1957"/>
+        <location filename="../eko.cpp" line="1980"/>
         <source>square root, law: -3 dB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1958"/>
+        <location filename="../eko.cpp" line="1981"/>
         <source>sin/cos, law: -3 dB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1974"/>
+        <location filename="../eko.cpp" line="1997"/>
         <source>MP3 and video decoder (restart EKO to apply):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2130"/>
+        <location filename="../eko.cpp" line="2097"/>
         <source>Input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2177"/>
+        <location filename="../eko.cpp" line="2143"/>
         <source>Buffer size (in frames)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5352"/>
+        <location filename="../eko.cpp" line="5138"/>
         <source>&lt;b&gt;Press Stop to stop recording!&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5522"/>
+        <location filename="../eko.cpp" line="5190"/>
         <source>There is no plugin file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -645,277 +645,277 @@ Chcete jej přepsat?</translation>
         <translation type="obsolete">Filtr</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1284"/>
+        <location filename="../eko.cpp" line="1323"/>
         <source>Analyze</source>
         <translation>Rozbor dat</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1287"/>
+        <location filename="../eko.cpp" line="1326"/>
         <source>RMS</source>
         <translation>RMS</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1288"/>
+        <location filename="../eko.cpp" line="1327"/>
         <source>Levels</source>
         <translation>Úrovně</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1291"/>
+        <location filename="../eko.cpp" line="1330"/>
         <source>DC Offset</source>
         <translation>Posun stejnosměrného proudu</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1294"/>
+        <location filename="../eko.cpp" line="1333"/>
         <source>Detect DC offset</source>
         <translation>Zjistit posun stejnosměrného proudu</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1295"/>
+        <location filename="../eko.cpp" line="1334"/>
         <source>Fix DC offset manually</source>
         <translation>Opravit posun stejnosměrného proudu ručně</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1296"/>
+        <location filename="../eko.cpp" line="1335"/>
         <source>Fix DC offset auto</source>
         <translation>Opravit posun stejnosměrného proudu automaticky</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1299"/>
+        <location filename="../eko.cpp" line="1338"/>
         <source>Other</source>
         <translation>Jiné</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1302"/>
+        <location filename="../eko.cpp" line="1341"/>
         <source>Reverse</source>
         <translation>Obrátit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1305"/>
+        <location filename="../eko.cpp" line="1344"/>
         <source>Nav</source>
         <translation>Pohyb</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1311"/>
+        <location filename="../eko.cpp" line="1350"/>
         <source>Play looped on/off</source>
         <translation>Přehrávat ve smyčce (zapnuto/vypnuto)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1318"/>
+        <location filename="../eko.cpp" line="1357"/>
         <source>Next tab</source>
         <translation>Další karta</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1319"/>
+        <location filename="../eko.cpp" line="1358"/>
         <source>Prev tab</source>
         <translation>Předchozí karta</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1320"/>
+        <location filename="../eko.cpp" line="1359"/>
         <source>Focus the Famous input field</source>
         <translation>Zaměřit prvotřídní vstupní pole</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1321"/>
+        <location filename="../eko.cpp" line="1360"/>
         <source>Focus the editor</source>
         <translation>Zaměřit editor</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1323"/>
+        <location filename="../eko.cpp" line="1362"/>
         <source>Fm</source>
         <translation>Správce souborů</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1326"/>
+        <location filename="../eko.cpp" line="1365"/>
         <source>File operations</source>
         <translation>Souborové operace</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1329"/>
+        <location filename="../eko.cpp" line="1368"/>
         <source>Create new directory</source>
         <translation>Vytvořit nový adresář</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1330"/>
+        <location filename="../eko.cpp" line="1369"/>
         <source>Rename</source>
         <translation>Přejmenovat</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1331"/>
+        <location filename="../eko.cpp" line="1370"/>
         <source>Delete file</source>
         <translation>Smazat soubor</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1333"/>
+        <location filename="../eko.cpp" line="1372"/>
         <source>File information</source>
         <translation>Informace o souboru</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1336"/>
+        <location filename="../eko.cpp" line="1375"/>
         <source>Full info</source>
         <translation>Úplná informace</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1339"/>
+        <location filename="../eko.cpp" line="1378"/>
         <source>Go to home dir</source>
         <translation>Jít do domovského adresáře</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1340"/>
+        <location filename="../eko.cpp" line="1379"/>
         <source>Refresh current dir</source>
         <translation>Obnovit nynější adresář</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1342"/>
+        <location filename="../eko.cpp" line="1381"/>
         <source>Select by regexp</source>
         <translation>Vybrat podle regulárního výrazu</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1343"/>
+        <location filename="../eko.cpp" line="1382"/>
         <source>Deselect by regexp</source>
         <translation>Zrušit výběr podle regulárního výrazu</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1346"/>
+        <location filename="../eko.cpp" line="1385"/>
         <source>View</source>
         <translation>Pohled</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1349"/>
+        <location filename="../eko.cpp" line="1388"/>
         <source>Palettes</source>
         <translation>Palety</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1352"/>
+        <location filename="../eko.cpp" line="1391"/>
         <source>Themes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1357"/>
+        <location filename="../eko.cpp" line="1396"/>
         <source>Profiles</source>
         <translation>Profily</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1360"/>
+        <location filename="../eko.cpp" line="1399"/>
         <source>Save profile</source>
         <translation>Uložit profil</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1362"/>
+        <location filename="../eko.cpp" line="1401"/>
         <source>Show/hide FX Rack</source>
         <translation>Ukázat/Skrýt přihrádku s efekty (FX)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1364"/>
+        <location filename="../eko.cpp" line="1403"/>
         <source>Toggle fullscreen</source>
         <translation>Zapnout/Vypnout zobrazení na celou obrazovku</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1365"/>
+        <location filename="../eko.cpp" line="1404"/>
         <source>Stay on top</source>
         <translation>Zůstat v popředí</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1368"/>
+        <location filename="../eko.cpp" line="1407"/>
         <source>Help</source>
         <translation>Nápověda</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1372"/>
+        <location filename="../eko.cpp" line="1411"/>
         <source>System check</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1376"/>
+        <location filename="../eko.cpp" line="1415"/>
         <source>NEWS</source>
         <translation>Zprávy</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1379"/>
+        <location filename="../eko.cpp" line="1418"/>
         <source>License</source>
         <translation>Povolení</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1399"/>
+        <location filename="../eko.cpp" line="1438"/>
         <source>Transport</source>
         <translation>Přesun</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1402"/>
+        <location filename="../eko.cpp" line="1441"/>
         <source>looped</source>
         <translation>ve smyčce</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1409"/>
+        <location filename="../eko.cpp" line="1448"/>
         <source>Current time: </source>
         <translation>Nynější čas: </translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1419"/>
+        <location filename="../eko.cpp" line="1458"/>
         <source>Ready</source>
         <translation>Připraven</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1779"/>
+        <location filename="../eko.cpp" line="1802"/>
         <source>Open Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1795"/>
+        <location filename="../eko.cpp" line="1818"/>
         <source>tune</source>
         <translation>Vyladění</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1806"/>
+        <location filename="../eko.cpp" line="1829"/>
         <source>Interface font</source>
         <translation>Písmo rozhraní</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1823"/>
+        <location filename="../eko.cpp" line="1846"/>
         <source>Icons size</source>
         <translation>Velikost ikon</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1844"/>
+        <location filename="../eko.cpp" line="1867"/>
         <source>UI style</source>
         <translation>Styl rozhraní</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1848"/>
+        <location filename="../eko.cpp" line="1871"/>
         <source>Amplitude meter bar in dB</source>
         <translation>Panel pro měření rozkmitu v dB</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1852"/>
+        <location filename="../eko.cpp" line="1875"/>
         <source>Use traditional File Save/Open dialogs</source>
         <translation>Používat tradiční dialogy pro uložení/otevření souboru</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1875"/>
+        <location filename="../eko.cpp" line="1898"/>
         <source>Use Alt key to access main menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1894"/>
+        <location filename="../eko.cpp" line="1917"/>
         <source>Interface</source>
         <translation>Rozhraní</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1905"/>
+        <location filename="../eko.cpp" line="1928"/>
         <source>Temp directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1911"/>
+        <location filename="../eko.cpp" line="1934"/>
         <source>Select</source>
         <translation type="unfinished">Vybrat</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1923"/>
+        <location filename="../eko.cpp" line="1946"/>
         <source>Set default format for new files</source>
         <translation>Nastavit výchozí formát pro nové soubory</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1938"/>
+        <location filename="../eko.cpp" line="1961"/>
         <source>Ogg vorbis quality on saving</source>
         <translation>Jakost Ogg Vorbis při uložení</translation>
     </message>
@@ -959,338 +959,355 @@ Chcete jej přepsat?</translation>
         <translation>Potlačit jazyk</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2066"/>
+        <location filename="../eko.cpp" line="2065"/>
         <source>Common</source>
         <translation>Společné</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2089"/>
+        <location filename="../eko.cpp" line="2077"/>
         <source>Sound devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2118"/>
+        <location filename="../eko.cpp" line="2085"/>
         <source>Output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2154"/>
+        <location filename="../eko.cpp" line="2120"/>
         <source>Mono recording mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2160"/>
+        <location filename="../eko.cpp" line="2126"/>
         <source>Mix both channels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2161"/>
+        <location filename="../eko.cpp" line="2127"/>
         <source>Use left channel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2162"/>
+        <location filename="../eko.cpp" line="2128"/>
         <source>Use right channel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2206"/>
+        <location filename="../eko.cpp" line="2172"/>
         <source>Monitor input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2241"/>
+        <location filename="../eko.cpp" line="2206"/>
         <source>Assign</source>
         <translation>Přiřadit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2242"/>
+        <location filename="../eko.cpp" line="2207"/>
         <source>Remove</source>
         <translation>Odstranit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2256"/>
+        <location filename="../eko.cpp" line="2221"/>
         <source>Keyboard</source>
         <translation>Klávesnice</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2409"/>
+        <location filename="../eko.cpp" line="2364"/>
         <source>learn</source>
         <translation>Učení</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2449"/>
+        <location filename="../eko.cpp" line="2404"/>
         <source>%1 - saved</source>
         <translation>%1 - uloženo</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2451"/>
+        <location filename="../eko.cpp" line="2406"/>
         <source>Cannot save %1</source>
         <translation>Nelze uložit %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2849"/>
-        <location filename="../eko.cpp" line="2907"/>
-        <location filename="../eko.cpp" line="3151"/>
-        <location filename="../eko.cpp" line="3346"/>
+        <location filename="../eko.cpp" line="2804"/>
+        <location filename="../eko.cpp" line="2862"/>
+        <location filename="../eko.cpp" line="3106"/>
+        <location filename="../eko.cpp" line="3299"/>
         <source>Enter the name</source>
         <translation>Zadejte název</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2850"/>
-        <location filename="../eko.cpp" line="2908"/>
-        <location filename="../eko.cpp" line="3152"/>
-        <location filename="../eko.cpp" line="3347"/>
+        <location filename="../eko.cpp" line="2805"/>
+        <location filename="../eko.cpp" line="2863"/>
+        <location filename="../eko.cpp" line="3107"/>
+        <location filename="../eko.cpp" line="3300"/>
         <source>Name:</source>
         <translation>Název:</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2851"/>
+        <location filename="../eko.cpp" line="2806"/>
         <source>new_directory</source>
         <translation>nový_adresář</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2909"/>
+        <location filename="../eko.cpp" line="2864"/>
         <source>new_session</source>
         <translation>nové_sezení</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2980"/>
+        <location filename="../eko.cpp" line="2935"/>
         <source>Name</source>
         <translation>Název</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2991"/>
+        <location filename="../eko.cpp" line="2946"/>
         <source>Go</source>
         <translation>Jít na</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2994"/>
+        <location filename="../eko.cpp" line="2949"/>
         <source>Home</source>
         <translation>Domovská složka</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2997"/>
+        <location filename="../eko.cpp" line="2952"/>
         <source>Refresh</source>
         <translation>Obnovit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2998"/>
+        <location filename="../eko.cpp" line="2953"/>
         <source>Operations</source>
         <translation>Operace</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3027"/>
+        <location filename="../eko.cpp" line="2982"/>
         <source>Save as</source>
         <translation>Uložit jako</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3063"/>
+        <location filename="../eko.cpp" line="3018"/>
         <source>&lt;b&gt;Bookmarks&lt;/b&gt;</source>
         <translation>&lt;b&gt;Záložky&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3103"/>
+        <location filename="../eko.cpp" line="3058"/>
         <source>manage</source>
         <translation>Správa</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3153"/>
+        <location filename="../eko.cpp" line="3108"/>
         <source>new</source>
         <translation>Nový</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3182"/>
+        <location filename="../eko.cpp" line="3137"/>
         <source>Are you sure to delete
 %1?</source>
         <translation>Jste si jistý, že chcete smazat
 %1?</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3226"/>
+        <location filename="../eko.cpp" line="3181"/>
         <source>file name: %1</source>
         <translation>Název souboru: %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3227"/>
+        <location filename="../eko.cpp" line="3182"/>
         <source>size: %1 kbytes</source>
         <translation>Velikost: %1 kB</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3228"/>
+        <location filename="../eko.cpp" line="3183"/>
         <source>created: %1</source>
         <translation>Vytvořeno: %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3229"/>
+        <location filename="../eko.cpp" line="3184"/>
         <source>modified: %1</source>
         <translation>Změněno: %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3348"/>
+        <location filename="../eko.cpp" line="3301"/>
         <source>new_profile</source>
         <translation>Nový_profil</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3587"/>
+        <location filename="../eko.cpp" line="3555"/>
         <source>Cannot open the temporary file with the recorded sound.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3716"/>
+        <location filename="../eko.cpp" line="3687"/>
         <source>samplerate: %1</source>
         <translation>Vzorkovací kmitočet: %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3717"/>
+        <location filename="../eko.cpp" line="3688"/>
         <source>channels: %1</source>
         <translation>Kanály: %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4046"/>
+        <location filename="../eko.cpp" line="4024"/>
         <source>RMS is %1 dB</source>
         <translation>RMS je %1 dB</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4272"/>
+        <location filename="../eko.cpp" line="4235"/>
         <source>Normalize to dB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4273"/>
+        <location filename="../eko.cpp" line="4236"/>
         <source>dB:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4379"/>
-        <location filename="../eko.cpp" line="4445"/>
+        <location filename="../eko.cpp" line="4337"/>
+        <location filename="../eko.cpp" line="4365"/>
         <source>Which channel?</source>
         <translation>Který kanál?</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4526"/>
+        <location filename="../eko.cpp" line="4415"/>
         <source>Sine wave parameters</source>
         <translation>Parametry sinusové vlny</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4534"/>
+        <location filename="../eko.cpp" line="4423"/>
         <source>Frequency</source>
         <translation>Kmitočet</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4546"/>
-        <location filename="../eko.cpp" line="5161"/>
+        <location filename="../eko.cpp" line="4435"/>
+        <location filename="../eko.cpp" line="4949"/>
         <source>Duration in seconds</source>
         <translation>Doba trvání v sekundách</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4558"/>
-        <location filename="../eko.cpp" line="5173"/>
+        <location filename="../eko.cpp" line="4447"/>
+        <location filename="../eko.cpp" line="4961"/>
         <source>Amplitude in dB</source>
         <translation>Rozkmit v dB</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4575"/>
-        <location filename="../eko.cpp" line="5190"/>
+        <location filename="../eko.cpp" line="4464"/>
+        <location filename="../eko.cpp" line="4978"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4576"/>
-        <location filename="../eko.cpp" line="5191"/>
+        <location filename="../eko.cpp" line="4465"/>
+        <location filename="../eko.cpp" line="4979"/>
         <source>Cancel</source>
         <translation>Zrušit</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4709"/>
+        <location filename="../eko.cpp" line="4556"/>
         <source>?</source>
         <translation>?</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4710"/>
+        <location filename="../eko.cpp" line="4557"/>
         <source>How many milliseconds?</source>
         <translation>Kolik milisekund?</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4978"/>
+        <location filename="../eko.cpp" line="4775"/>
         <source>average level in samples = %1</source>
         <translation>Průměrná úroveň ve vzorcích = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4979"/>
+        <location filename="../eko.cpp" line="4776"/>
         <source>average level in dB = %1</source>
         <translation>Průměrná úroveň v dB = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4980"/>
+        <location filename="../eko.cpp" line="4777"/>
         <source>max level in samples = %1</source>
         <translation>Nejvyšší úroveň ve vzorcích = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4981"/>
+        <location filename="../eko.cpp" line="4778"/>
         <source>max level in dB = %1</source>
         <translation>Nejvyšší úroveň v dB = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4982"/>
+        <location filename="../eko.cpp" line="4779"/>
         <source>min level in samples = %1</source>
         <translation>Nejnižší úroveň ve vzorcích = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4983"/>
+        <location filename="../eko.cpp" line="4780"/>
         <source>min level in dB = %1</source>
         <translation>Nejnižší úroveň v dB = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5009"/>
+        <location filename="../eko.cpp" line="4805"/>
         <source>DC offset in samples = %1</source>
         <translation>Vyrovnání posun proudu ve vzorcích = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5019"/>
+        <location filename="../eko.cpp" line="4815"/>
         <source>fix DC offset</source>
         <translation>Opravit posun stejnosměrného proudu</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5019"/>
+        <location filename="../eko.cpp" line="4815"/>
         <source>Offset in samples:</source>
         <translation>Posun ve vzorcích:</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5140"/>
+        <location filename="../eko.cpp" line="4928"/>
         <source>Noise parameters</source>
         <translation>Parametry šumu</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5148"/>
+        <location filename="../eko.cpp" line="4936"/>
         <source>Type</source>
         <translation>Typ</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5150"/>
+        <location filename="../eko.cpp" line="4938"/>
         <source>White</source>
         <translation>Bílá</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5151"/>
+        <location filename="../eko.cpp" line="4939"/>
         <source>Pink</source>
         <translation>Růžová</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5152"/>
+        <location filename="../eko.cpp" line="4940"/>
         <source>Brown</source>
         <translation>Hnědá</translation>
     </message>
 </context>
 <context>
+    <name>CFxClassicOverdrive</name>
+    <message>
+        <source>Gain</source>
+        <translation type="obsolete">Zesílení</translation>
+    </message>
+</context>
+<context>
     <name>CFxPitchShift</name>
     <message>
-        <location filename="../fx.cpp" line="471"/>
+        <location filename="../fxset.cpp" line="215"/>
         <source>Simple Pitchshifter</source>
         <translation>Jednoduchý posun výšky tónu</translation>
     </message>
     <message>
-        <location filename="../fx.cpp" line="478"/>
+        <location filename="../fxset.cpp" line="216"/>
+        <source>Pitchshifter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="216"/>
+        <source>Pitchshifter module</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="220"/>
         <source>Ratio: 1.0</source>
         <translation>Poměr: 1.0</translation>
     </message>
@@ -1298,12 +1315,12 @@ Chcete jej přepsat?</translation>
 <context>
     <name>CFxRack</name>
     <message>
-        <location filename="../document.cpp" line="2874"/>
+        <location filename="../fxrack.cpp" line="169"/>
         <source>Select</source>
         <translation>Vybrat</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="2874"/>
+        <location filename="../fxrack.cpp" line="169"/>
         <source>Available effects</source>
         <translation>Dostupné efekty</translation>
     </message>
@@ -1311,22 +1328,17 @@ Chcete jej přepsat?</translation>
 <context>
     <name>CFxRackWindow</name>
     <message>
-        <location filename="../document.cpp" line="2487"/>
+        <location filename="../document.cpp" line="1737"/>
         <source>Apply</source>
         <translation>Přehrát</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="2523"/>
+        <location filename="../document.cpp" line="1772"/>
         <source>Volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="2535"/>
-        <source>Pan</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../document.cpp" line="2552"/>
+        <location filename="../document.cpp" line="1788"/>
         <source>Mixer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1338,73 +1350,106 @@ Chcete jej přepsat?</translation>
 <context>
     <name>CFxSimpleAmp</name>
     <message>
-        <location filename="../fx.cpp" line="175"/>
+        <location filename="../fxset.cpp" line="29"/>
         <source>Simple Amp</source>
         <translation>Jednoduché zesílení</translation>
     </message>
     <message>
-        <location filename="../fx.cpp" line="182"/>
-        <source>Gain: 1 dB</source>
-        <translation>Zesílení: 1 dB</translation>
+        <location filename="../fxset.cpp" line="31"/>
+        <source>&lt;b&gt;Simple Amp&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fx.cpp" line="209"/>
+        <location filename="../fxset.cpp" line="31"/>
+        <source>&lt;i&gt;Simple Ampifier&lt;/i&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="44"/>
+        <source>Input gain: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gain: 1 dB</source>
+        <translation type="obsolete">Zesílení: 1 dB</translation>
+    </message>
+    <message>
         <source>Gain: %1 dB</source>
-        <translation>Zesílení: %1 dB</translation>
+        <translation type="obsolete">Zesílení: %1 dB</translation>
     </message>
 </context>
 <context>
     <name>CFxSimpleComp</name>
     <message>
-        <location filename="../fx.cpp" line="836"/>
-        <source>Simple compressor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../fx.cpp" line="842"/>
         <source>threshold (dB): </source>
-        <translation type="unfinished">Práh (dB): </translation>
-    </message>
-    <message>
-        <location filename="../fx.cpp" line="855"/>
-        <source>ratio: </source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>CFxSimpleDelay</name>
-    <message>
-        <location filename="../fx.cpp" line="670"/>
-        <source>Simple delay</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../fx.cpp" line="677"/>
-        <source>delay (msecs): </source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Práh (dB): </translation>
     </message>
 </context>
 <context>
     <name>CFxSimpleEQ</name>
     <message>
-        <location filename="../fx.cpp" line="263"/>
         <source>EQ</source>
-        <translation>Ekvalizér</translation>
+        <translation type="obsolete">Ekvalizér</translation>
     </message>
     <message>
-        <location filename="../fx.cpp" line="283"/>
         <source>Low</source>
-        <translation>Nízké</translation>
+        <translation type="obsolete">Nízké</translation>
     </message>
     <message>
-        <location filename="../fx.cpp" line="295"/>
         <source>Mid</source>
-        <translation>Střední</translation>
+        <translation type="obsolete">Střední</translation>
     </message>
     <message>
-        <location filename="../fx.cpp" line="306"/>
         <source>Hi</source>
-        <translation>Vysoké</translation>
+        <translation type="obsolete">Vysoké</translation>
+    </message>
+</context>
+<context>
+    <name>CFxSimpleFilter</name>
+    <message>
+        <location filename="../fxset.cpp" line="327"/>
+        <source>Simple Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="328"/>
+        <source>Filter</source>
+        <translation type="unfinished">Filtr</translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="328"/>
+        <source>Multi-mode filter module</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="333"/>
+        <source>Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="336"/>
+        <source>Lowpass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="337"/>
+        <source>Highpass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="338"/>
+        <source>Bandpass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="352"/>
+        <source>Cut-off freq (hZ)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="369"/>
+        <source>Resonance</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1414,52 +1459,85 @@ Chcete jej přepsat?</translation>
         <translation type="obsolete">Jednoduchá brána pro šum</translation>
     </message>
     <message>
-        <location filename="../fx.cpp" line="602"/>
-        <source>Simple limiter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../fx.cpp" line="608"/>
         <source>threshold (dB): </source>
-        <translation>Práh (dB): </translation>
+        <translation type="obsolete">Práh (dB): </translation>
     </message>
 </context>
 <context>
     <name>CFxSimpleNoiseGate</name>
     <message>
-        <location filename="../fx.cpp" line="559"/>
         <source>Simple noise gate</source>
-        <translation>Jednoduchá brána pro šum</translation>
+        <translation type="obsolete">Jednoduchá brána pro šum</translation>
     </message>
     <message>
-        <location filename="../fx.cpp" line="566"/>
         <source>level (dB): </source>
-        <translation>Úroveň (dB): </translation>
+        <translation type="obsolete">Úroveň (dB): </translation>
     </message>
 </context>
 <context>
     <name>CFxSimpleOverdrive</name>
     <message>
-        <location filename="../fx.cpp" line="394"/>
+        <location filename="../fxset.cpp" line="112"/>
+        <location filename="../fxset.cpp" line="114"/>
         <source>Simple Overdrive</source>
         <translation>Jednoduché přebuzení</translation>
     </message>
     <message>
-        <location filename="../fx.cpp" line="401"/>
-        <source>Gain</source>
-        <translation>Zesílení</translation>
-    </message>
-</context>
-<context>
-    <name>CFxStereoRotator</name>
-    <message>
-        <location filename="../fx.cpp" line="924"/>
-        <source>Stereo Rotator</source>
+        <location filename="../fxset.cpp" line="114"/>
+        <source>Simple overdrive module</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fx.cpp" line="931"/>
-        <source>Angle:</source>
+        <location filename="../fxset.cpp" line="122"/>
+        <source>Gain</source>
+        <translation>Zesílení</translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="137"/>
+        <source>Output level: </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CMetaluga</name>
+    <message>
+        <location filename="../fxset.cpp" line="534"/>
+        <source>Metaluga: overdrive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="536"/>
+        <source>Metaluga</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="538"/>
+        <source>&lt;b&gt;Metaluga&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="538"/>
+        <source>&lt;i&gt;Soviet overdrive module&lt;/i&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="550"/>
+        <source>Gain</source>
+        <translation type="unfinished">Zesílení</translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="568"/>
+        <source>Drive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="586"/>
+        <source>Tone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="604"/>
+        <source>Output level</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1479,17 +1557,15 @@ Chcete jej přepsat?</translation>
 <context>
     <name>CTioLAME</name>
     <message>
-        <location filename="../tio.cpp" line="646"/>
-        <location filename="../tio.cpp" line="653"/>
         <source>saving of this format is not supported</source>
-        <translation type="unfinished">Ukládání v tomto formátu není podporováno</translation>
+        <translation type="obsolete">Ukládání v tomto formátu není podporováno</translation>
     </message>
 </context>
 <context>
     <name>CTioProxy</name>
     <message>
-        <location filename="../tio.cpp" line="795"/>
-        <location filename="../tio.cpp" line="802"/>
+        <location filename="../tio.cpp" line="655"/>
+        <location filename="../tio.cpp" line="662"/>
         <source>saving of this format is not supported</source>
         <translation type="unfinished">Ukládání v tomto formátu není podporováno</translation>
     </message>
@@ -1497,7 +1573,7 @@ Chcete jej přepsat?</translation>
 <context>
     <name>CTioReadOnly</name>
     <message>
-        <location filename="../tio.cpp" line="213"/>
+        <location filename="../tio.cpp" line="220"/>
         <source>saving of this format is not supported</source>
         <translation>Ukládání v tomto formátu není podporováno</translation>
     </message>

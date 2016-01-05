@@ -1839,10 +1839,16 @@ bool CDSP::process_whole_document (CDocument *d)
 
   ////////////call fx chain
 
+  size_t portion_size = buffer_size_frames;
+
   d->wave_edit->waveform->fb->pbuffer_inc (frames_start); 
 
   while (d->wave_edit->waveform->fb->offset < frames_end)
         {
+         size_t diff = frames_end - d->wave_edit->waveform->fb->offset;
+         if (diff < buffer_size_frames)     
+            portion_size = diff;
+        
          //qDebug() << "offset = " << d->wave_edit->waveform->fb->offset;
 
          //size_t diff = nframes - d->wave_edit->waveform->fb->offset;
@@ -1860,12 +1866,12 @@ bool CDSP::process_whole_document (CDocument *d)
                   
                   wnd_fxrack->fx_rack->effects[i]->execute (d->wave_edit->waveform->fb->pbuffer,
                                                             d->wave_edit->waveform->fb->pbuffer, 
-                                                            buffer_size_frames);
+                                                            portion_size);
                      
                  }
              }
 
-         d->wave_edit->waveform->fb->pbuffer_inc (buffer_size_frames);  
+         d->wave_edit->waveform->fb->pbuffer_inc (portion_size);  
         }
 
 
@@ -1876,7 +1882,7 @@ bool CDSP::process_whole_document (CDocument *d)
       }
 
 
-  d->wave_edit->waveform->fb->offset = 0;
+  d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->frames_start();
   d->wave_edit->waveform->magic_update();
 
   return true;

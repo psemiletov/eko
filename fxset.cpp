@@ -529,9 +529,9 @@ void CFxSimpleFilter::reset_params (size_t srate, size_t ch)
 }
 
 
-CFxClassicOverdrive::CFxClassicOverdrive()
+CMetaluga::CMetaluga()
 {
-  name = "Metaluga";
+  name = tr ("Metaluga: overdrive");
   
   wnd_ui->setWindowTitle (tr ("Metaluga"));
 
@@ -549,6 +549,8 @@ CFxClassicOverdrive::CFxClassicOverdrive()
   
   QLabel *l = new QLabel (tr ("Gain"));
   QDial *dial_gain = new QDial;
+  dial_gain->setNotchesVisible (true);
+
   dial_gain->setWrapping (false);
   connect (dial_gain, SIGNAL(valueChanged(int)), this, SLOT(dial_gain_valueChanged(int)));
   dial_gain->setRange (1, 100);
@@ -565,6 +567,8 @@ CFxClassicOverdrive::CFxClassicOverdrive()
   
   l = new QLabel (tr ("Drive"));
   QDial *dial_drive = new QDial;
+  dial_drive->setNotchesVisible (true);
+
   dial_drive->setWrapping (false);
   connect (dial_drive, SIGNAL(valueChanged(int)), this, SLOT(dial_drive_valueChanged(int)));
   dial_drive->setRange (1, 26);
@@ -581,6 +585,8 @@ CFxClassicOverdrive::CFxClassicOverdrive()
   
   l = new QLabel (tr ("Tone"));
   dial_tone = new QDial;
+  dial_tone->setNotchesVisible (true);
+
   dial_tone->setWrapping (false);
   connect (dial_tone, SIGNAL(valueChanged(int)), this, SLOT(dial_tone_valueChanged(int)));
   dial_tone->setRange (1000, 21000);
@@ -622,7 +628,7 @@ CFxClassicOverdrive::CFxClassicOverdrive()
 }
 
 
-void CFxClassicOverdrive::dial_gain_valueChanged (int value)
+void CMetaluga::dial_gain_valueChanged (int value)
 {
   if (value == 0)
       gain = 1.0f;
@@ -631,7 +637,7 @@ void CFxClassicOverdrive::dial_gain_valueChanged (int value)
 }
 
 
-void CFxClassicOverdrive::dial_drive_valueChanged (int value)
+void CMetaluga::dial_drive_valueChanged (int value)
 {
   float a = sin (((drive + 1) / 101) * (M_PI / 2));
   float k = 2 * /*cos*/ (a) / (1 - a);
@@ -639,25 +645,25 @@ void CFxClassicOverdrive::dial_drive_valueChanged (int value)
 }
 
 
-void CFxClassicOverdrive::dial_tone_valueChanged (int value)
+void CMetaluga::dial_tone_valueChanged (int value)
 {
   filter.set_cutoff ((float) value / samplerate);
 }
 
 
-CFxClassicOverdrive::~CFxClassicOverdrive()
+CMetaluga::~CMetaluga()
 {
   //qDebug() << "~CFxSimpleOverdrive";
 }
 
 
-AFx* CFxClassicOverdrive::self_create()
+AFx* CMetaluga::self_create()
 {
-  return new CFxClassicOverdrive;
+  return new CMetaluga;
 }
 
 
-size_t CFxClassicOverdrive::execute (float **input, float **output, size_t frames)
+size_t CMetaluga::execute (float **input, float **output, size_t frames)
 {
   for (size_t ch = 0; ch < channels; ch++)
       {
@@ -679,7 +685,7 @@ size_t CFxClassicOverdrive::execute (float **input, float **output, size_t frame
 }
 
 
-void CFxClassicOverdrive::reset_params (size_t srate, size_t ch)
+void CMetaluga::reset_params (size_t srate, size_t ch)
 {
   AFx::reset_params (srate, ch);
   filter.reset();
@@ -687,7 +693,7 @@ void CFxClassicOverdrive::reset_params (size_t srate, size_t ch)
 }
 
 
-void CFxClassicOverdrive::dial_level_valueChanged (int value)
+void CMetaluga::dial_level_valueChanged (int value)
 {
   if (value == 0)
      {
