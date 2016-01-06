@@ -5052,8 +5052,11 @@ void CEKO::file_record()
       pa_stream_in = 0;
      }
 
-  fb_record->settozero();
 
+  fb_record->length_frames = buffer_size_frames;
+  fb_record->allocate_interleaved();
+  fb_record->settozero();
+  
   int sndfile_format = 0;
   sndfile_format = sndfile_format | SF_FORMAT_WAV | SF_FORMAT_FLOAT;
 
