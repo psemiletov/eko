@@ -1782,13 +1782,13 @@ void CEKO::cmb_sound_dev_in_currentIndexChanged (int index)
   pa_device_id_in = index;
 }
 
-
+/*
 void CEKO::cmb_panner_currentIndexChanged (int index)
 {
   settings->setValue ("panner", index);
   dsp->panner = index;
 }
-
+*/
 
 void CEKO::cmb_proxy_video_decoder_currentIndexChanged (int index)
 {
@@ -1968,7 +1968,7 @@ void CEKO::createOptions()
   lt_ogg_q->addWidget (spb_ogg_q);
 
 
-
+/*
   QHBoxLayout *h_panner = new QHBoxLayout;
   QLabel *l_panner = new QLabel (tr ("Panner:"));
     
@@ -1990,7 +1990,7 @@ void CEKO::createOptions()
   
   connect (cmb_panner, SIGNAL(currentIndexChanged (int)),
            this, SLOT(cmb_panner_currentIndexChanged (int)));
-
+*/
 
  
   QHBoxLayout *h_proxy_video_decoder = new QHBoxLayout;
@@ -2052,7 +2052,7 @@ void CEKO::createOptions()
 
   page_common_layout->addLayout (lt_maxundos);
   
-  page_common_layout->addLayout (h_panner);
+  //page_common_layout->addLayout (h_panner);
       
   page_common_layout->addWidget (cb_session_restore);
     

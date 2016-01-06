@@ -1,5 +1,5 @@
  /**************************************************************************
- *   2010-2015 by Peter Semiletov                                          *
+ *   2010-2016 by Peter Semiletov                                          *
  *   tea@list.ru                                                           *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -93,7 +93,6 @@ public slots:
   void update_image();
   
 };
-
   
 
 class CEKO: public QMainWindow
@@ -240,7 +239,7 @@ main window callbacks
   void cb_monitor_input_changed (int state);
 
 
-  void cmb_panner_currentIndexChanged (int index);
+ // void cmb_panner_currentIndexChanged (int index);
 
 
   void stop_recording();
@@ -383,21 +382,11 @@ main window callbacks
   void man_find_find();
   void man_find_next();
   void man_find_prev();
-
-
-
-
-  
+ 
 
 /*************************
 prefs window callbacks
 *************************/
-
-
-
-  //void cmb_src_currentIndexChanged (int index);
-
- 
 
   void spb_def_channels_valueChanged (int i);
   
@@ -483,7 +472,6 @@ main window widgets
   QToolBar *editToolBar;
   QToolBar *transportToolBar;
   QToolBar *levelMeterToolBar;
-
 
   QAction *act_test;
   QAction *newAct;

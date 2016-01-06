@@ -1,5 +1,5 @@
 /***************************************************************************
- *   2010-2015 by Peter Semiletov                            *
+ *   2010-2016 by Peter Semiletov                            *
  *   tea@list.ru                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -13,7 +13,7 @@
  *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU General Public License     *
- *   aint with this program; if not, write to the                         *
+ *   aint with this program; if not, write to the                          *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
@@ -43,49 +43,6 @@
 #include "cvlevelmeter.h"
 #include "fxrack.h"
 
-
-/*
-mapping for mp3/wav/flac:
-
-SPEAKER_FRONT_LEFT = 0,
-SPEAKER_FRONT_RIGHT,
-SPEAKER_FRONT_CENTER,
-SPEAKER_LOW_FREQUENCY, //subwoofer
-SPEAKER_BACK_LEFT,
-SPEAKER_BACK_RIGHT,
-SPEAKER_FRONT_LEFT_OF_CENTER,
-SPEAKER_FRONT_RIGHT_OF_CENTER,
-SPEAKER_BACK_CENTER,
-SPEAKER_SIDE_LEFT,
-SPEAKER_SIDE_RIGHT,
-SPEAKER_LEFT_HEIGHT,
-SPEAKER_RIGHT_HEIGHT
-*/
-
-enum EChannels
-{
-CH_FRONT_LEFT = 0,
-CH_FRONT_RIGHT,
-CH_FRONT_CENTER,
-CH_LOW_FREQUENCY, //subwoofer
-CH_BACK_LEFT,
-CH_BACK_RIGHT,
-CH_FRONT_LEFT_OF_CENTER,
-CH_FRONT_RIGHT_OF_CENTER,
-CH_BACK_CENTER,
-CH_SIDE_LEFT,
-CH_SIDE_RIGHT,
-CH_LEFT_HEIGHT,
-CH_RIGHT_HEIGHT
-};
-
-/*
-5.1 WAV front left channel front right channel front center channel LFE rear left channel rear right channel
-5.1 AC3 front left channel front center channel front right channel rear left channel rear right channel LFE
-5.1 DTS front center channel front left channel front right channel rear left channel rear right channel LFE
-5.1 AAC front center channel front left channel front right channel rear left channel rear right channel LFE
-5.1 AIFF front left channel rear left channel front center channel front right channel rear right channel LFE
-*/
 
 
 enum ETransportStates
@@ -496,10 +453,6 @@ public:
 };
 
 
-
-class CVLevelMeter;
-class CFxRack;
-
 class CDSP: public QObject
 {
 
@@ -512,9 +465,7 @@ public:
 
 //mixer stuff
   float gain; //in dB
-  float pan; 
-  int panner; 
-
+ 
   CFloatBuffer *temp_float_buffer;
 
   CDSP (QObject *parent = 0);
@@ -557,9 +508,6 @@ protected:
 
   void closeEvent (QCloseEvent *event);
 };
-
-
-
 
 
 #endif

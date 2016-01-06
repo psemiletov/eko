@@ -1767,14 +1767,12 @@ CFxRackWindow::CFxRackWindow()
   //tm_level_meter.setInterval (meter_msecs_delay);
   tm_level_meter.setInterval (60);
 
-
   QVBoxLayout *v_vol = new QVBoxLayout;
   QLabel *l_vol = new QLabel (tr ("Volume"));
   QDial *dial_volume = new QDial;
   dial_volume->setWrapping (false);
   connect (dial_volume, SIGNAL(valueChanged(int)), this, SLOT(dial_gain_valueChanged(int)));
   dial_volume->setRange (-26, 26);
-
   
   v_vol->addWidget (l_vol);
   v_vol->addWidget (dial_volume);
@@ -1795,7 +1793,6 @@ void CFxRackWindow::closeEvent (QCloseEvent *event)
 }
 
 
-
 void CFxRackWindow::apply_fx()
 {
   CDocument *d = documents->get_current();
@@ -1807,7 +1804,7 @@ void CFxRackWindow::apply_fx()
 }
 
 
-//ГЛЮЧИТ!!!
+
 //process the whole file or the selection
 bool CDSP::process_whole_document (CDocument *d)
 {
@@ -1825,17 +1822,6 @@ bool CDSP::process_whole_document (CDocument *d)
   size_t frames_end = d->wave_edit->waveform->frames_end();
   
   d->wave_edit->waveform->fb->pbuffer_reset();
-    
-
-  if (d->wave_edit->waveform->selected)
-     {
-      //nframes = frames_end - frames_start;
-      //d->wave_edit->waveform->fb->offset = frames_start;
-     }
-
- 
-  //d->wave_edit->waveform->fb->pbuffer_inc (d->wave_edit->waveform->fb->offset);
-  
 
   ////////////call fx chain
 
@@ -1846,14 +1832,9 @@ bool CDSP::process_whole_document (CDocument *d)
   while (d->wave_edit->waveform->fb->offset < frames_end)
         {
          size_t diff = frames_end - d->wave_edit->waveform->fb->offset;
+         
          if (diff < buffer_size_frames)     
             portion_size = diff;
-        
-         //qDebug() << "offset = " << d->wave_edit->waveform->fb->offset;
-
-         //size_t diff = nframes - d->wave_edit->waveform->fb->offset;
-         //if (diff < portion_size)
-           // portion_size = diff;
 
          for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); i++)
              {
@@ -2655,8 +2636,8 @@ CDSP::CDSP (QObject *parent): QObject (parent)
   maxr = 0;
   
   gain = 1.0f;
-  pan = 0.5f;
-  panner = settings->value ("panner", 0).toInt();
+  //pan = 0.5f;
+  //panner = settings->value ("panner", 0).toInt();
   
 //  temp_float_buffer = 0; 
   temp_float_buffer = new CFloatBuffer (buffer_size_frames, 2);
