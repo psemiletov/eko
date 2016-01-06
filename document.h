@@ -472,8 +472,7 @@ public:
   CDSP (QObject *parent = 0);
   ~CDSP();
   
-  bool process_whole_document (CDocument *d);
-  size_t process (size_t nframes);
+  size_t process (CFloatBuffer *fb, size_t nframes);
   size_t process_rec (float *buffer, size_t channels, size_t nframes);
 };
 
@@ -499,7 +498,7 @@ public:
 public slots:
 
   void tm_level_meter_timeout();
-  void apply_fx();
+ // void apply_fx();
   
   void cb_l_changed (int value);
   void cb_r_changed (int value);

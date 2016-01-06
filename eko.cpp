@@ -298,7 +298,7 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
         return paAbort;
        }
  
-  if (dsp->process (frameCount) == 0)
+  if (dsp->process (d->wave_edit->waveform->fb, frameCount) == 0)
      {
       qDebug() << "return from process()";
       transport_state = STATE_STOP;

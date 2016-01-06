@@ -1794,6 +1794,7 @@ void CFxRackWindow::closeEvent (QCloseEvent *event)
 }
 
 
+/*
 void CFxRackWindow::apply_fx()
 {
   CDocument *d = documents->get_current();
@@ -1803,76 +1804,13 @@ void CFxRackWindow::apply_fx()
   dsp->process_whole_document (d);
   wnd_fxrack->fx_rack->bypass_all();
 }
+*/
 
 
 
-//process the whole file or the selection
-bool CDSP::process_whole_document (CDocument *d)
-{
-  if (! d)
-     return false;
 
-//here we work with short buffer to process it and output to it
-  
-  d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
-
-  wnd_fxrack->fx_rack->set_state_all (FXS_RUN);
-  wnd_fxrack->fx_rack->reset_all_fx (d->wave_edit->waveform->fb->samplerate, d->wave_edit->waveform->fb->channels);
-      
-  size_t frames_start = d->wave_edit->waveform->frames_start();
-  size_t frames_end = d->wave_edit->waveform->frames_end();
-  
-  d->wave_edit->waveform->fb->pbuffer_reset();
-
-  ////////////call fx chain
-
-  size_t portion_size = buffer_size_frames;
-
-  d->wave_edit->waveform->fb->pbuffer_inc (frames_start); 
-
-  while (d->wave_edit->waveform->fb->offset < frames_end)
-        {
-         size_t diff = frames_end - d->wave_edit->waveform->fb->offset;
-         
-         if (diff < buffer_size_frames)     
-            portion_size = diff;
-
-         for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); i++)
-             {
-              if (! wnd_fxrack->fx_rack->effects[i]->bypass)
-                 {
-                  wnd_fxrack->fx_rack->effects[i]->realtime = false;
-                 
-                  wnd_fxrack->fx_rack->effects[i]->channels = d->wave_edit->waveform->fb->channels;
-                  wnd_fxrack->fx_rack->effects[i]->samplerate = d->wave_edit->waveform->fb->samplerate;
-                  
-                  wnd_fxrack->fx_rack->effects[i]->execute (d->wave_edit->waveform->fb->pbuffer,
-                                                            d->wave_edit->waveform->fb->pbuffer, 
-                                                            portion_size);
-                     
-                 }
-             }
-
-         d->wave_edit->waveform->fb->pbuffer_inc (portion_size);  
-        }
-
-
-  for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); i++)
-      {
-       if (! wnd_fxrack->fx_rack->effects[i]->bypass)
-           wnd_fxrack->fx_rack->effects[i]->bypass = true;
-      }
-
-
-  d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->frames_start();
-  d->wave_edit->waveform->magic_update();
-
-  return true;
-}
-
-
-
-size_t CDSP::process (size_t nframes)
+//documents->current->wave_edit->waveform->
+size_t CDSP::process (CFloatBuffer *fb, size_t nframes)
 {
  // qDebug() << "CDSP::process -- start";
   
@@ -1882,7 +1820,7 @@ size_t CDSP::process (size_t nframes)
   if (transport_state == STATE_EXIT)
      return 0;
 
-  if (! documents->current)
+  if (! fb)
      return 0;
    
   maxl = 0.0f;
@@ -1893,8 +1831,7 @@ size_t CDSP::process (size_t nframes)
   size_t frames = nframes;
 //  qDebug() << "nsamples: " << nsamples;
   
-  size_t tail = documents->current->wave_edit->waveform->fb->length_frames
-                - documents->current->wave_edit->waveform->fb->offset;
+  size_t tail = fb->length_frames - fb->offset;
                 
   tail = tail - frames; 
   
@@ -1903,26 +1840,20 @@ size_t CDSP::process (size_t nframes)
    
   //just copy
   
-  documents->current->wave_edit->waveform->fb->copy_to_pos (
-                     temp_float_buffer,
-                     documents->current->wave_edit->waveform->fb->offset, frames, 0);
-  
-  
-  //memcpy (temp_buffer, psource, nsamples * sizeof (float));
-
+  fb->copy_to_pos (temp_float_buffer, fb->offset, frames, 0);
+    
     
 ////////////call fx chain
 
-  //temp_float_buffer->pbuffer_reset();
 
-  if (! bypass_mixer && documents->current)
+  if (! bypass_mixer)
   for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); i++)
       {
        if (! wnd_fxrack->fx_rack->effects[i]->bypass)
           { 
            wnd_fxrack->fx_rack->effects[i]->realtime = true;
-           wnd_fxrack->fx_rack->effects[i]->channels = documents->current->wave_edit->waveform->fb->channels;
-           wnd_fxrack->fx_rack->effects[i]->samplerate = documents->current->wave_edit->waveform->fb->samplerate;
+           wnd_fxrack->fx_rack->effects[i]->channels = fb->channels;
+           wnd_fxrack->fx_rack->effects[i]->samplerate = fb->samplerate;
            wnd_fxrack->fx_rack->effects[i]->execute (temp_float_buffer->buffer, temp_float_buffer->buffer, frames);
           }
       }
@@ -1950,7 +1881,7 @@ size_t CDSP::process (size_t nframes)
      }
                 
 
-  documents->current->wave_edit->waveform->fb->offset += frames;
+  fb->offset += frames;
  
   //qDebug() << "CDSP::process -- end";
  
@@ -2599,10 +2530,6 @@ CDSP::CDSP (QObject *parent): QObject (parent)
   maxr = 0;
   
   gain = 1.0f;
-  //pan = 0.5f;
-  //panner = settings->value ("panner", 0).toInt();
-  
-//  temp_float_buffer = 0; 
   temp_float_buffer = new CFloatBuffer (buffer_size_frames, 2);
 }
 
