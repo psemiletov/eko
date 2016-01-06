@@ -100,6 +100,8 @@ extern int buffer_size_frames;
 
 extern int proxy_video_decoder;
 
+CFloatBuffer *fb_record;
+
 
 extern CFloatBuffer *sound_clipboard;
 extern CFileFormats *file_formats;
@@ -192,51 +194,39 @@ int pa_input_stream_callback (const void *input, void *output, unsigned long fra
   if (transport_state == STATE_EXIT)
      return paAbort;
 
+  float **p_in = (float **) input;
+  float **p_out = (float **) output;
+
   if (b_monitor_input)
-     memcpy (output, (float *)input, 2 * frameCount * sizeof (float));
-    
-
-  dsp->process_rec ((float *)input, 2, frameCount);
-
-  if (rec_channels == 2)
+     {
+      memcpy (p_out[0], p_in[0],  frameCount * sizeof (float));
+      memcpy (p_out[1], p_in[1],  frameCount * sizeof (float));
+     } 
+  
+ if (rec_channels == 2)
     {
-     sf_writef_float (file_temp_handle, (float *)input, frameCount);
+     fb_record->settozero();
+     
+     memcpy (fb_record->buffer[0], p_in[0], frameCount * sizeof (float));
+     memcpy (fb_record->buffer[1], p_in[1], frameCount * sizeof (float));
+     
+     fb_record->fill_interleaved();
+     
+     sf_writef_float (file_temp_handle, (float *)fb_record->buffer_interleaved, frameCount);
      return paContinue; 	
     }
-  
-  //if 1 channel
+  else  
+  //если пишем моно, что делать с каналами?
+   {       
+   if (mono_recording_mode == 0)
+      sf_writef_float (file_temp_handle, p_in[0], frameCount);
+   else
+       sf_writef_float (file_temp_handle, p_in[1], frameCount);
+  }     
+   
 
-  float *tb = new float[frameCount];
-  float *buffer = (float *)input;
+  dsp->process_rec (p_in, 2, frameCount);
 
-  size_t c = 0;
-  size_t i = 0;
-  
-  size_t samples_total = frameCount * 2;
-    
-  while (i < samples_total)
-        {
-         float ls = buffer [i];
-         float l = buffer [i] * 0.5;
-         i++;
-
-         float rs = buffer [i];
-         float r = buffer [i] * 0.5;
-         i++;
-        
-         if (mono_recording_mode == 0)
-            tb[c++] = l + r;
-         else
-         if (mono_recording_mode == 1)
-            tb[c++] = ls;
-         else
-         if (mono_recording_mode == 2)
-            tb[c++] = rs;
-        }
-
-  sf_writef_float (file_temp_handle, (float *)tb, frameCount);
-  
-  delete []tb;
   
   return paContinue; 	
 }
@@ -750,6 +740,8 @@ CEKO::CEKO()
   log->log (tr ("<b>EKO %1 @ http://semiletov.org/eko</b><br>by Peter Semiletov (tea@list.ru)<br>read the Manual under the <i>learn</i> tab!").arg (QString (VERSION_NUMBER)));
   
   idx_tab_edit_activate();
+      
+  fb_record = new CFloatBuffer (65536, 2);     
       
   dsp = new CDSP;
       
@@ -1472,6 +1464,7 @@ CEKO::~CEKO()
   delete fman;
   delete log;
   delete transport_control;
+  delete fb_record;
 }
 
 
@@ -2128,7 +2121,7 @@ void CEKO::createOptions()
   
   QStringList lmrm;
   
-  lmrm.append (tr ("Mix both channels"));
+ // lmrm.append (tr ("Mix both channels"));
   lmrm.append (tr ("Use left channel"));
   lmrm.append (tr ("Use right channel"));
   
@@ -5059,6 +5052,8 @@ void CEKO::file_record()
       pa_stream_in = 0;
      }
 
+  fb_record->settozero();
+
   int sndfile_format = 0;
   sndfile_format = sndfile_format | SF_FORMAT_WAV | SF_FORMAT_FLOAT;
 
@@ -5084,13 +5079,11 @@ void CEKO::file_record()
   
   file_temp_handle = sf_open (tf.toUtf8().data(), SFM_WRITE, &sf);
 
-  
+  PaStreamParameters outputParameters;
 
-      PaStreamParameters outputParameters;
-
-      outputParameters.device = pa_device_id_out;
-      outputParameters.channelCount = 2;
-      outputParameters.sampleFormat = paFloat32/* | paNonInterleaved*/;
+  outputParameters.device = pa_device_id_out;
+  outputParameters.channelCount = 2;
+  outputParameters.sampleFormat = paFloat32 | paNonInterleaved;
       outputParameters.suggestedLatency = Pa_GetDeviceInfo (outputParameters.device)->defaultLowOutputLatency;;
       outputParameters.hostApiSpecificStreamInfo = NULL;
 
@@ -5099,7 +5092,7 @@ void CEKO::file_record()
 
       inputParameters.device = pa_device_id_in;
       inputParameters.channelCount = 2;
-      inputParameters.sampleFormat = paFloat32/* | paNonInterleaved*/;
+      inputParameters.sampleFormat = paFloat32 | paNonInterleaved;
       inputParameters.suggestedLatency = Pa_GetDeviceInfo (inputParameters.device)->defaultLowOutputLatency;;
       inputParameters.hostApiSpecificStreamInfo = NULL;
 

@@ -1890,7 +1890,7 @@ size_t CDSP::process (CFloatBuffer *fb, size_t nframes)
 }
 
 
-size_t CDSP::process_rec (float *buffer, size_t channels, size_t nframes)
+size_t CDSP::process_rec (float **buffer, size_t channels, size_t nframes)
 {
   if (nframes == 0)
      return 0;
@@ -1904,29 +1904,27 @@ size_t CDSP::process_rec (float *buffer, size_t channels, size_t nframes)
 
 //here we work with short buffer to process it and output to it
 
-  size_t nsamples = nframes * channels;
+//  size_t nsamples = nframes * channels;
                 
   if (channels == 1)
-     for (size_t i = 0; i < nsamples; i++)
+     for (size_t i = 0; i < nframes; i++)
          {
-          if (float_greater_than (buffer[i], maxl))
-              maxl = buffer[i];
+          if (float_greater_than (buffer[0][i], maxl))
+              maxl = buffer[0][i];
          }
            
            
   size_t i = 0;
 
   if (channels == 2)
-     do
+     for (size_t i = 0; i < nframes; i++)
        {
-        if (float_less_than (maxl, buffer[i]))
-            maxl = buffer[i];
-        i++;
-        if (float_less_than (maxr, buffer[i]))
-            maxr = buffer[i];
-        i++;
+        if (float_less_than (maxl, buffer[0][i]))
+            maxl = buffer[0][i];
+        
+        if (float_less_than (maxr, buffer[1][i]))
+            maxr = buffer[1][i];
        }
-    while (i < nsamples);
 
 
   if (wnd_fxrack->level_meter)         
