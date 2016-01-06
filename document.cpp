@@ -1734,8 +1734,9 @@ CFxRackWindow::CFxRackWindow()
   
   level_meter = new CVLevelMeter (this);
   
-  QPushButton *bt_apply = new QPushButton (tr ("Apply"));
-  connect (bt_apply, SIGNAL(clicked()), this, SLOT(apply_fx()));
+  bt_apply = new QPushButton (tr ("Apply"));
+  
+  //connect (bt_apply, SIGNAL(clicked()), this, SLOT(apply_fx()));
 
   fx_rack = new CFxRack;
 
@@ -1960,44 +1961,6 @@ size_t CDSP::process (size_t nframes)
 
 size_t CDSP::process_rec (float *buffer, size_t channels, size_t nframes)
 {
-  //qDebug() << "CDSP::process -- start";
-  /*
-  if (nframes == 0)
-     return 0;
-
-  if (transport_state == STATE_EXIT)
-     return 0;
-
-  
-  int *pchannels = (int *)buffer;
-  float *pout_l = (float *)pchannels[0];
-  float *pout_r = (float *)pchannels[1];
-   
-  maxl = 0.0f;
-  maxr = 0.0f;
-
-//here we work with short buffer to process it and output to it
-
-  size_t nsamples = nframes * channels;
-                
-  for (size_t i = 0; i < nsamples; i++)
-      {
-       if (float_greater_than (pout_l[i], maxl))
-           maxl = pout_l[i];
-           
-       if (float_greater_than (pout_r[i], maxr))
-           maxr = pout_r[i];
-      }
-           
-  if (wnd_fxrack->level_meter)         
-     {
-      wnd_fxrack->level_meter->pl = maxl;
-      wnd_fxrack->level_meter->pr = maxr;
-     }
-               
-
-  return nframes;*/
- 
   if (nframes == 0)
      return 0;
 

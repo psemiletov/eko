@@ -186,6 +186,7 @@ static void StreamFinished (void* userData )
 }
 */
 
+//ПЕРЕПИСАТЬ СFloatBuffer
 int pa_input_stream_callback (const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData)
 {
   if (transport_state == STATE_EXIT)
@@ -753,6 +754,10 @@ CEKO::CEKO()
   dsp = new CDSP;
       
   wnd_fxrack = new CFxRackWindow;
+  
+  connect(wnd_fxrack->bt_apply, SIGNAL (clicked()),this, SLOT (apply_fx_clicked()));
+  
+  
   
   documents->transport_control = transport_control;
   
@@ -5570,3 +5575,73 @@ void CEKO::test()
  
 }
 
+
+
+void CEKO::apply_fx_clicked()
+{
+  CDocument *d = documents->get_current();
+  if (! d)
+     return;
+
+//  dsp->process_whole_document (d);
+  
+    if (! d)
+     return;
+
+//here we work with short buffer to process it and output to it
+  
+  d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
+
+  wnd_fxrack->fx_rack->set_state_all (FXS_RUN);
+  wnd_fxrack->fx_rack->reset_all_fx (d->wave_edit->waveform->fb->samplerate, d->wave_edit->waveform->fb->channels);
+      
+  size_t frames_start = d->wave_edit->waveform->frames_start();
+  size_t frames_end = d->wave_edit->waveform->frames_end();
+  
+  d->wave_edit->waveform->fb->pbuffer_reset();
+
+  ////////////call fx chain
+
+  size_t portion_size = buffer_size_frames;
+
+  d->wave_edit->waveform->fb->pbuffer_inc (frames_start); 
+
+  while (d->wave_edit->waveform->fb->offset < frames_end)
+        {
+         size_t diff = frames_end - d->wave_edit->waveform->fb->offset;
+         
+         if (diff < buffer_size_frames)     
+            portion_size = diff;
+
+         for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); i++)
+             {
+              if (! wnd_fxrack->fx_rack->effects[i]->bypass)
+                 {
+                  wnd_fxrack->fx_rack->effects[i]->realtime = false;
+                 
+                  wnd_fxrack->fx_rack->effects[i]->channels = d->wave_edit->waveform->fb->channels;
+                  wnd_fxrack->fx_rack->effects[i]->samplerate = d->wave_edit->waveform->fb->samplerate;
+                  
+                  wnd_fxrack->fx_rack->effects[i]->execute (d->wave_edit->waveform->fb->pbuffer,
+                                                            d->wave_edit->waveform->fb->pbuffer, 
+                                                            portion_size);
+                     
+                 }
+             }
+
+         d->wave_edit->waveform->fb->pbuffer_inc (portion_size);  
+        }
+
+
+  for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); i++)
+      {
+       if (! wnd_fxrack->fx_rack->effects[i]->bypass)
+           wnd_fxrack->fx_rack->effects[i]->bypass = true;
+      }
+
+
+  d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->frames_start();
+  d->wave_edit->waveform->magic_update();
+ 
+  wnd_fxrack->fx_rack->bypass_all();
+}

@@ -205,6 +205,9 @@ private slots:
 main window callbacks
 *************************/
 
+  void apply_fx_clicked();
+
+
   void leaving_tune();
 
   void file_import_raw();

@@ -32,6 +32,7 @@
 #include <QScrollBar>
 #include <QCheckBox>
 #include <QTimer>
+#include <QPushButton>
 
 #include <portaudio.h>
 
@@ -490,6 +491,8 @@ public:
   QCheckBox cb_l;
   QCheckBox cb_r;
 
+  QPushButton *bt_apply; 
+
   CFxRackWindow();
   ~CFxRackWindow();
 
@@ -507,6 +510,11 @@ public slots:
 protected:
 
   void closeEvent (QCloseEvent *event);
+  
+signals:
+
+  void apply_fx_button_pressed();
+  
 };
 
 
