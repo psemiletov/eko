@@ -66,7 +66,7 @@ public slots:
 };
 
 
-class CFxPitchShift: public AFx
+class CFxDelay: public AFx
 {
   Q_OBJECT
 
@@ -78,8 +78,8 @@ public:
   
   double ratio;
 
-  CFxPitchShift();
-  ~CFxPitchShift();
+  CFxDelay();
+  ~CFxDelay();
 
   AFx* self_create();
 

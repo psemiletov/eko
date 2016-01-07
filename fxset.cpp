@@ -205,15 +205,14 @@ size_t CFxSimpleOverdrive::execute (float **input, float **output, size_t frames
 }
 
 
-
-CFxPitchShift::CFxPitchShift()
+CFxDelay::CFxDelay()
 {
-  name = "FxPitchShift";
+  name = "CFxDelay";
   
-  fb = new CFloatBuffer (4096, 8);
+  fb = new CFloatBuffer (2, 2);
 
-  wnd_ui->setWindowTitle (tr ("Simple Pitchshifter"));
-  set_caption (tr ("Pitchshifter"), tr ("Pitchshifter module"));
+  wnd_ui->setWindowTitle (tr ("Simple Delay"));
+  set_caption (tr ("Delay"), tr ("Delay module"));
 
   ratio = 1.0;
 
@@ -230,76 +229,54 @@ CFxPitchShift::CFxPitchShift()
 }
 
 
-void CFxPitchShift::spb_ratio_changed (double value)
+void CFxDelay::spb_ratio_changed (double value)
 {
   ratio = value;
 }
 
 
-CFxPitchShift::~CFxPitchShift()
+CFxDelay::~CFxDelay()
 {
   if (fb)
      delete fb;
 }
 
 
-AFx* CFxPitchShift::self_create()
+AFx* CFxDelay::self_create()
 {
-  return new CFxPitchShift;
+  return new CFxDelay;
 }
 
 
-size_t CFxPitchShift::execute (float **input, float **output, size_t frames)
+size_t CFxDelay::execute (float **input, float **output, size_t frames)
 {
-  for (size_t ch = 0; ch < channels; ch++)
+  for (size_t i = 0; i < frames; i++)
       {
-       SRC_DATA data;
-
-       data.src_ratio = ratio;
-
-       data.input_frames = frames;
-       data.output_frames = frames;
-
-       size_t bsize = frames * sizeof (float);
-       
-       memset (fb->buffer[ch], 0, bsize);
-       
-       memcpy (fb->buffer[ch], input[ch], bsize);
-
-       data.data_in = fb->buffer[ch];
-       data.data_out = output[ch];
-
-       int q;
-
-       if (realtime)
-          q = SRC_LINEAR;
-       else
-           q = SRC_SINC_BEST_QUALITY;
-
-       int error = src_simple (&data, q, channels);
-       if (error)
-          {
-           qDebug() << src_strerror (error);
-           //delete data_in;
-           return 0;
-          }
-
-       //delete [] data_in;
+       for (size_t ch = 0; ch < channels; ch++)
+           {    
+            fb->buffer[ch][fb->tail] = input[ch][i];
+            output[ch][i] = input[ch][i] + fb->buffer[ch][fb->head];
+           }
+        
+       fb->ringbuffer_head_inc();
+       fb->ringbuffer_tail_inc();
       }
+  
+  qDebug() << "fb->head: " << fb->head;
+  qDebug() << "fb->tail: " << fb->tail;
   
   return frames;
 }
 
 
-
-void CFxPitchShift::reset_params (size_t srate, size_t ch)
+void CFxDelay::reset_params (size_t srate, size_t ch)
 {
   AFx::reset_params (srate, ch);
  
   if (fb)
      delete fb;
      
-  fb = new CFloatBuffer (4096, channels);
+  fb = new CFloatBuffer (srate * 2, channels);
 }
 
 

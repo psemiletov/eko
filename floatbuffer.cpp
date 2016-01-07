@@ -1,4 +1,4 @@
-//VER 5
+//VER 6
 
 #include <iostream>
 
@@ -12,6 +12,9 @@
 
 CFloatBuffer::CFloatBuffer (size_t len, size_t channels_count)
 {
+  head = 1;
+  tail = 0;
+
   pbuffer = 0;
   channels = channels_count;
   length_frames = len;
@@ -33,6 +36,9 @@ CFloatBuffer::CFloatBuffer (size_t len, size_t channels_count)
 
 CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len)
 {
+  head = 1;
+  tail = 0;
+
   pbuffer = 0;
   
   channels = 1;
@@ -48,6 +54,8 @@ CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len)
 CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count)
 {
 //  qDebug() << "CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count)  -1";
+  head = 1;
+  tail = 0;
 
   pbuffer = 0;
   
@@ -500,15 +508,8 @@ void CFloatBuffer::copy_from_w_resample (CFloatBuffer  *other)
 
 void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
 {
-  qDebug() << " CFloatBuffer::paste_at start";
-
-  qDebug() << "samplerate: " << samplerate;
-  qDebug() << "other->samplerate: " << other->samplerate;
-
   if (! other)
      return;
-  
-  qDebug() << "1";
 
   if (samplerate != other->samplerate) //TEST IT!
      {
@@ -518,13 +519,8 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
       delete fb;
       return;
      }
-
-  qDebug() << "2";
-
+ 
   CFloatBuffer *temp_buffer = 0;
-    
-  qDebug() << "channels: " << channels;  
-  qDebug() << "other->channels: " << other->channels;  
     
   if (channels == 1 && other->channels == 2)
      temp_buffer = other->convert_to_mono();
@@ -576,7 +572,21 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
   delete temp_buffer;
   
   offset = pos_frames;
-  
-  qDebug() << " CFloatBuffer::paste_at end";
+}
 
+
+void CFloatBuffer::ringbuffer_head_inc()
+{
+  head++;
+  
+  if (head >= length_frames)
+     head = 0;
+}
+
+void CFloatBuffer::ringbuffer_tail_inc()
+{
+  tail++;
+  
+  if (tail >= length_frames)
+     tail = 0;
 }
