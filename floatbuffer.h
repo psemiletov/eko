@@ -1,7 +1,7 @@
 #ifndef FLOATBUFFER_H
 #define FLOATBUFFER_H
 
-//VER 6
+//VER 7
 
 using namespace std;
 
@@ -30,6 +30,7 @@ public:
   //ringbuffer: tail index = head - 1
   size_t head; //read from here
   size_t tail; //write to here
+  size_t ringbuffer_length; //in the range of length_frames
   
   int sndfile_format;
   
@@ -45,6 +46,7 @@ public:
   
   void ringbuffer_head_inc();
   void ringbuffer_tail_inc();
+  void ringbuffer_set_length (size_t len);
 
   void allocate_interleaved();
   void fill_interleaved();

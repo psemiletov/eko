@@ -1,4 +1,4 @@
-//VER 6
+//VER 7
 
 #include <iostream>
 
@@ -14,6 +14,8 @@ CFloatBuffer::CFloatBuffer (size_t len, size_t channels_count)
 {
   head = 1;
   tail = 0;
+  
+  ringbuffer_length = len;
 
   pbuffer = 0;
   channels = channels_count;
@@ -38,6 +40,7 @@ CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len)
 {
   head = 1;
   tail = 0;
+  ringbuffer_length = len;
 
   pbuffer = 0;
   
@@ -56,6 +59,7 @@ CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len, size_t channe
 //  qDebug() << "CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count)  -1";
   head = 1;
   tail = 0;
+  ringbuffer_length = len;
 
   pbuffer = 0;
   
@@ -579,7 +583,7 @@ void CFloatBuffer::ringbuffer_head_inc()
 {
   head++;
   
-  if (head >= length_frames)
+  if (head >= ringbuffer_length)
      head = 0;
 }
 
@@ -587,6 +591,15 @@ void CFloatBuffer::ringbuffer_tail_inc()
 {
   tail++;
   
-  if (tail >= length_frames)
+  if (tail >= ringbuffer_length)
      tail = 0;
+}
+
+
+void CFloatBuffer::ringbuffer_set_length (size_t len)
+{
+  ringbuffer_length = len;
+  
+  if (ringbuffer_length > length_frames)
+     ringbuffer_length = length_frames;   
 }

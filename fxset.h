@@ -76,7 +76,12 @@ public:
   
   CFloatBuffer *fb;  
   
-  double ratio;
+  
+  QDoubleSpinBox *spb_mixlevel;
+  QDoubleSpinBox *spb_time; 
+ 
+  float mixlevel;
+  float delay_msecs;
 
   CFxDelay();
   ~CFxDelay();
@@ -89,7 +94,9 @@ public:
 
 public slots:
 
-  void spb_ratio_changed (double value);
+  void spb_mixlevel_changed (double value);
+  void spb_time_changed (double value);
+
 };
 
 

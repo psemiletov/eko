@@ -209,29 +209,64 @@ CFxDelay::CFxDelay()
 {
   name = "CFxDelay";
   
-  fb = new CFloatBuffer (2, 2);
+  fb = new CFloatBuffer (96000, 2);
+
 
   wnd_ui->setWindowTitle (tr ("Simple Delay"));
   set_caption (tr ("Delay"), tr ("Delay module"));
 
-  ratio = 1.0;
+  mixlevel = 1.0f;
 
-  QLabel *label = new QLabel (tr ("Ratio: 1.0"));
+  QHBoxLayout *hbl_mixlevel = new QHBoxLayout;
 
-  QDoubleSpinBox *spb_ratio = new QDoubleSpinBox;
-  spb_ratio->setRange (-12, 12);
-  spb_ratio->setSingleStep (0.1);
-  spb_ratio->setValue (1.0);
-  connect (spb_ratio, SIGNAL(valueChanged (double )), this, SLOT(spb_ratio_changed (double )));
+  QLabel *label = new QLabel (tr ("Mixing level"));
 
-  vbl_main->addWidget (label);
-  vbl_main->addWidget (spb_ratio);
+  spb_mixlevel = new QDoubleSpinBox;
+  
+  spb_mixlevel->setRange (-26.0f, 0);
+  spb_mixlevel->setSingleStep (0.1f);
+  spb_mixlevel->setValue (-6.0f);
+  connect (spb_mixlevel, SIGNAL(valueChanged (double )), this, SLOT(spb_mixlevel_changed (double )));
+
+  hbl_mixlevel->addWidget (label);
+  hbl_mixlevel->addWidget (spb_mixlevel);
+  
+  
+  QHBoxLayout *hbl_time = new QHBoxLayout;
+
+  label = new QLabel (tr ("Time (mseconds)"));
+
+  spb_time = new QDoubleSpinBox;
+  spb_time->setRange (0.001, 6.000f);
+  spb_time->setSingleStep (0.010f);
+  spb_time->setValue (0.5f);
+  spb_time->setDecimals (3); 
+  connect (spb_time, SIGNAL(valueChanged (double )), this, SLOT(spb_time_changed (double )));
+
+  hbl_time->addWidget (label);
+  hbl_time->addWidget (spb_time);
+  
+  
+  vbl_main->addLayout (hbl_mixlevel);
+  vbl_main->addLayout (hbl_time);
 }
 
 
-void CFxDelay::spb_ratio_changed (double value)
+void CFxDelay::spb_mixlevel_changed (double value)
 {
-  ratio = value;
+  mixlevel = db2lin (value);
+}
+
+
+void CFxDelay::spb_time_changed (double value)
+{
+  delay_msecs = value;
+  
+  qDebug() << "delay_msecs: " << delay_msecs; 
+  qDebug() << "fb->samplerate: " << fb->samplerate; 
+  
+  fb->ringbuffer_set_length (fb->samplerate * delay_msecs);
+  qDebug() << fb->ringbuffer_length;
 }
 
 
@@ -255,15 +290,14 @@ size_t CFxDelay::execute (float **input, float **output, size_t frames)
        for (size_t ch = 0; ch < channels; ch++)
            {    
             fb->buffer[ch][fb->tail] = input[ch][i];
-            output[ch][i] = input[ch][i] + fb->buffer[ch][fb->head];
+            output[ch][i] = input[ch][i] + (fb->buffer[ch][fb->head] * mixlevel);
+           // output[ch][i] = input[ch][i] + fb->buffer[ch][fb->head];
+
            }
         
        fb->ringbuffer_head_inc();
        fb->ringbuffer_tail_inc();
       }
-  
-  qDebug() << "fb->head: " << fb->head;
-  qDebug() << "fb->tail: " << fb->tail;
   
   return frames;
 }
@@ -276,7 +310,19 @@ void CFxDelay::reset_params (size_t srate, size_t ch)
   if (fb)
      delete fb;
      
-  fb = new CFloatBuffer (srate * 2, channels);
+  delay_msecs = spb_time->value();
+  mixlevel = db2lin (spb_mixlevel->value());
+     
+  fb = new CFloatBuffer (srate * 6, channels); //6 seconds max delay
+  fb->samplerate = srate;
+  fb->ringbuffer_set_length (fb->samplerate * delay_msecs);
+
+  qDebug() << "delay_msecs: " << delay_msecs;
+ 
+  qDebug() << "fb->samplerate: " << fb->samplerate;
+  qDebug() << "fb->ringbuffer_length: " << fb->ringbuffer_length;
+  
+  qDebug() << "mixlevel: " << mixlevel;
 }
 
 
@@ -290,6 +336,7 @@ void CFxSimpleFilter::dsb_cutoff_valueChanged (double d)
 {
   filter.set_cutoff ((float) d / samplerate);
 }
+
 
 void CFxSimpleFilter::dsb_reso_valueChanged (double d)
 {
