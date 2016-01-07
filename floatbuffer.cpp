@@ -1,11 +1,10 @@
-//VER 7
+//VER 8
 
 #include <iostream>
+#include <math.h>
 
 #include <sndfile.h>
 #include <samplerate.h>
-
-#include <QDebug>
 
 #include "floatbuffer.h"
 
@@ -56,7 +55,6 @@ CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len)
  
 CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count)
 {
-//  qDebug() << "CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count)  -1";
   head = 1;
   tail = 0;
   ringbuffer_length = len;
@@ -75,7 +73,6 @@ CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len, size_t channe
   
   for (size_t ch = 0; ch < channels; ch++)
       {
-       qDebug() << "alloc channel: " << ch;
        buffer[ch] = new float [length_frames];
        memset (buffer[ch], 0, length_frames * sizeof (float));
       } 
@@ -90,7 +87,6 @@ CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len, size_t channe
            }     
       }
       
-  qDebug() << "CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count)  -2";
 }
   
 
@@ -141,8 +137,6 @@ CFloatBuffer* CFloatBuffer::clone()
 
 CFloatBuffer* CFloatBuffer::copy (size_t offset_from, size_t size)
 {
-  qDebug() << "CFloatBuffer::copy - start";
-
   if (size > length_frames)
      return 0;
 
@@ -162,30 +156,8 @@ CFloatBuffer* CFloatBuffer::copy (size_t offset_from, size_t size)
        memcpy (fb->buffer[ch], buffer[ch] + offset_from, size * sizeof (float));
       }     
 
-  qDebug() << "CFloatBuffer::copy - end";
-
   return fb;
 }
-
-/*
-void CFloatBuffer::copy_to (CFloatBuffer *other, size_t offset_from, size_t size)
-{
-  if (size > length_frames)
-     return;
-      
-  if (offset_from > length_frames)
-     return;
-
-  size_t reminder = length_frames - offset_from;
-  if (reminder < size)
-     return;
-  
-  for (size_t ch = 0; ch < channels; ch++) 
-      {
-       memcpy (other->buffer[ch], buffer[ch] + offset_from, size * sizeof (float));
-      }     
-}
-*/
 
 void CFloatBuffer::copy_to_pos (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to)
 {
@@ -195,9 +167,9 @@ void CFloatBuffer::copy_to_pos (CFloatBuffer *other, size_t offset_from, size_t 
   if (offset_from > length_frames)
      return;
 
-
   size_t copysize = size;
   size_t reminder = length_frames - offset_from;
+
   if (reminder < size)
      copysize = reminder;
   
@@ -317,7 +289,6 @@ void CFloatBuffer::fill_interleaved()
  
 //function to overwrite data in this soundbuffer from the other one,
 //from the pos position
-
 void CFloatBuffer::overwrite_at (CFloatBuffer *other, size_t pos_frames)
 {
   if (! other)
@@ -410,7 +381,6 @@ CFloatBuffer* CFloatBuffer::resample (size_t new_rate)
        int error = src_simple (&data, SRC_SINC_BEST_QUALITY, 1);
        if (error)
           {
-           qDebug() << src_strerror (error);
            delete tfb;
            return 0;
           }
@@ -493,8 +463,6 @@ void CFloatBuffer::copy_from_w_resample (CFloatBuffer  *other)
   if (! other || ! other->buffer[0])
     return;
 
-  int f = sndfile_format;
-
   if (samplerate != other->samplerate) //TEST IT!
      {
       CFloatBuffer *fb = other->resample (samplerate);
@@ -517,7 +485,7 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
 
   if (samplerate != other->samplerate) //TEST IT!
      {
-      qDebug() << "TEST IT!";
+      //qDebug() << "TEST IT!";
       CFloatBuffer *fb = other->resample (samplerate);
       paste_at (fb, pos_frames);
       delete fb;
@@ -539,11 +507,10 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
   size_t new_buffer_frames_count = temp_buffer->length_frames + length_frames;
   
   //создаем новый буфер, размером равный текущему со вставляемым
-  //CFloatBuffer *tfb = new CFloatBuffer (new_buffer_frames_count, default_channels_count);
   CFloatBuffer *sum = new CFloatBuffer (new_buffer_frames_count, channels);
   sum->samplerate = samplerate;  
+
   //из старого буфера в новый, копируем все по позицию position_in_frames 
-  
   for (size_t ch = 0; ch < channels; ch++)
       {
        memcpy (sum->buffer[ch], buffer[ch], pos_frames * sizeof (float));

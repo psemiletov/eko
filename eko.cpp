@@ -737,7 +737,7 @@ CEKO::CEKO()
   
   setAcceptDrops (true);
   qApp->setWindowIcon (QIcon (":/icons/eko_icon.png"));
-  log->log (tr ("<b>EKO %1 @ http://semiletov.org/eko</b><br>by Peter Semiletov (tea@list.ru)<br>read the Manual under the <i>learn</i> tab!").arg (QString (VERSION_NUMBER)));
+  log->log (tr ("<b>EKO %1 @ http://semiletov.org/eko</b><br>or <i>https://github.com/psemiletov/eko</i><br>by Peter Semiletov (tea@list.ru)<br>read the Manual under the <i>learn</i> tab!").arg (QString (VERSION_NUMBER)));
   
   idx_tab_edit_activate();
       
@@ -749,8 +749,7 @@ CEKO::CEKO()
   
   connect(wnd_fxrack->bt_apply, SIGNAL (clicked()),this, SLOT (apply_fx_clicked()));
   
-  
-  
+   
   documents->transport_control = transport_control;
   
   QPoint ps = settings->value ("wnd_fxrack.pos", QPoint (pos().x() + width() + 3, y())).toPoint();

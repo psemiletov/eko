@@ -291,8 +291,6 @@ size_t CFxDelay::execute (float **input, float **output, size_t frames)
            {    
             fb->buffer[ch][fb->tail] = input[ch][i];
             output[ch][i] = input[ch][i] + (fb->buffer[ch][fb->head] * mixlevel);
-           // output[ch][i] = input[ch][i] + fb->buffer[ch][fb->head];
-
            }
         
        fb->ringbuffer_head_inc();
