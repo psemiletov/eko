@@ -32,6 +32,7 @@ public:
   ~CFxSimpleAmp();
 
   QLabel *label;
+  QDial *dial_gain;
 
   AFx* self_create();
 

@@ -1,0 +1,11 @@
+waveform_background=white
+waveform_foreground=darkMagenta
+waveform_selection_foreground=#004c00
+waveform_selection_alpha=127
+axis=black  
+cursor=red  
+text=black
+envelope=red
+timeruler.background_color=#dcdcdc
+timeruler.foreground=black
+env_point_selected=#ff2ba3

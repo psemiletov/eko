@@ -1,0 +1,9 @@
+waveform_background=#1e1814
+waveform_foreground=#ffea9e
+waveform_selection_foreground=#006000
+waveform_selection_alpha=127
+axis=red 
+cursor=#3ef9ff
+text=red
+timeruler.background_color=#a3b3bc
+timeruler.foreground=black

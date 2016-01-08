@@ -24,11 +24,11 @@
 
 CFxSimpleAmp::CFxSimpleAmp()
 {
-  name = "FxSimpleAmp";
+  name = tr ("Simple amplifier");
 
   wnd_ui->setWindowTitle (tr ("Simple Amp"));
 
-  set_caption (tr ("<b>Simple Amp</b>"), tr ("<i>Simple Ampifier</i>"));
+  set_caption (tr ("<b>Simple amplifier</b>"), tr ("<i>Simple amplifier module</i>"));
 
   QString qstl = "QWidget {"
     "border-radius: 15px;"
@@ -36,14 +36,13 @@ CFxSimpleAmp::CFxSimpleAmp()
   
   w_caption->setStyleSheet (qstl);
 
-
   gain = 1.0f;
 
   QHBoxLayout *hbl_gain = new QHBoxLayout;
 
   label = new QLabel (tr ("Input gain: "));
 
-  QDial *dial_gain = new QDial;
+  dial_gain = new QDial;
   dial_gain->setWrapping (false);
   connect (dial_gain, SIGNAL(valueChanged(int)), this, SLOT(dial_gain_valueChanged(int)));
   dial_gain->setRange (0, 26);
@@ -314,13 +313,6 @@ void CFxDelay::reset_params (size_t srate, size_t ch)
   fb = new CFloatBuffer (srate * 6, channels); //6 seconds max delay
   fb->samplerate = srate;
   fb->ringbuffer_set_length (fb->samplerate * delay_msecs);
-
-  qDebug() << "delay_msecs: " << delay_msecs;
- 
-  qDebug() << "fb->samplerate: " << fb->samplerate;
-  qDebug() << "fb->ringbuffer_length: " << fb->ringbuffer_length;
-  
-  qDebug() << "mixlevel: " << mixlevel;
 }
 
 
@@ -662,8 +654,8 @@ void CMetaluga::dial_gain_valueChanged (int value)
 void CMetaluga::dial_drive_valueChanged (int value)
 {
   float a = sin (((drive + 1) / 101) * (M_PI / 2));
-  float k = 2 * /*cos*/ (a) / (1 - a);
-  drive = (1 + k) * (value) / (1 + k * abs (value));
+  float k = 2 * atan (a) / (1 - a);
+  drive = (1 + k) * value / (1 + k * abs (value));
 }
 
 
