@@ -4992,15 +4992,11 @@ void CEKO::generate_noise()
   main_tab_widget->setCurrentIndex (idx_tab_edit);
 
   int ntype = cbm_type.currentIndex();
-  size_t len_seconds = sp_duration.value();//2;
+  size_t len_seconds = sp_duration.value();
 
   float amplitude = db2lin((float) sp_amplitude.value());
 
-  //size_t samples_count = len_seconds * new_document->wave_edit->waveform->sound_buffer->samplerate * new_document->wave_edit->waveform->sound_buffer->channels;
   size_t frames_count = len_seconds * new_document->wave_edit->waveform->fb->samplerate;
-
-  //qDebug() << "frames_count = " << frames_count;
-  //qDebug() << "samples_count = " << samples_count;
 
   CFloatBuffer *tfb = new CFloatBuffer (frames_count, settings->value ("def_channels", 1).toInt());
   
@@ -5011,6 +5007,8 @@ void CEKO::generate_noise()
                    amplitude,
                    ntype))
      qDebug() << "! MakeNoise";
+
+  delete new_document->wave_edit->waveform->fb;
 
   new_document->wave_edit->waveform->fb = tfb;
 
@@ -5030,7 +5028,6 @@ void CEKO::cmb_icon_sizes_currentIndexChanged (const QString &text)
 
   setIconSize (QSize (text.toInt(), text.toInt()));
   tb_fman_dir->setIconSize (QSize (text.toInt(), text.toInt()));
-
 }
 
 
