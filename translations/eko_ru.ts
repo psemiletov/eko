@@ -1335,42 +1335,54 @@ Do you want to overwrite?</source>
 <context>
     <name>CFxJest</name>
     <message>
-        <location filename="../fxset.cpp" line="734"/>
         <source>Jest&apos; overdrive/disto</source>
-        <translation>Жесть овердрайв/дисторшн</translation>
+        <translation type="obsolete">Жесть овердрайв/дисторшн</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="736"/>
+        <location filename="../fxset.cpp" line="733"/>
         <source>Jest&apos;</source>
         <translation>Жесть</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="738"/>
+        <location filename="../fxset.cpp" line="735"/>
         <source>&lt;b&gt;Jest&apos;&lt;/b&gt;</source>
         <translation>&lt;b&gt;Жесть&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="738"/>
         <source>&lt;i&gt;Soviet overdrive/distortion pedal&lt;/i&gt;</source>
-        <translation>&lt;i&gt;Советская овердрайв/дисторшн примочка&lt;/i&gt;</translation>
+        <translation type="obsolete">&lt;i&gt;Советская овердрайв/дисторшн примочка&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="750"/>
+        <source>Jest&apos; overdrive/dist</source>
+        <translation type="obsolete">Жесть советский перегруз</translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="731"/>
+        <source>Jest&apos; (overdrive/dist)</source>
+        <translation>Жесть (овердрайв/дисторшн)</translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="735"/>
+        <source>&lt;i&gt;Soviet peregrooz pedal&lt;/i&gt;</source>
+        <translation>&lt;i&gt;Советская примочка перегруза&lt;/i&gt;</translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="747"/>
         <source>Gain</source>
         <translation>Порог</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="768"/>
+        <location filename="../fxset.cpp" line="765"/>
         <source>Drive</source>
         <translation>Драйв</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="785"/>
+        <location filename="../fxset.cpp" line="782"/>
         <source>Tone</source>
         <translation>Тон</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="804"/>
+        <location filename="../fxset.cpp" line="801"/>
         <source>Output level</source>
         <translation>Выход</translation>
     </message>
@@ -1388,9 +1400,13 @@ Do you want to overwrite?</source>
         <translation>&lt;b&gt;Металюга&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="548"/>
         <source>Metaluga: overdrive/dist pedal</source>
-        <translation>Металюга: примочка овердрайва/дисторшна</translation>
+        <translation type="obsolete">Металюга: примочка овердрайва/дисторшна</translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="548"/>
+        <source>Metaluga (overdrive/dist pedal)</source>
+        <translation>Металюга (овердрайв/дисторшн)</translation>
     </message>
     <message>
         <location filename="../fxset.cpp" line="552"/>

@@ -1290,42 +1290,42 @@ Chcete jej přepsat?</translation>
 <context>
     <name>CFxJest</name>
     <message>
-        <location filename="../fxset.cpp" line="734"/>
-        <source>Jest&apos; overdrive/disto</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../fxset.cpp" line="736"/>
+        <location filename="../fxset.cpp" line="733"/>
         <source>Jest&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="738"/>
+        <location filename="../fxset.cpp" line="735"/>
         <source>&lt;b&gt;Jest&apos;&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="738"/>
-        <source>&lt;i&gt;Soviet overdrive/distortion pedal&lt;/i&gt;</source>
+        <location filename="../fxset.cpp" line="731"/>
+        <source>Jest&apos; (overdrive/dist)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="750"/>
+        <location filename="../fxset.cpp" line="735"/>
+        <source>&lt;i&gt;Soviet peregrooz pedal&lt;/i&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxset.cpp" line="747"/>
         <source>Gain</source>
         <translation type="unfinished">Zesílení</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="768"/>
+        <location filename="../fxset.cpp" line="765"/>
         <source>Drive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="785"/>
+        <location filename="../fxset.cpp" line="782"/>
         <source>Tone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="804"/>
+        <location filename="../fxset.cpp" line="801"/>
         <source>Output level</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1344,7 +1344,7 @@ Chcete jej přepsat?</translation>
     </message>
     <message>
         <location filename="../fxset.cpp" line="548"/>
-        <source>Metaluga: overdrive/dist pedal</source>
+        <source>Metaluga (overdrive/dist pedal)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

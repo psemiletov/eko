@@ -545,7 +545,7 @@ void CFxSimpleFilter::reset_params (size_t srate, size_t ch)
 
 CFxMetaluga::CFxMetaluga()
 {
-  name = tr ("Metaluga: overdrive/dist pedal");
+  name = tr ("Metaluga (overdrive/dist pedal)");
   
   wnd_ui->setWindowTitle (tr ("Metaluga"));
 
@@ -665,11 +665,8 @@ void CFxMetaluga::dial_drive_valueChanged (int value)
 
 void CFxMetaluga::dial_tone_valueChanged (int value)
 {
- // filter.set_cutoff ((float) value / samplerate);
- 
  float val = scale_val (value, 1, 100, 1000, 21000);
  filter.set_cutoff (val / samplerate);
- 
 }
 
 
@@ -731,11 +728,11 @@ void CFxMetaluga::dial_level_valueChanged (int value)
 
 CFxJest::CFxJest()
 {
-  name = tr ("Jest' overdrive/disto");
+  name = tr ("Jest' (overdrive/dist)");
   
   wnd_ui->setWindowTitle (tr ("Jest'"));
 
-  set_caption (tr ("<b>Jest'</b>"), tr ("<i>Soviet overdrive/distortion pedal</i>"));
+  set_caption (tr ("<b>Jest'</b>"), tr ("<i>Soviet peregrooz pedal</i>"));
 
   gain = 1.0f;
   level = db2lin (-12.0f);
