@@ -41,7 +41,6 @@ to do or to fix:
 * level meter < -26 dB
 * inspect fn_detect_average_value
 * noise gate realtime effect
-* fix the scrolling
 * dc offset functions - check stereo support
 * add space when FXRack apply needs more file length //test with pitch shifter
 * 10-th seconds timeruler markers when > 1 min

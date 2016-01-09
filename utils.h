@@ -194,9 +194,6 @@ inline float conv_to_db (float v, float v_min, float v_max, float range_negative
     }
   else
       {
-  //     float x = v_max / range_negative;
-    //   float y = v_max / v;
-  
        float x = v_min / range_negative;
        float y = v_min / v;
    
@@ -206,5 +203,12 @@ inline float conv_to_db (float v, float v_min, float v_max, float range_negative
 
 
 QString str_from_locale (const char *s);
+
+
+inline float scale_val (float val, float from_min, float from_max, float to_min, float to_max)
+{
+  return (val - from_min) * (to_max - to_min) / 
+          (from_max - from_min) + to_min;
+}
 
 #endif

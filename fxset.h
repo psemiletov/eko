@@ -129,7 +129,7 @@ public slots:
 };
 
 
-class CMetaluga: public AFx
+class CFxMetaluga: public AFx
 {
   Q_OBJECT
 
@@ -144,8 +144,8 @@ public:
   
   QDial *dial_tone;
 
-  CMetaluga();
-  ~CMetaluga();
+  CFxMetaluga();
+  ~CFxMetaluga();
 
   AFx* self_create();
 
@@ -159,6 +159,39 @@ public slots:
   void dial_tone_valueChanged (int value);
   void dial_level_valueChanged (int value);
 };
+
+
+class CFxJest: public AFx
+{
+  Q_OBJECT
+
+public:
+
+  CFilter filter;
+  
+  float gain;
+  float drive;
+  float tone;
+  float level;
+  
+  QDial *dial_tone;
+
+  CFxJest();
+  //~CFxMetaluga();
+
+  AFx* self_create();
+
+  size_t execute (float **input, float **output, size_t frames);
+  void reset_params (size_t srate, size_t ch);
+
+public slots:
+
+  void dial_gain_valueChanged (int value);
+  void dial_drive_valueChanged (int value);
+  void dial_tone_valueChanged (int value);
+  void dial_level_valueChanged (int value);
+};
+
 
 
 #endif // FX_H

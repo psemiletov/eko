@@ -218,7 +218,7 @@ CFxDelay::CFxDelay()
 
   QHBoxLayout *hbl_mixlevel = new QHBoxLayout;
 
-  QLabel *label = new QLabel (tr ("Mixing level"));
+  QLabel *label = new QLabel (tr ("Delayed signal level"));
 
   spb_mixlevel = new QDoubleSpinBox;
   
@@ -233,7 +233,7 @@ CFxDelay::CFxDelay()
   
   QHBoxLayout *hbl_time = new QHBoxLayout;
 
-  label = new QLabel (tr ("Time (mseconds)"));
+  label = new QLabel (tr ("Time (seconds)"));
 
   spb_time = new QDoubleSpinBox;
   spb_time->setRange (0.001, 6.000f);
@@ -543,13 +543,13 @@ void CFxSimpleFilter::reset_params (size_t srate, size_t ch)
 }
 
 
-CMetaluga::CMetaluga()
+CFxMetaluga::CFxMetaluga()
 {
-  name = tr ("Metaluga: overdrive");
+  name = tr ("Metaluga: overdrive/dist pedal");
   
   wnd_ui->setWindowTitle (tr ("Metaluga"));
 
-  set_caption (tr ("<b>Metaluga</b>"), tr ("<i>Soviet overdrive module</i>"));
+  set_caption (tr ("<b>Metaluga</b>"), tr ("<i>Overdrive/distortion pedal</i>"));
 
   gain = 1.0f;
   level = db2lin (-12.0f);
@@ -603,9 +603,10 @@ CMetaluga::CMetaluga()
 
   dial_tone->setWrapping (false);
   connect (dial_tone, SIGNAL(valueChanged(int)), this, SLOT(dial_tone_valueChanged(int)));
-  dial_tone->setRange (1000, 21000);
+ 
+  dial_tone->setRange (1, 100);
+  dial_tone->setValue (50);
 
-  dial_tone->setValue (11500);
 
   hbl_tone->addWidget (l);
   hbl_tone->addWidget (dial_tone);
@@ -633,16 +634,19 @@ CMetaluga::CMetaluga()
 
   QString qstl = "QWidget#w_caption {"
     "border-radius: 15px;"
-    "background: qlineargradient(x1:0, y1:0, x2:1, y2:1,"
-                "stop:0 #aa5500, stop:1 #aa0000);}";
+    "background: qlineargradient(x1:0, y1:0, x2:0, y2:1,"
+                "stop:0 #000000, stop:1 #363636);}";
   
+
+
   
   w_caption->setStyleSheet (qstl);  
-  
+  l_caption->setStyleSheet ("color: white;");  
+  l_subcaption->setStyleSheet ("color: white;");  
 }
 
 
-void CMetaluga::dial_gain_valueChanged (int value)
+void CFxMetaluga::dial_gain_valueChanged (int value)
 {
   if (value == 0)
       gain = 1.0f;
@@ -651,7 +655,7 @@ void CMetaluga::dial_gain_valueChanged (int value)
 }
 
 
-void CMetaluga::dial_drive_valueChanged (int value)
+void CFxMetaluga::dial_drive_valueChanged (int value)
 {
   float a = sin (((drive + 1) / 101) * (M_PI / 2));
   float k = 2 * atan (a) / (1 - a);
@@ -659,25 +663,29 @@ void CMetaluga::dial_drive_valueChanged (int value)
 }
 
 
-void CMetaluga::dial_tone_valueChanged (int value)
+void CFxMetaluga::dial_tone_valueChanged (int value)
 {
-  filter.set_cutoff ((float) value / samplerate);
+ // filter.set_cutoff ((float) value / samplerate);
+ 
+ float val = scale_val (value, 1, 100, 1000, 21000);
+ filter.set_cutoff (val / samplerate);
+ 
 }
 
 
-CMetaluga::~CMetaluga()
+CFxMetaluga::~CFxMetaluga()
 {
   //qDebug() << "~CFxSimpleOverdrive";
 }
 
 
-AFx* CMetaluga::self_create()
+AFx* CFxMetaluga::self_create()
 {
-  return new CMetaluga;
+  return new CFxMetaluga;
 }
 
 
-size_t CMetaluga::execute (float **input, float **output, size_t frames)
+size_t CFxMetaluga::execute (float **input, float **output, size_t frames)
 {
   for (size_t ch = 0; ch < channels; ch++)
       {
@@ -687,7 +695,7 @@ size_t CMetaluga::execute (float **input, float **output, size_t frames)
             
             output[ch][i] = (float) (atan(output[ch][i] * drive) / atan(drive));
             
-           // output[ch][i] *= drive;
+            output[ch][i] *= drive;
 
             output[ch][i] = filter.process (output[ch][i], ch);
 
@@ -699,15 +707,184 @@ size_t CMetaluga::execute (float **input, float **output, size_t frames)
 }
 
 
-void CMetaluga::reset_params (size_t srate, size_t ch)
+void CFxMetaluga::reset_params (size_t srate, size_t ch)
 {
   AFx::reset_params (srate, ch);
   filter.reset();
-  filter.set_cutoff ((float) dial_tone->value() / samplerate);
+  
+  float val = scale_val (dial_tone->value(), 1, 100, 1000, 21000);
+  filter.set_cutoff (val / samplerate);
 }
 
 
-void CMetaluga::dial_level_valueChanged (int value)
+void CFxMetaluga::dial_level_valueChanged (int value)
+{
+  if (value == 0)
+     {
+      level = 1.0f;
+      return;
+     }
+
+   level = db2lin (value);
+}
+
+
+CFxJest::CFxJest()
+{
+  name = tr ("Jest' overdrive/disto");
+  
+  wnd_ui->setWindowTitle (tr ("Jest'"));
+
+  set_caption (tr ("<b>Jest'</b>"), tr ("<i>Soviet overdrive/distortion pedal</i>"));
+
+  gain = 1.0f;
+  level = db2lin (-12.0f);
+  drive = 1.0f;
+  tone = 1.0f;
+  
+  filter.mode = 2;
+  filter.set_resonance (0.5f);
+
+  QHBoxLayout *hbl_gain = new QHBoxLayout;
+  
+  QLabel *l = new QLabel (tr ("Gain"));
+  QDial *dial_gain = new QDial;
+  dial_gain->setNotchesVisible (true);
+
+  dial_gain->setWrapping (false);
+  connect (dial_gain, SIGNAL(valueChanged(int)), this, SLOT(dial_gain_valueChanged(int)));
+  dial_gain->setRange (1, 100);
+
+  dial_gain->setValue (1);
+
+  hbl_gain->addWidget (l);
+  hbl_gain->addWidget (dial_gain);
+  
+  vbl_main->addLayout (hbl_gain);
+  
+  
+  QHBoxLayout *hbl_drive = new QHBoxLayout;
+  
+  l = new QLabel (tr ("Drive"));
+  QDial *dial_drive = new QDial;
+  dial_drive->setNotchesVisible (true);
+
+  dial_drive->setWrapping (false);
+  connect (dial_drive, SIGNAL(valueChanged(int)), this, SLOT(dial_drive_valueChanged(int)));
+  dial_drive->setRange (1, 26);
+
+  dial_drive->setValue (1);
+
+  hbl_drive->addWidget (l);
+  hbl_drive->addWidget (dial_drive);
+  
+  vbl_main->addLayout (hbl_drive);
+    
+  QHBoxLayout *hbl_tone = new QHBoxLayout;
+  
+  l = new QLabel (tr ("Tone"));
+  dial_tone = new QDial;
+  dial_tone->setNotchesVisible (true);
+
+  dial_tone->setWrapping (false);
+  connect (dial_tone, SIGNAL(valueChanged(int)), this, SLOT(dial_tone_valueChanged(int)));
+  
+  dial_tone->setRange (1, 100);
+  dial_tone->setValue (50);
+
+
+  hbl_tone->addWidget (l);
+  hbl_tone->addWidget (dial_tone);
+  
+  vbl_main->addLayout (hbl_tone);
+
+
+  QHBoxLayout *hbl_level = new QHBoxLayout;
+
+  QLabel *l_level = new QLabel (tr ("Output level"));
+
+  QDial *dial_level = new QDial;
+  dial_level->setWrapping (false);
+  connect (dial_level, SIGNAL(valueChanged(int)), this, SLOT(dial_level_valueChanged(int)));
+  dial_level->setRange (-90, 0);
+
+  dial_level->setValue (-12);
+
+  dial_level->setNotchesVisible (true);
+
+  hbl_level->addWidget (l_level);
+  hbl_level->addWidget (dial_level);
+  
+  vbl_main->addLayout (hbl_level);
+
+  QString qstl = "QWidget#w_caption {"
+    "border-radius: 15px;"
+    "background: qlineargradient(x1:0, y1:0, x2:0, y2:1,"
+                "stop:0 #aa5500, stop:1 #aa0000);}";
+  
+  
+  w_caption->setStyleSheet (qstl);  
+  
+}
+
+
+void CFxJest::dial_gain_valueChanged (int value)
+{
+  if (value == 0)
+      gain = 1.0f;
+  else   
+      gain = db2lin (value);
+}
+
+
+void CFxJest::dial_drive_valueChanged (int value)
+{
+  
+  filter.set_resonance (scale_val (value, 1, 26, 0.001, 0.999f));
+}
+
+
+void CFxJest::dial_tone_valueChanged (int value)
+{
+  float val = scale_val (dial_tone->value(), 1, 100, 1000, 21000);
+  filter.set_cutoff (val / samplerate);
+}
+
+
+AFx* CFxJest::self_create()
+{
+  return new CFxJest;
+}
+
+
+size_t CFxJest::execute (float **input, float **output, size_t frames)
+{
+  for (size_t ch = 0; ch < channels; ch++)
+      {
+       for (size_t i = 0; i < frames; i++)
+           {
+            output[ch][i] = input[ch][i] * gain;
+            output[ch][i] = (float) (atan(output[ch][i] * drive) / atan(drive));
+            output[ch][i] = filter.process (output[ch][i], ch);
+            output[ch][i] *= level;  
+           }       
+      }
+
+  return frames;
+}
+
+
+void CFxJest::reset_params (size_t srate, size_t ch)
+{
+  AFx::reset_params (srate, ch);
+  filter.reset();
+  float val = scale_val (dial_tone->value(), 1, 100, 1000, 21000);
+  filter.set_cutoff (val / samplerate);
+
+}
+
+
+void CFxJest::dial_level_valueChanged (int value)
 {
   if (value == 0)
      {
