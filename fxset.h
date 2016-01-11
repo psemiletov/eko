@@ -38,6 +38,10 @@ public:
 
   size_t execute (float **input, float **output, size_t frames);
 
+  QString save_params_to_string();
+  void load_params_from_string (const QString &s);
+
+
 public slots:
 
   void dial_gain_valueChanged (int value);
@@ -53,6 +57,9 @@ public:
   float gain;
   float level;
 
+  QDial *dial_gain;
+  QDial *dial_level;
+
   CFxSimpleOverdrive();
   ~CFxSimpleOverdrive();
 
@@ -60,6 +67,9 @@ public:
 
   size_t execute (float **input, float **output, size_t frames);
 
+  QString save_params_to_string();
+  void load_params_from_string (const QString &s);
+  
 public slots:
 
   void dial_gain_valueChanged (int value);
@@ -92,6 +102,8 @@ public:
   size_t execute (float **input, float **output, size_t frames);
   void reset_params (size_t srate, size_t ch);
 
+  QString save_params_to_string() {return QString ("");};
+  void load_params_from_string (const QString &s) {};
 
 public slots:
 
@@ -116,6 +128,9 @@ public:
 
   CFxSimpleFilter();
 
+   QString save_params_to_string() {return QString ("");};
+  void load_params_from_string (const QString &s) {};
+  
   AFx* self_create();
 
   size_t execute (float **input, float **output, size_t frames);
@@ -149,6 +164,9 @@ public:
 
   AFx* self_create();
 
+ QString save_params_to_string() {return QString ("");};
+ void load_params_from_string (const QString &s) {};
+
   size_t execute (float **input, float **output, size_t frames);
   void reset_params (size_t srate, size_t ch);
 
@@ -179,6 +197,10 @@ public:
   CFxJest();
   //~CFxMetaluga();
 
+
+ QString save_params_to_string() {return QString ("");};
+  void load_params_from_string (const QString &s) {};
+  
   AFx* self_create();
 
   size_t execute (float **input, float **output, size_t frames);

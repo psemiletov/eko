@@ -1901,10 +1901,6 @@ size_t CDSP::process_rec (float **buffer, size_t channels, size_t nframes)
    
   maxl = 0.0f;
   maxr = 0.0f;
-
-//here we work with short buffer to process it and output to it
-
-//  size_t nsamples = nframes * channels;
                 
   if (channels == 1)
      for (size_t i = 0; i < nframes; i++)
@@ -1913,9 +1909,7 @@ size_t CDSP::process_rec (float **buffer, size_t channels, size_t nframes)
               maxl = buffer[0][i];
          }
            
-           
-  size_t i = 0;
-
+ 
   if (channels == 2)
      for (size_t i = 0; i < nframes; i++)
        {

@@ -217,16 +217,14 @@ int pa_input_stream_callback (const void *input, void *output, unsigned long fra
     }
   else  
   //если пишем моно, что делать с каналами?
-   {       
-   if (mono_recording_mode == 0)
-      sf_writef_float (file_temp_handle, p_in[0], frameCount);
-   else
-       sf_writef_float (file_temp_handle, p_in[1], frameCount);
-  }     
+      {       
+       if (mono_recording_mode == 0)
+          sf_writef_float (file_temp_handle, p_in[0], frameCount);
+       else 
+           sf_writef_float (file_temp_handle, p_in[1], frameCount);
+      }     
    
-
   dsp->process_rec (p_in, 2, frameCount);
-
   
   return paContinue; 	
 }
@@ -251,36 +249,27 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
      {
       if (! d->wave_edit->waveform->selected)
          {
-          //qDebug() << "l1";
-           if (d->wave_edit->waveform->fb->offset >= 
-               d->wave_edit->waveform->fb->length_frames - frameCount) 
+          if (d->wave_edit->waveform->fb->offset >= 
+              d->wave_edit->waveform->fb->length_frames - frameCount) 
               {
                d->wave_edit->waveform->fb->offset = 0;
               }                                          
           }
       else //looped, but selected
            {
-           // qDebug() << "l2";
-
             if (d->wave_edit->waveform->fb->offset >= d->wave_edit->waveform->frames_end()) 
                 d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->frames_start();
            }
      }
-   else //not looped at all - НЕЯСНО, ДОХОДИТ ЛИ СЮДА УПРАВЛЕНИЕ
+   else //not looped at all
    if (d->wave_edit->waveform->fb->offset + frameCount >= 
        d->wave_edit->waveform->fb->length_frames)
        {
-        qDebug() << "nl1";
-        
         d->wave_edit->waveform->timer.stop();
         wnd_fxrack->tm_level_meter.stop();
 
         transport_state = STATE_STOP;
         wnd_fxrack->fx_rack->set_state_all (FXS_STOP);
-
-//        qDebug() << "full stop";
-//        qDebug() << "buffer offset: " << d->wave_edit->waveform->sound_buffer->buffer_offset;
-//        qDebug() << "samples total: " << d->wave_edit->waveform->sound_buffer->samples_total;
 
         d->wave_edit->waveform->fb->offset = 0;
         d->wave_edit->waveform->scrollbar->setValue (0);
@@ -303,11 +292,6 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
       d->wave_edit->waveform->scrollbar->setValue (0);
       return paAbort;
      }
-  
- // dsp->temp_float_buffer->fill_interleved();
-  
-  //memcpy (output, dsp->temp_float_buffer->buffer_interleaved, 
-    //      nframes * dsp->temp_float_buffer->channels * sizeof (float));
   
   if (play_l)  
       memcpy (pchannels[0], dsp->temp_float_buffer->buffer[0], 
@@ -384,7 +368,7 @@ void CEKO::init_styles()
 }
 
 
-void pa_init (CEKO *pe)
+void pa_init()
 {
   PaError err = Pa_Initialize();
   qDebug() << Pa_GetErrorText (err);
@@ -586,7 +570,7 @@ void CEKO::create_main_widget()
 
 CEKO::CEKO()
 {
-  pa_init (this);
+  pa_init();
 
   play_r = true;
   play_l = true;

@@ -10,6 +10,7 @@ AFx::AFx()
  
   state = FXS_STOP;
   name = "AFx";
+  id = "AFx";
 
   samplerate = 1;
   channels = 1;//chann;

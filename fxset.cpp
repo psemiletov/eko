@@ -20,12 +20,65 @@
 #include "fxset.h"
 #include "utils.h"
 
+/*
+
+{
+  if (! writer)
+     return;
+
+  stream->writeStartElement ("effect");
+  stream.writeAttribute ("id", typeid (this).name());
+
+  stream->writeStartElement ("param");
+  stream.writeAttribute ("name", "dial_gain");
+  
+  stream.writeAttribute ("type", "floatval");
+  
+  stream.writeAttribute ("gain", dial_gain->value());
+
+  stream->writeEndElement ("param");
+
+  stream->writeEndElement ("effect");
+}
+*/
+
+
+QString CFxSimpleAmp::save_params_to_string()
+{
+  QString result;
+  
+  //format is: paramname=frame_number1:value,frame_numberN:valueN;
+  //it is designed to save automation pairs time:value
+  result += ("dial_gain=0:" + QString::number (dial_gain->value()) + ";");
+  
+  return result;
+}
+
+
+void CFxSimpleAmp::load_params_from_string (const QString &s)
+{
+  QStringList ls = s.split (";");
+  QHash <QString, QString> h;
+  //parsing
+
+  for (int i = 0; i < ls.size(); i++)
+      {
+       QStringList lt = ls[i].split ("=");
+       h[lt[0]] = lt[1];
+      }  
+      
+      
+  QStringList lt = h["dial_gain"].split (",");    
+  QStringList lt2 = lt[0].split (":");    
+      
+  dial_gain->setValue (lt2[1].toDouble());    
+}
 
 
 CFxSimpleAmp::CFxSimpleAmp()
 {
   name = tr ("Simple amplifier");
-
+  
   wnd_ui->setWindowTitle (tr ("Simple Amp"));
 
   set_caption (tr ("<b>Simple amplifier</b>"), tr ("<i>Simple amplifier module</i>"));
@@ -104,6 +157,44 @@ size_t CFxSimpleAmp::execute (float **input, float **output, size_t frames)
 }
 
 
+QString CFxSimpleOverdrive::save_params_to_string()
+{
+  QString result;
+  
+  //format is: paramname=frame_number1:value,frame_numberN:valueN;
+  //it is designed to save automation pairs time:value
+  result += ("dial_gain=0:" + QString::number (dial_gain->value()) + ";");
+  result += ("dial_level=0:" + QString::number (dial_level->value()) + ";");
+  
+  return result;
+}
+
+
+void CFxSimpleOverdrive::load_params_from_string (const QString &s)
+{
+  QStringList ls = s.split (";");
+  QHash <QString, QString> h;
+  //parsing
+
+  for (int i = 0; i < ls.size(); i++)
+      {
+       QStringList lt = ls[i].split ("=");
+       h[lt[0]] = lt[1];
+      }  
+      
+  QStringList lt = h["dial_gain"].split (",");    
+  QStringList lt2 = lt[0].split (":");    
+      
+  dial_gain->setValue (lt2[1].toDouble());    
+  
+  lt = h["dial_level"].split (",");    
+  lt2 = lt[0].split (":");    
+  
+  dial_level->setValue (lt2[1].toDouble());    
+}
+
+
+
 CFxSimpleOverdrive::CFxSimpleOverdrive()
 {
   name = "FxSimpleOverdrive";
@@ -119,7 +210,7 @@ CFxSimpleOverdrive::CFxSimpleOverdrive()
 
   
   QLabel *l = new QLabel (tr ("Gain"));
-  QDial *dial_gain = new QDial;
+  dial_gain = new QDial;
   dial_gain->setWrapping (false);
   connect (dial_gain, SIGNAL(valueChanged(int)), this, SLOT(dial_gain_valueChanged(int)));
   dial_gain->setRange (1, 600);
@@ -135,7 +226,7 @@ CFxSimpleOverdrive::CFxSimpleOverdrive()
 
   QLabel *l_level = new QLabel (tr ("Output level: "));
 
-  QDial *dial_level = new QDial;
+  dial_level = new QDial;
   dial_level->setWrapping (false);
   connect (dial_level, SIGNAL(valueChanged(int)), this, SLOT(dial_level_valueChanged(int)));
   dial_level->setRange (-90, 0);

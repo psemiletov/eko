@@ -8,6 +8,8 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QString>
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
 
 
 #include "floatbuffer.h"
@@ -47,11 +49,19 @@ public:
   QLabel *l_subcaption;
   
   QString name;
+  QString id;
 
   AFx();
   virtual ~AFx();
 
   virtual size_t execute (float **input, float **output, size_t frames) = 0;
+  
+  //virtual void state_save_xml (QXmlStreamWriter *writer) = 0;
+  
+  virtual QString save_params_to_string() = 0;
+  virtual void load_params_from_string (const QString &s) = 0;
+
+  
   virtual void set_state (FxState s);
   virtual void reset_params (size_t srate, size_t ch);
 
