@@ -472,7 +472,9 @@ public:
   CDSP (QObject *parent = 0);
   ~CDSP();
   
-  size_t process (CFloatBuffer *fb, size_t nframes);
+//  size_t process (CFloatBuffer *fb, size_t nframes);
+  size_t process (CDocument *d, size_t nframes);
+
   size_t process_rec (float **buffer, size_t channels, size_t nframes);
 };
 

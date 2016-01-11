@@ -818,7 +818,7 @@ void CWaveform::fix_selection_bounds()
       sel_end_frames = t;
       selection_selected = 1;
      }
- 
+ /*
  //выравнивание по размеру буфера, той или иной границы выделения
     
   if (selection_selected == 2)  
@@ -879,7 +879,7 @@ void CWaveform::fix_selection_bounds()
             }
         
       sel_start_frames = i + buffer_size_frames;
-     }
+     }*/
 }
 
 
@@ -1794,8 +1794,7 @@ void CFxRackWindow::apply_fx()
 
 
 
-//documents->current->wave_edit->waveform->
-size_t CDSP::process (CFloatBuffer *fb, size_t nframes)
+size_t CDSP::process (CDocument *d, size_t nframes)
 {
  // qDebug() << "CDSP::process -- start";
   
@@ -1805,7 +1804,7 @@ size_t CDSP::process (CFloatBuffer *fb, size_t nframes)
   if (transport_state == STATE_EXIT)
      return 0;
 
-  if (! fb)
+  if (! d)
      return 0;
    
   maxl = 0.0f;
@@ -1814,18 +1813,36 @@ size_t CDSP::process (CFloatBuffer *fb, size_t nframes)
 //here we work with short buffer to process it and output to it
 
   size_t frames = nframes;
-//  qDebug() << "nsamples: " << nsamples;
   
-  size_t tail = fb->length_frames - fb->offset;
-                
-  tail = tail - frames; 
+  if (! d->wave_edit->waveform->play_looped) 
+     {
+      //just copy
+
+      size_t tail = (d->wave_edit->waveform->fb->length_frames - d->wave_edit->waveform->fb->offset) - frames;
   
-  if (tail < nframes)
-     frames = tail;
-   
-  //just copy
-  
-  fb->copy_to_pos (temp_float_buffer, fb->offset, frames, 0);
+      if (tail < nframes)
+         frames = tail;
+
+       d->wave_edit->waveform->fb->copy_to_pos (temp_float_buffer, d->wave_edit->waveform->fb->offset, frames, 0);
+       d->wave_edit->waveform->fb->offset += frames;
+     }
+  else
+      {
+       size_t diff = d->wave_edit->waveform->sel_end_frames - d->wave_edit->waveform->fb->offset;
+       if (diff < frames)
+         {
+          d->wave_edit->waveform->fb->copy_to_pos (temp_float_buffer, d->wave_edit->waveform->fb->offset, diff, 0);
+          d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->sel_start_frames;
+          size_t part = frames - diff;
+          d->wave_edit->waveform->fb->copy_to_pos (temp_float_buffer, d->wave_edit->waveform->fb->offset, part, diff);
+          d->wave_edit->waveform->fb->offset += part;
+         }  
+      else
+          {
+           d->wave_edit->waveform->fb->copy_to_pos (temp_float_buffer, d->wave_edit->waveform->fb->offset, frames, 0);
+           d->wave_edit->waveform->fb->offset += frames;
+          } 
+      } 
     
     
 ////////////call fx chain
@@ -1837,8 +1854,8 @@ size_t CDSP::process (CFloatBuffer *fb, size_t nframes)
        if (! wnd_fxrack->fx_rack->effects[i]->bypass)
           { 
            wnd_fxrack->fx_rack->effects[i]->realtime = true;
-           wnd_fxrack->fx_rack->effects[i]->channels = fb->channels;
-           wnd_fxrack->fx_rack->effects[i]->samplerate = fb->samplerate;
+           wnd_fxrack->fx_rack->effects[i]->channels = d->wave_edit->waveform->fb->channels;
+           wnd_fxrack->fx_rack->effects[i]->samplerate = d->wave_edit->waveform->fb->samplerate;
            wnd_fxrack->fx_rack->effects[i]->execute (temp_float_buffer->buffer, temp_float_buffer->buffer, frames);
           }
       }
@@ -1866,8 +1883,7 @@ size_t CDSP::process (CFloatBuffer *fb, size_t nframes)
      }
                 
 
-  fb->offset += frames;
- 
+  
   //qDebug() << "CDSP::process -- end";
  
  

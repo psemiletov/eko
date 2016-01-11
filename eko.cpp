@@ -245,6 +245,7 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
 
   float** pchannels = (float **)output;
 
+/*
   if (d->wave_edit->waveform->play_looped)
      {
       if (! d->wave_edit->waveform->selected)
@@ -261,10 +262,14 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
                 d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->frames_start();
            }
      }
-   else //not looped at all
+   else //not looped at all*/
+   
+   if (! d->wave_edit->waveform->play_looped)
    if (d->wave_edit->waveform->fb->offset + frameCount >= 
        d->wave_edit->waveform->fb->length_frames)
        {
+        qDebug() << "FULL STOP";
+       
         d->wave_edit->waveform->timer.stop();
         wnd_fxrack->tm_level_meter.stop();
 
@@ -277,7 +282,9 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
         return paAbort;
        }
  
-  if (dsp->process (d->wave_edit->waveform->fb, frameCount) == 0)
+ 
+  size_t ret = dsp->process (d, frameCount);
+  if (ret == 0/* && ! d->wave_edit->waveform->play_looped*/)
      {
       qDebug() << "return from process()";
       transport_state = STATE_STOP;
@@ -292,7 +299,8 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
       d->wave_edit->waveform->scrollbar->setValue (0);
       return paAbort;
      }
-  
+   
+   
   if (play_l)  
       memcpy (pchannels[0], dsp->temp_float_buffer->buffer[0], 
               frameCount * sizeof (float));
