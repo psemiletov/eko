@@ -15,7 +15,6 @@
 using namespace std;
 
 
-
 int proxy_video_decoder;
 double ogg_q;
 CFileFormats *file_formats;

@@ -6,11 +6,9 @@
 #include <QHash>
 #include <QStringList>
 
-
 #include <sndfile.h>
 
 #include "floatbuffer.h"
-
 
 
 class CFileFormats

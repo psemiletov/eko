@@ -4,7 +4,7 @@
 #include "cvlevelmeter.h"
 #include "utils.h"
 
-//FIXME: make meter bar non-linear
+
 void CVLevelMeter::update_scale_image()
 {
   QImage im (scale_width, height(), QImage::Format_RGB32);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   2010 - 2015 by Peter Semiletov                                        *
+ *   2010 - 2016 by Peter Semiletov                                        *
  *   tea@list.ru                                                           *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -401,19 +401,7 @@ void CWaveform::recalc_view()
 
   if (! fb)
      return;
- 
-  /*
-  size_t cursor_frames = cursor_position * frames_per_section;
-
-  size_t sel_start_frames = selection_start * frames_per_section;
-  size_t sel_end_frames = selection_end * frames_per_section;
-
-  qDebug() << "frames_per_section = " << frames_per_section;
-  qDebug() << "sel_start_frames = " << sel_start_frames;
-  qDebug() << "sel_end_frames = " << sel_end_frames;
-  qDebug() << "cursor_position = " << cursor_position;
-  qDebug() << "cursor_frames = " << cursor_frames;
-*/
+   
   sections_total = width() * scale_factor;
   
   if (sections_total == 0)
@@ -423,10 +411,7 @@ void CWaveform::recalc_view()
   
   if (frames_per_section < FRAMES_PER_SECT_MAX)
      frames_per_section = FRAMES_PER_SECT_MAX;
-     
-  //qDebug() << "frames_per_section == " << frames_per_section;
-  //qDebug() << "cursor_frames = " << cursor_frames;
-
+  
   scrollbar->setMinimum (0);
   scrollbar->setMaximum (sections_total - width());
 
@@ -901,7 +886,7 @@ void CWaveform::fix_selection_bounds()
 void CWaveform::select_all()
 {
   sel_start_frames = 0;
-  sel_end_frames = fb->length_frames/* - 1*/;
+  sel_end_frames = fb->length_frames;
 
   selected = true;
   update();
