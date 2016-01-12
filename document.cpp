@@ -1828,11 +1828,11 @@ size_t CDSP::process (CDocument *d, size_t nframes)
      }
   else
       {
-       size_t diff = d->wave_edit->waveform->sel_end_frames - d->wave_edit->waveform->fb->offset;
+       size_t diff = d->wave_edit->waveform->frames_end() - d->wave_edit->waveform->fb->offset;
        if (diff < frames)
          {
           d->wave_edit->waveform->fb->copy_to_pos (temp_float_buffer, d->wave_edit->waveform->fb->offset, diff, 0);
-          d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->sel_start_frames;
+          d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->frames_start();
           size_t part = frames - diff;
           d->wave_edit->waveform->fb->copy_to_pos (temp_float_buffer, d->wave_edit->waveform->fb->offset, part, diff);
           d->wave_edit->waveform->fb->offset += part;
