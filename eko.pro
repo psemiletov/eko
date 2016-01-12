@@ -40,7 +40,8 @@ SOURCES += eko.cpp \
     cvlevelmeter.cpp \
     fxrack.cpp \
     afx.cpp \
-    fxlist.cpp
+    fxlist.cpp \
+    noisegen.cpp
 #    tinyplayer.cpp
 
 HEADERS += eko.h \
@@ -60,7 +61,8 @@ HEADERS += eko.h \
     cvlevelmeter.h \
     fxrack.h \
     afx.h \
-    fxlist.h
+    fxlist.h \
+    noisegen.h
 #    tinyplayer.h
 
 
