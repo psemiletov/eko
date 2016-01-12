@@ -229,9 +229,13 @@ public:
 
   size_t frames_per_section;
 
-  size_t section_from;
-  size_t section_to;
+  //size_t section_from;
+  //size_t section_to;
+  
   size_t sections_total;
+
+  size_t get_section_from();
+  size_t get_section_to();
 
 //colors
 
@@ -246,6 +250,8 @@ public:
   QColor cl_shadow; 
 
   int waveform_selection_alpha;
+
+
 
   void load_color (const QString &fname);
 

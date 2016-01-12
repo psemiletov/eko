@@ -204,7 +204,7 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
   painter.setBrush (background_color);
   painter.drawRect (0, 0, width(), height());
   
-  size_t sections = waveform->section_to - waveform->section_from;
+  size_t sections = waveform->get_section_to() - waveform->get_section_from();
   float sections_per_second = (float) waveform->fb->samplerate / waveform->frames_per_section;
  
  // qDebug() << "frames_per_section = " << waveform->frames_per_section;
@@ -216,8 +216,8 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
  // if (sections_per_second == 0) //nasty hack
    //  sections_per_second = 1;
 
-  size_t seconds_start = waveform->section_from / sections_per_second;
-  size_t seconds_end = waveform->section_to / sections_per_second;
+  size_t seconds_start = waveform->get_section_from() / sections_per_second;
+  size_t seconds_end = waveform->get_section_to() / sections_per_second;
     
   size_t seconds = seconds_end - seconds_start;
 
@@ -239,7 +239,7 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
              QPoint p2 (x, 12);
 
              QTime t (0, 0);
-             t = t.addSecs ((waveform->section_from + x) / sections_per_second);       
+             t = t.addSecs ((waveform->get_section_from() + x) / sections_per_second);       
 
              painter.drawLine (p1, p2);
              painter.drawText (x + 2, 20, t.toString ("ss:zzz") + "s");
@@ -252,7 +252,7 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
              QPoint p2 (x, 12);
 
              QTime t (0, 0);
-             t = t.addSecs ((waveform->section_from + x) / sections_per_second);       
+             t = t.addSecs ((waveform->get_section_from() + x) / sections_per_second);       
 
              painter.drawLine (p1, p2);
              painter.drawText (x + 2, 20, t.toString ("mm:ss") + "m");
@@ -281,14 +281,14 @@ void CWaveform::paintEvent (QPaintEvent *event)
 
   painter.setPen (cl_cursor);
   
-  int x = section - section_from;
+  int x = section - get_section_from();
   painter.drawLine (x, 1, x, height());
 
   if (selected)
   if (get_selection_start_sections() != get_selection_end_sections())
      {
-      int s_start = get_selection_start_sections() - section_from;  //section start
-      int s_end = get_selection_end_sections() - section_from;  //section end
+      int s_start = get_selection_start_sections() - get_section_from();  //section start
+      int s_end = get_selection_end_sections() - get_section_from();  //section end
 
       QPoint p1 (s_start, 0);
       QPoint p2 (s_end, height());
@@ -313,7 +313,7 @@ void CWaveform::timer_timeout()
    
   int cursor_pos_sections = get_cursor_position_sections();
    
-  if (cursor_pos_sections >= section_to) //скачем на следующий экран
+  if (cursor_pos_sections >= get_section_to()) //скачем на следующий экран
      scrollbar->setValue (scrollbar->value() + width());
   
  // if (cursor_pos_sections >= get_selection_end_sections())
@@ -340,8 +340,8 @@ CWaveform::CWaveform (QWidget *parent): QWidget (parent)
 
   init_state = true;
   scale_factor = 1.0;
-  section_from = 0;
-  section_to = width() - 1;
+  //section_from = 0;
+  //section_to = width() - 1;
   
   max_undos = 3;
     
@@ -430,7 +430,7 @@ void CWaveform::scale (int delta)
   if (frames_per_section == 0)
      return;
 
-  int old_section_from = section_from;
+  int old_section_from = get_section_from();
   int old_frame_from = old_section_from * frames_per_section;
 
   if (delta > 0)
@@ -468,8 +468,8 @@ void CWaveform::resizeEvent (QResizeEvent *event)
 {
   recalc_view();
   
-  section_from = scrollbar->value();
-  section_to = width() + scrollbar->value();
+ // section_from = scrollbar->value();
+  //section_to = width() + scrollbar->value();
   
   prepare_image();
 }
@@ -557,7 +557,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
       if (get_cursor_position_sections() != 0)
          set_cursor_by_section (get_cursor_position_sections() - 1);
 
-      if (get_cursor_position_sections() == section_from)
+      if (get_cursor_position_sections() == get_section_from())
          {
           if (scrollbar->value() != scrollbar->minimum())
              scrollbar->setValue (scrollbar->value() - 1);         
@@ -606,7 +606,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
       if (get_cursor_position_sections() == sections_total)
          set_cursor_by_section (get_cursor_position_sections() - 1);
   
-      if (get_cursor_position_sections() == section_to)
+      if (get_cursor_position_sections() == get_section_to())
          {
           if (scrollbar->value() != scrollbar->maximum())
              scrollbar->setValue (scrollbar->value() + 1);         
@@ -1144,8 +1144,8 @@ bool CWaveEdit::isReadOnly()
 
 void CWaveEdit::scb_horizontal_valueChanged (int value)
 {
-  waveform->section_from = value;
-  waveform->section_to = waveform->width() + value;
+  //waveform->section_from = value;
+  //waveform->section_to = waveform->width() + value;
   
   waveform->init_state = false;
   timeruler->init_state = false;
@@ -1932,7 +1932,7 @@ void CWaveform::prepare_image()
   if (frames_per_section == 0)
      return;
 
-  size_t sections = section_to - section_from;
+  size_t sections = get_section_to() - get_section_from();
   int image_height = height();
   int channel_height = image_height / fb->channels;
   
@@ -1946,7 +1946,7 @@ void CWaveform::prepare_image()
   
   size_t frame = 0;
   size_t section = 0;
-  size_t frameno = section_from * frames_per_section;
+  size_t frameno = get_section_from() * frames_per_section;
   
  //qDebug() << "sections: " << sections;
  
@@ -2088,7 +2088,7 @@ void CWaveform::prepare_image()
           {
            int pos_sections = env_vol.points[i]->position_frames / frames_per_section; 
            
-           int point_x = pos_sections - section_from; //in sections
+           int point_x = pos_sections - get_section_from(); //in sections
            int point_y = get_fvalue (image_height, env_vol.points[i]->value);
            
            QPen envpen;
@@ -2198,7 +2198,7 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
      y = height();  
 
 
-  int section = section_from + event->x();
+  int section = get_section_from() + event->x();
 
   if (event->button() == Qt::RightButton)
      {
@@ -2342,7 +2342,7 @@ void CWaveform::mouseMoveEvent (QMouseEvent *event)
      y = height();  
 
 
-  size_t current_section = section_from + x;
+  size_t current_section = get_section_from() + x;
 
     if (! mouse_pressed)
      {
@@ -2461,3 +2461,14 @@ CDSP::~CDSP()
   delete temp_float_buffer;
 }
   
+
+size_t CWaveform::get_section_from()
+{
+ return scrollbar->value();
+}
+
+
+size_t CWaveform::get_section_to()
+{
+  return width() + scrollbar->value();
+}
