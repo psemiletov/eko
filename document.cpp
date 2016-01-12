@@ -1944,17 +1944,15 @@ void CWaveform::prepare_image()
   //QTime tm;
   //tm.start();
   
-  size_t frame = 0;
+  //size_t frame = 0;
   size_t section = 0;
   size_t frameno = get_section_from() * frames_per_section;
   
  //qDebug() << "sections: " << sections;
  
  //переписать это в for обратив в проход по всему буферу
-  while (section/* + 1*/ < sections)
+  while (section < sections)
         {
-        // frameno++;
-          
          for (size_t ch = 0; ch < fb->channels; ch++)    
              {
               if (fb->buffer[ch][frameno] < minmaxes->values[ch]->min_values->temp)
@@ -1966,7 +1964,9 @@ void CWaveform::prepare_image()
            
          frameno++;
 
-         if (frame == frames_per_section)
+         if (frameno % frames_per_section == 0)
+
+//         if (frame == frames_per_section)
             {
              for (size_t ch = 0; ch < fb->channels; ch++)    
                  { 
@@ -1978,12 +1978,12 @@ void CWaveform::prepare_image()
                  }
                  
              section++;
-             frame = 0;
+            // frame = 0;
 
              continue;
             }
 
-          frame++;
+          //frame++;
          }
 
    //int msecs = tm.elapsed();
