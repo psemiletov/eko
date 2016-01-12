@@ -183,14 +183,14 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
 
   if (! waveform && ! waveform->fb)
      {
-      qDebug() << "! waveform && ! waveform->fb";
+//      qDebug() << "! waveform && ! waveform->fb";
       event->accept();
       return;
      }
      
   if (waveform->frames_per_section == 0)   
      {
-      qDebug() << "waveform->frames_per_section == 0";
+//      qDebug() << "waveform->frames_per_section == 0";
       event->accept();
       return;
      }
@@ -239,7 +239,6 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
              QPoint p2 (x, 12);
 
              QTime t (0, 0);
-
              t = t.addSecs ((waveform->section_from + x) / sections_per_second);       
 
              painter.drawLine (p1, p2);
@@ -253,7 +252,6 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
              QPoint p2 (x, 12);
 
              QTime t (0, 0);
-
              t = t.addSecs ((waveform->section_from + x) / sections_per_second);       
 
              painter.drawLine (p1, p2);
@@ -318,9 +316,12 @@ void CWaveform::timer_timeout()
   if (cursor_pos_sections >= section_to) //скачем на следующий экран
      scrollbar->setValue (scrollbar->value() + width());
   
-  if (cursor_pos_sections >= get_selection_end_sections())
-     scrollbar->setValue (get_selection_start_sections()); //скачем к началу выделения
+ // if (cursor_pos_sections >= get_selection_end_sections())
+    // scrollbar->setValue (get_selection_start_sections()); //скачем к началу выделения
     
+  if (scrollbar->value() >= cursor_pos_sections)
+     scrollbar->setValue (get_selection_start_sections()); //скачем к началу выделения
+      
   update();
       
   set_cursorpos_text();
@@ -1779,21 +1780,6 @@ void CFxRackWindow::closeEvent (QCloseEvent *event)
 }
 
 
-/*
-void CFxRackWindow::apply_fx()
-{
-  CDocument *d = documents->get_current();
-  if (! d)
-     return;
-
-  dsp->process_whole_document (d);
-  wnd_fxrack->fx_rack->bypass_all();
-}
-*/
-
-
-
-
 size_t CDSP::process (CDocument *d, size_t nframes)
 {
  // qDebug() << "CDSP::process -- start";
@@ -1938,16 +1924,13 @@ void CWaveform::prepare_image()
 //  qDebug() << "CWaveform::prepare_image() - start";
 
   if (! fb)
-    {
+     {
       qDebug() << "! sound_buffer";
       return;
      } 
 
-
   if (frames_per_section == 0)
      return;
-
- // qDebug() << "sb buffer size: " << sound_buffer->buffer_size;
 
   size_t sections = section_to - section_from;
   int image_height = height();
@@ -1963,19 +1946,17 @@ void CWaveform::prepare_image()
   
   size_t frame = 0;
   size_t section = 0;
-  size_t frameno = section_from * frames_per_section/* - 1*/;
- 
- 
+  size_t frameno = section_from * frames_per_section;
+  
  //qDebug() << "sections: " << sections;
  
  //переписать это в for обратив в проход по всему буферу
-  while (section + 1 < sections)
+  while (section/* + 1*/ < sections)
         {
-         frameno++;
+        // frameno++;
           
          for (size_t ch = 0; ch < fb->channels; ch++)    
              {
-              //заменить на fmin fmax
               if (fb->buffer[ch][frameno] < minmaxes->values[ch]->min_values->temp)
                  minmaxes->values[ch]->min_values->temp = fb->buffer[ch][frameno];
               else   
@@ -1983,11 +1964,10 @@ void CWaveform::prepare_image()
                  minmaxes->values[ch]->max_values->temp = fb->buffer[ch][frameno];
              }
            
+         frameno++;
 
          if (frame == frames_per_section)
             {
-             section++;
-             frame = 0;
              for (size_t ch = 0; ch < fb->channels; ch++)    
                  { 
                   minmaxes->values[ch]->min_values->samples[section] = minmaxes->values[ch]->min_values->temp;
@@ -1996,6 +1976,9 @@ void CWaveform::prepare_image()
                   minmaxes->values[ch]->min_values->temp = 0;
                   minmaxes->values[ch]->max_values->temp = 0;
                  }
+                 
+             section++;
+             frame = 0;
 
              continue;
             }
@@ -2003,63 +1986,8 @@ void CWaveform::prepare_image()
           frame++;
          }
 
- // << "3";
-
    //int msecs = tm.elapsed();
     //qDebug() << "time: " << msecs;
-   
-
-
-/*
-  QTime tm;
-  tm.start();
-
-  //size_t frame = 0;
-  size_t section = -1;
-  size_t sampleno = section_from * (frames_per_section * sound_buffer->channels) - 1;
-
-  size_t frame_start = section_from * frames_per_section;
-  size_t frame_end = section_to * frames_per_section - 1;
-
-#pragma omp for schedule(dynamic)
-  for (size_t i = frame_start; i < frame_end; i++)
-      {
-       //qDebug() << i;
-       for (int ch = 0; ch < sound_buffer->channels; ch++)    
-             {
-              sampleno++;
-
-              if (sound_buffer->buffer[sampleno] < minmaxes->values[ch]->min_values->temp)
-                 minmaxes->values[ch]->min_values->temp = sound_buffer->buffer[sampleno];
-              else   
-              if (sound_buffer->buffer[sampleno] > minmaxes->values[ch]->max_values->temp)
-                 minmaxes->values[ch]->max_values->temp = sound_buffer->buffer[sampleno];
-             }
-             
-             
-         if (i % frames_per_section == 0)
-            {
-             section++;
-             
-           //  qDebug() << section;
-             
-             for (int ch = 0; ch < sound_buffer->channels; ch++)    
-                 { 
-                  minmaxes->values[ch]->min_values->samples[section] = minmaxes->values[ch]->min_values->temp;
-                  minmaxes->values[ch]->max_values->samples[section] = minmaxes->values[ch]->max_values->temp;
-               
-                  minmaxes->values[ch]->min_values->temp = 0;
-                  minmaxes->values[ch]->max_values->temp = 0;
-                 }
-            }
-      }
-      
-   int msecs = tm.elapsed();
-   qDebug() << "time: " << msecs;
-      
-*/
-
- 
 
   QImage img (width(), image_height, QImage::Format_RGB32);
   QPainter painter (&img);
@@ -2067,7 +1995,8 @@ void CWaveform::prepare_image()
   painter.setPen (cl_waveform_foreground);
     
   img.fill (cl_waveform_background.rgb()); 
-    
+
+//draw amplitude bars    
   for (int ch = 0; ch < fb->channels; ch++)    
   for (size_t x = 0; x < sections; x++)
       {
