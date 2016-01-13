@@ -1145,9 +1145,6 @@ bool CWaveEdit::isReadOnly()
 
 void CWaveEdit::scb_horizontal_valueChanged (int value)
 {
-  //waveform->section_from = value;
-  //waveform->section_to = waveform->width() + value;
-  
   waveform->init_state = false;
   timeruler->init_state = false;
   
@@ -1202,19 +1199,11 @@ bool CDocument::open_file (const QString &fileName, bool set_fname)
                            .arg (tio->error_string));
       return false;
      }
-
-  qDebug() << "ff->channels: " << ff->channels;
-  qDebug() << "ff->length_frames: " << ff->length_frames;
   
   if (wave_edit->waveform->fb)
      delete wave_edit->waveform->fb;
 
   wave_edit->waveform->fb = ff;
-
-//  wave_edit->waveform->sound_buffer->sndfile_format = tio->format;
-  
-//  wave_edit->waveform->sound_buffer->samplerate = tio->samplerate;
-//  wave_edit->waveform->sound_buffer->default_channels_count = wave_edit->waveform->sound_buffer->float_buffer->channels;
     
   ronly = tio->ronly;  
     
@@ -1282,8 +1271,6 @@ bool CDocument::save_with_name (const QString &fileName)
      return false;
 
   tio->float_input_buffer = wave_edit->waveform->fb;
-  //tio->samplerate = wave_edit->waveform->fb->samplerate;
-  //tio->format = wave_edit->waveform->fb->sndfile_format;
 
   QTime tm;
   tm.start();
@@ -1392,9 +1379,6 @@ bool CDocument::save_with_name_plain (const QString &fileName)
   CTio *tio = holder->tio_handler.get_for_fname (fileName);
 
   tio->float_input_buffer = wave_edit->waveform->fb;
-  //tio->samplerate = wave_edit->waveform->sound_buffer->samplerate;
-  //tio->channels = wave_edit->waveform->sound_buffer->float_buffer->channels;
-  //tio->format = wave_edit->waveform->sound_buffer->sndfile_format;
   
   if (! tio->save (fileName))
      {
@@ -1722,8 +1706,6 @@ CFxRackWindow::CFxRackWindow()
   level_meter = new CVLevelMeter (this);
   
   bt_apply = new QPushButton (tr ("Apply"));
-  
-  //connect (bt_apply, SIGNAL(clicked()), this, SLOT(apply_fx()));
 
   fx_rack = new CFxRack;
 
@@ -1945,13 +1927,11 @@ void CWaveform::prepare_image()
   //QTime tm;
   //tm.start();
   
-  //size_t frame = 0;
   size_t section = 0;
   size_t frameno = get_section_from() * frames_per_section;
   
  //qDebug() << "sections: " << sections;
  
- //переписать это в for обратив в проход по всему буферу
   while (section < sections)
         {
          for (size_t ch = 0; ch < fb->channels; ch++)    
@@ -1966,8 +1946,6 @@ void CWaveform::prepare_image()
          frameno++;
 
          if (frameno % frames_per_section == 0)
-
-//         if (frame == frames_per_section)
             {
              for (size_t ch = 0; ch < fb->channels; ch++)    
                  { 
@@ -1979,12 +1957,9 @@ void CWaveform::prepare_image()
                  }
                  
              section++;
-            // frame = 0;
 
              continue;
             }
-
-          //frame++;
          }
 
    //int msecs = tm.elapsed();
@@ -2006,15 +1981,19 @@ void CWaveform::prepare_image()
 
   	   QPoint p1 (x, ymin + channel_height * ch);
        QPoint p2 (x, ymax + channel_height * ch);
-       
-  		   /*
-  		   if ((minmaxes->values[ch]->max_values->samples[x] >= 1) || (minmaxes->values[ch]->min_values->samples[x] <= -1))
-       painter.setPen (QColor (Qt::red));
-       else
-       painter.setPen (cl_waveform_foreground);
-*/
-
+ 
        painter.drawLine (p1, p2);
+       
+       /*
+       if ((minmaxes->values[ch]->max_values->samples[x] >= 1) || (minmaxes->values[ch]->min_values->samples[x] <= -1))
+          {
+           painter.setPen (QColor (Qt::red));
+           painter.drawEllipse (p1, 2, 2);
+           painter.drawEllipse (p2, 2, 2);
+          }
+          
+       painter.setPen (cl_waveform_foreground);
+       */   
       }        
 
 
@@ -2170,7 +2149,6 @@ void CWaveform::set_cursor_by_section (size_t section)
 }
 
 
-
 void CWaveform::mouseDoubleClickEvent (QMouseEvent *event)
 {
   select_all();
@@ -2202,17 +2180,7 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
 
   if (event->button() == Qt::RightButton)
      {
-      //env_vol.insert_wise (section * frames_per_section, event->y(), height(), sound_buffer->samples_total - 1);
       env_vol.insert_wise (section * frames_per_section, y, height(), fb->length_frames);
-  
-       
-      //env_vol.insert_wise (section * frames_per_section * sound_buffer->channels, event->y(), height(), 
-        //                   section_to * frames_per_section * sound_buffer->channels);
-
-    
-     //qDebug() << "calc:" << section_to * frames_per_section * sound_buffer->channels;
-     //qDebug() << "total:" << sound_buffer->samples_total - 1;
-     
     
       setFocus (Qt::OtherFocusReason);
  
@@ -2224,15 +2192,11 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
       previous_mouse_pos_x = section;
       return;
      }
-
   
   CEnvelopePoint *ep = env_vol.find (section * frames_per_section, y, height(), frames_per_section);
 
   if (ep)
      {
-      //qDebug() << "ep->position = " << ep->position_frames;
-      //qDebug() << "ep->value = " << ep->value;
-      
       env_vol.select_point (ep);
       
       envelope_selected = 0;
@@ -2261,7 +2225,6 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
      }
   
 
-
 //deselect if click is not on the selection bounds
   if (! x_nearby (section, get_selection_start_sections(), 2) &&
       ! x_nearby (section, get_selection_end_sections(), 2))
@@ -2271,13 +2234,10 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
       } 
   else
       {
-       //selected = true;
-
        if (x_nearby (section, get_selection_start_sections(), 2))
           {
            set_selstart_value (section);
            selection_selected = 1;
-  //         qDebug() << "selection_selected: " << selection_selected; 
           } 
           
        else  
@@ -2285,10 +2245,7 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
           {
            set_selend_value (section);
            selection_selected = 2;
-//           qDebug() << "selection_selected: " << selection_selected; 
-
           }
-           
       }   
   
   
@@ -2299,7 +2256,6 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
   
   set_cursorpos_text();
   previous_mouse_pos_x = section;
-
 }
 
 
@@ -2439,8 +2395,6 @@ void CWaveform::mouseReleaseEvent (QMouseEvent * event)
 
   selection_selected = 0;
   envelope_selected = -1;
-//  if (selected)
-  //   fix_selection_bounds_release();
 
   QWidget::mouseReleaseEvent (event);
 }
