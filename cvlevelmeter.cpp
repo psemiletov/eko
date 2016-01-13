@@ -3,6 +3,7 @@
 
 #include "cvlevelmeter.h"
 #include "utils.h"
+#include "db.h"
 
 
 void CVLevelMeter::update_scale_image()

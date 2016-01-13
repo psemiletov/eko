@@ -17,6 +17,7 @@
 
 #include <cmath>
 
+#include "db.h"
 #include "fxset.h"
 #include "utils.h"
 

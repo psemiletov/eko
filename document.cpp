@@ -38,6 +38,7 @@
 
 #include "logmemo.h"
 #include "fxrack.h"
+#include "db.h"
 
 #define FRAMES_PER_SECT_MAX 16
 
@@ -2018,7 +2019,7 @@ void CWaveform::prepare_image()
 
 
 //draw the amplitude meter bar  
-//FIXME!!!
+
   painter.setPen (cl_text);
   //painter.setFont (QFont ("Mono", 5));
 
@@ -2026,7 +2027,6 @@ void CWaveform::prepare_image()
   tfont.setPixelSize (8);
 
   painter.setFont (tfont);
-
    
   //int ten = get_value (channel_height / 2, 10) / 2;  
        
@@ -2054,14 +2054,14 @@ void CWaveform::prepare_image()
             QPoint p1 (1, y);
             QPoint p2 (5, y);
             painter.drawLine (p1, p2);
-       
+       /*
             if (draw_shadow)
                {    
                 painter.setPen (cl_shadow);
                 painter.drawText (QPoint (2, 1 + y), QString::number (db, 'g', 2)); //dB
                 painter.setPen (cl_text);
                }                  
-                    
+         */           
             painter.drawText (QPoint (1, y), QString::number (db, 'g', 2)); //dB
          
             if (db >= -9)
@@ -2072,7 +2072,7 @@ void CWaveform::prepare_image()
            }            
        }  
   
-  //draw vol env
+  //draw vol envelope
   
   int old_point_x = -1;
   int old_point_y = -1;

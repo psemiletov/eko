@@ -56,6 +56,7 @@ started at 25 July 2010
 #include "floatbuffer.h"
 #include "fxrack.h"
 
+#include "db.h"
 
 #define FM_ENTRY_MODE_NONE 0
 #define FM_ENTRY_MODE_OPEN 1
@@ -576,6 +577,8 @@ void CEKO::create_main_widget()
 
 CEKO::CEKO()
 {
+  init_db();
+
   pa_init();
 
   play_r = true;
@@ -3467,6 +3470,10 @@ void CEKO::slot_transport_play()
       if (err < 0)
          {
           log->log (Pa_GetErrorText (err));
+          
+          QMessageBox::warning (0, tr ("Error!"), 
+                               tr ("Something wrong!\n Try to select another sound port[s] at Tune - Sound options page, or release the sound device from another application use."));
+          
           pa_stream = 0;
           return;
          }

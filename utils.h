@@ -98,48 +98,6 @@ inline QString get_file_path (const QString &fileName)
   return QFileInfo (fileName).absolutePath();
 }
 
-inline float float2db (float v)
-{
-  if (v == 0)
-     return 0;
-         
-  if (v > 0)
-     return (float) 20 * log10 (v / 1.0);
-
-  return (float) 20 * log10 (v / -1.0);
-}
-
-
-/* from 
- *  db.h
- *
- *  Copyright (C) 2003,2005 Steve Harris, Nicholas Humfrey
- *
- */
-static inline float db2lin2 (float db)
-{
-  if (db <= -90.0f) 
-      return 0.0f;
-  else 
-      return powf (10.0f, db * 0.05f);
-        
-}
-
-
-static inline float lin2db (float lin)
-{
-  if (lin == 0.0f) 
-     return -90.0f;
-  else 
-      return (20.0f * log10f (lin));
-}
-
-
-static inline float db2lin (float db)
-{
-  return powf (10.0f, db / 20);
-}
-
 
 double input_double_value (const QString &caption, const QString &lbl,
                            double minval, double maxval, double defval, double step);
