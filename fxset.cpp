@@ -749,6 +749,11 @@ void CFxMetaluga::dial_gain_valueChanged (int value)
 
 void CFxMetaluga::dial_drive_valueChanged (int value)
 {
+/*
+this code is based on "A Guitar Overdrive/Distortion Effect of Digital Signal Processing"
+algoritm from the article written by Cheng-Hao Chang
+*/
+
   float a = sin (((drive + 1) / 101) * (M_PI / 2));
   float k = 2 * atan (a) / (1 - a);
   drive = (1 + k) * value / (1 + k * abs (value));

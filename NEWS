@@ -1,16 +1,17 @@
-=====NEWS ABOUT EKO====
-EKO 4.0.0, November 2015
----------------------------------------
-http://semiletov.org/eko
----------------------------------------
+_____________________________________________________
+       ===== NEWS ABOUT EKO ====                 
 
-   Hi.
-   First of all, this release fixes all bugs those I knew. It includes the multilply (> 2) channels processing, fading, selections and many more.
-   The "Normalize" function now takes the parameter in dB.
-   Now you can monitor the input signal (Tune - Sound devices - Monitor input option).
-   The volume can be adjusted dynamically using the volume (or dynamics) automation envelope and "Functions - Dynamics" menu.
+                   EKO 5.0.0, January 2016                         
+_____________________________________________________
 
-   With the 4.0.0 I'm afraid (yes) to introduce the initial Win32 build that I didn't test much.
+http://semiletov.org/eko (stable ver. with win32 builds)
+https://github.com/psemiletov/eko (development ver.)
+_____________________________________________________
+
+   Hello! The fifth EKO's code has been heavy rewritten to share the codebase with my new project, the minimalistic DAW - Wavylon. Also there are many errors were fixed, and limitations eliminated. But what is changed for the user?
+   EKO becomes more stable. Some new realtime FX - two guitar pedals emulators, the filter and the delay module. But they are will be more useful with Wavylon. 
+   So there is not so much visible and audible changes but the inner changes allows me to move EKO forward. 
+   
 
    Stay tuned.
 
