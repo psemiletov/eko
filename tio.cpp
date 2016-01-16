@@ -540,7 +540,7 @@ CTioProxy::CTioProxy()
  // proxies[exts_mp3] = "lame --decode \"@FILEIN\" \"@FILEOUT\"";
   //extensions += exts_mp3;
   
-  QString exts_videos = "mp3,avi,mp4,mpeg2,flv,mkv,aac,vob,wmv,3gp,3ga,m2t,mov,mpeg,h264,ts,webm,asf,wma,ogm,rm,qt,nut,smi,ac3,divx,dv,fli,flc,cpk";
+  QString exts_videos = "mp3,avi,mp4,mpeg2,flv,mkv,aac,vob,wmv,3gp,3ga,m2t,mov,mpeg,h264,ts,webm,asf,wma,ogm,wv,wvc,rm,qt,nut,smi,ac3,divx,dv,fli,flc,cpk";
     
   //QString exts_videos = "avi,mp4";
   
