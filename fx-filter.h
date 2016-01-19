@@ -1,5 +1,5 @@
-#ifndef FXIIRFILTER_H
-#define FXIIRFILTER_H
+#ifndef FXFILTER_H
+#define FXFILTER_H
 
 /*
 
@@ -9,6 +9,7 @@ by Paul Kellett http://www.musicdsp.org/showone.php?id=29
 */
 
 #include <cstring>
+#include <cmath>
 
 enum filter_mode {
         FILTER_MODE_LOWPASS = 0,
@@ -45,4 +46,5 @@ public:
 };
 
 
-#endif // FXIIRFILTER_H
+
+#endif // FXFILTER_H

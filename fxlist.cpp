@@ -8,6 +8,7 @@ CFxList::CFxList()
   list.append (new CFxSimpleOverdrive);
   list.append (new CFxDelay);
   list.append (new CFxSimpleFilter);
+  list.append (new CFxVynil);
   list.append (new CFxMetaluga);
   list.append (new CFxJest);
 }

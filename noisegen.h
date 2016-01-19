@@ -4,13 +4,9 @@
 #include <cstring>
 
 
-/*from:   Audacity: A Digital Audio Editor
+float* noise_generate_white (size_t len, float amp); //gen one channel noise
+float* noise_generate_pink (size_t len, float amp); //gen one channel noise
+float* noise_generate_pink2 (size_t len, float amp); //gen one channel noise
 
-  Noise.cpp
-
-  Dominic Mazzoni
-*/
-
-bool MakeNoise (float *buffer, size_t len, float fs, float amplitude, int noiseType);
 
 #endif // NOISEGEN_H

@@ -7,57 +7,88 @@
 #include <cmath>
 #include <cstdlib>
 
+#include <random>
+
 #include "noisegen.h"
 
-bool MakeNoise (float *buffer, size_t len, float fs, float amplitude, int noiseType)
+
+float* noise_generate_white (size_t len, float amp) //gen one channel noise
 {
-   float white, buf0, buf1, buf2, buf3, buf4, buf5;
-   float a0, b1, fc, y;
-   size_t i;
-   float div = ((float)RAND_MAX) / 2.0f;
+  float *buffer = new float [len];
+  
+  std::random_device rd;
+  std::default_random_engine gen (rd());
+  std::uniform_real_distribution<> dis(-1.0, 1.0);
+  
+ for (size_t i = 0; i < len; i++)
+      {
+       buffer[i] = (float)dis(gen) * amp;  
+      }
+          
+  return buffer;        
+}
 
-   switch (noiseType) {
-   default:
-   case 0: // white
-       for(i=0; i<len; i++)
-          buffer[i] = amplitude * ((rand() / div) - 1.0f);
-       break;
+/*
+Following the
+http://www.firstpr.com.au/dsp/pink-noise/
+Using the Paul Kellet's filtering
+*/
 
-   case 1: // pink
-       white=buf0=buf1=buf2=buf3=buf4=buf5=0;
+float* noise_generate_pink (size_t len, float amp) //gen one channel noise
+{
+  float *buffer = new float [len];
+  
+  float b0, b1, b2;
+  
+  std::random_device rd;
+  std::knuth_b gen (rd());
+  std::uniform_real_distribution<> dis(-1.0, 1.0);
+  
+  for (size_t i = 0; i < len; i++)
+      {
+       float white = (float)dis(gen);  
+       
+       b0 = 0.99765 * b0 + white * 0.0990460;
+       b1 = 0.96300 * b1 + white * 0.2965164;
+       b2 = 0.57000 * b2 + white * 1.0526913;
+       float tmp = (b0 + b1 + b2 + white * 0.1848) / 4; 
+      
+       buffer[i] = tmp * amp;
+      }
+          
+  return buffer;        
+}
 
-       // 0.55f is an experimental normalization factor: thanks to Martyn
-       amplitude *= 0.55f;
-       for(i=0; i<len; i++) {
-        white=(rand() / div) - 1.0f;
-        buf0=0.997f * buf0 + 0.029591f * white;
-        buf1=0.985f * buf1 + 0.032534f * white;
-        buf2=0.950f * buf2 + 0.048056f * white;
-        buf3=0.850f * buf3 + 0.090579f * white;
-        buf4=0.620f * buf4 + 0.108990f * white;
-        buf5=0.250f * buf5 + 0.255784f * white;
-        buffer[i] = amplitude * (buf0 + buf1 + buf2 + buf3 + buf4 + buf5);
-       };
-       break;
-
-   case 2: // brown
-       // fc=100 Hz,
-       // y[n]=a0*x[n] + b1*y[n-1];
-       white = a0 = b1 = fc = y = 0;
-       fc=100; //fs=44100;
-       b1=exp(-2*M_PI*fc/fs);
-       a0=1.0f-b1;
-
-       // 6.2f is an experimental normalization factor: thanks to Martyn
-       amplitude *= 6.2f;
-       for(i=0; i<len; i++){
-         white=(rand() / div) - 1.0f;
-         y = (a0 * white + b1 * y);
-         buffer[i] = amplitude * y;
-       };
-       break;
-   }
-   return true;
+//Using the Paul Kellet's filtering
+float* noise_generate_pink2 (size_t len, float amp) //gen one channel noise
+{
+  float *buffer = new float [len];
+  
+  float b0, b1, b2, b3, b4, b5, b6;
+  b6 = 0;
+   
+  std::random_device rd;
+  std::knuth_b gen (rd());
+  std::uniform_real_distribution<> dis(-1.0, 1.0);
+  
+  for (size_t i = 0; i < len; i++)
+      {
+       float white = (float)dis(gen);  
+       
+       b0 = 0.99886 * b0 + white * 0.0555179;
+       b1 = 0.99332 * b1 + white * 0.0750759;
+       b2 = 0.96900 * b2 + white * 0.1538520;
+       b3 = 0.86650 * b3 + white * 0.3104856;
+       b4 = 0.55000 * b4 + white * 0.5329522;
+       b5 = -0.7616 * b5 - white * 0.0168980;
+       float pink = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+       b6 = white * 0.115926;
+     
+       buffer[i] = pink * amp / 7;
+      }
+          
+  return buffer;        
 }
 
 
+//brown B[n] = (B[n-1] + C * w[n]) / (1. + C) 

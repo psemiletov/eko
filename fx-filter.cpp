@@ -1,5 +1,11 @@
 #include "fx-filter.h"
 
+/*
+
+this code based on Martin Finke's filter tutorial,
+where the filter itself based on the resonant filter 
+by Paul Kellett http://www.musicdsp.org/showone.php?id=29
+*/
 
 float CFilter::process (float sample, size_t channel)
 {

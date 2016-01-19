@@ -1,5 +1,5 @@
-#ifndef FX_H
-#define FX_H
+#ifndef FXSET_H
+#define FXSET_H
 
 #include <QObject>
 #include <QWidget>
@@ -216,4 +216,34 @@ public slots:
 
 
 
-#endif // FX_H
+class CFxVynil: public AFx
+{
+  Q_OBJECT
+
+public:
+
+  
+  QDial *dial_scratches_amount;
+  QDoubleSpinBox *spb_mixlevel;
+
+  float mixlevel;
+  float cutoff;
+
+  CFxVynil();
+
+  QString save_params_to_string() {return QString ("");};
+  void load_params_from_string (const QString &s) {};
+  
+  AFx* self_create();
+
+  size_t execute (float **input, float **output, size_t frames);
+  void reset_params (size_t srate, size_t ch);
+
+public slots:
+
+  void dial_scratches_amount_valueChanged (int value);
+  void spb_mixlevel_changed (double value);
+};
+
+
+#endif // FXSET_H

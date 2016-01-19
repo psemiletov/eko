@@ -27,6 +27,8 @@ started at 25 July 2010
 #include <sndfile.h>
 #include <portaudio.h>
 #include <limits>
+#include <cstdlib>
+#include <ctime>
 
 #include <QDebug>
 #include <QVBoxLayout>
@@ -578,6 +580,8 @@ void CEKO::create_main_widget()
 CEKO::CEKO()
 {
   init_db();
+  
+  srand (static_cast <unsigned> (time(0)));
 
   pa_init();
 
@@ -4871,7 +4875,7 @@ void CEKO::generate_noise()
   QComboBox cbm_type;
   cbm_type.addItem (tr ("White"));
   cbm_type.addItem (tr ("Pink"));
-  cbm_type.addItem (tr ("Brown"));
+  //cbm_type.addItem (tr ("Brown"));
 
   h_box->addWidget (&ltype);
   h_box->addWidget (&cbm_type);
@@ -4933,10 +4937,16 @@ void CEKO::generate_noise()
 
   float amplitude = db2lin((float) sp_amplitude.value());
 
+  qDebug() << "new_document->wave_edit->waveform->fb->samplerate " << new_document->wave_edit->waveform->fb->samplerate;
+
   size_t frames_count = len_seconds * new_document->wave_edit->waveform->fb->samplerate;
 
+  qDebug() << "frames_count: " << frames_count;
+
   CFloatBuffer *tfb = new CFloatBuffer (frames_count, settings->value ("def_channels", 1).toInt());
+  tfb->samplerate = new_document->wave_edit->waveform->fb->samplerate;
   
+  /*
   for (size_t ch = 0; ch < tfb->channels; ch++)  
       if (! MakeNoise (tfb->buffer[ch],
                    frames_count,
@@ -4944,6 +4954,21 @@ void CEKO::generate_noise()
                    amplitude,
                    ntype))
      qDebug() << "! MakeNoise";
+*/
+
+ for (size_t ch = 0; ch < tfb->channels; ch++)  
+     {
+      float *buf;
+      
+      if (ntype == 0)
+         buf = noise_generate_white (frames_count, amplitude);
+      else
+      if (ntype == 1)
+         buf = noise_generate_pink2 (frames_count, amplitude);
+      
+      memcpy (tfb->buffer[ch], buf, frames_count * sizeof (float));
+      delete [] buf;
+     }
 
   delete new_document->wave_edit->waveform->fb;
 

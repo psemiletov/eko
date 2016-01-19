@@ -7,8 +7,6 @@
 #include <QMouseEvent>
 #include <QDial>
 #include <QDoubleSpinBox>
-#include <QDrag>
-#include <QMimeData>
 
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
@@ -198,7 +196,7 @@ void CFxSimpleOverdrive::load_params_from_string (const QString &s)
 
 CFxSimpleOverdrive::CFxSimpleOverdrive()
 {
-  name = "FxSimpleOverdrive";
+  name = tr ("Simple Overdrive");  
   
   wnd_ui->setWindowTitle (tr ("Simple Overdrive"));
 
@@ -512,54 +510,14 @@ float simplp (float *x, float *y,
   return x[M-1];
 }
 
-/*
-size_t CFxSimpleFilter::execute (float **input, float **output, size_t frames)
-{
-  float xm1 = 0.0f;
-  float M = frames;
-
-  for (size_t ch = 0; ch < channels; ch++)
-      {
-      float xm1 = 0.0f;
-  
-      // for (size_t i = 0; i < frames; i++)
-            xm1 = simplp (input[ch], output[ch], M, xm1);
-      }
-
-  return frames;
-}
-*/
-
-#define CUTOFF 12000
-
-float del[2]={0.f, 0.f}, del1[2]={0.f,0.f};
-
-
-float lowpass(float* sig, float freq, float *del,
-int vecsize, float sr){
-double costh, coef;
-costh = 2. - cos(2* M_PI * freq/sr);
-coef = sqrt(costh*costh - 1.) - costh;
-for(int i =0; i < vecsize; i++){
-sig[i] = (float) (sig[i]*(1 + coef) - *del*coef);
-*del = sig[i];
-}
-return *sig;
-}
-
 
 size_t CFxSimpleFilter::execute (float **input, float **output, size_t frames)
 {
- 
   for (size_t ch = 0; ch < channels; ch++)
       {
-        //lowpass (input[ch], 20, del, frames, samplerate);
-         
         for (size_t i = 0; i < frames; i++)
           {
            input[ch][i] = filter.process (input[ch][i], ch);
-
-         
           }
       }
 
@@ -631,7 +589,6 @@ void CFxSimpleFilter::reset_params (size_t srate, size_t ch)
   filter.reset();
   
   filter.set_cutoff ((float) dsb_cutoff_freq->value() / samplerate);
-  
 }
 
 
@@ -988,3 +945,102 @@ void CFxJest::dial_level_valueChanged (int value)
 
    level = db2lin (value);
 }
+
+
+void CFxVynil::dial_scratches_amount_valueChanged (int value)
+{
+ cutoff = scale_val (value, 1, 100, 96000, 500);
+}
+
+
+CFxVynil::CFxVynil()
+{
+  name = tr ("Vynil Taste");
+  
+  wnd_ui->setWindowTitle (tr ("Vynil Taste"));
+  set_caption (tr ("Vynil Taste"), tr ("Scratches generator module"));
+
+  QHBoxLayout *hbl_scratches = new QHBoxLayout;
+  
+  QLabel *l = new QLabel (tr ("Amount"));
+  dial_scratches_amount = new QDial;
+  dial_scratches_amount->setNotchesVisible (true);
+
+  dial_scratches_amount->setWrapping (false);
+  connect (dial_scratches_amount, SIGNAL(valueChanged(int)), this, SLOT(dial_scratches_amount_valueChanged(int)));
+  
+  dial_scratches_amount->setRange (1, 100);
+  dial_scratches_amount->setValue (50);
+
+
+  hbl_scratches->addWidget (l);
+  hbl_scratches->addWidget (dial_scratches_amount);
+  
+  vbl_main->addLayout (hbl_scratches);
+
+  QHBoxLayout *hbl_mixlevel = new QHBoxLayout;
+
+  QLabel *label = new QLabel (tr ("Scratches signal level"));
+
+  spb_mixlevel = new QDoubleSpinBox;
+  
+  spb_mixlevel->setRange (-26.0f, 0);
+  spb_mixlevel->setSingleStep (0.1f);
+  
+  connect (spb_mixlevel, SIGNAL(valueChanged (double )), this, SLOT(spb_mixlevel_changed (double )));
+
+  spb_mixlevel->setValue (-16.0f);
+  
+  hbl_mixlevel->addWidget (label);
+  hbl_mixlevel->addWidget (spb_mixlevel);
+
+  vbl_main->addLayout (hbl_mixlevel);
+  
+  
+   QString qstl = "QWidget#w_caption {"
+    "border-radius: 15px;"
+    "background:  qradialgradient(cx:0.5, cy:0.5, radius: 0.8, fx:0.5, fy:0.5, stop:0 black, stop:0.1 grey, stop:0.7 black, stop:1 black) }";
+                
+  
+  w_caption->setStyleSheet (qstl);  
+
+  l_caption->setStyleSheet ("color: white;");  
+  l_subcaption->setStyleSheet ("color: white;");  
+}
+
+
+AFx* CFxVynil::self_create()
+{
+  return new CFxVynil;
+}
+
+
+size_t CFxVynil::execute (float **input, float **output, size_t frames)
+{
+ 
+  for (size_t ch = 0; ch < channels; ch++)
+      {
+        for (size_t i = 0; i < frames; i++)
+          {
+           float f = input[ch][i];
+           f = (float)f / (f + float (1 / cutoff));
+           f *= mixlevel;
+           input[ch][i] += f;
+          }
+      }
+
+  return frames;
+}
+
+
+void CFxVynil::reset_params (size_t srate, size_t ch)
+{
+  AFx::reset_params (srate, ch);
+}
+
+
+void CFxVynil::spb_mixlevel_changed (double value)
+{
+  mixlevel = db2lin (value);
+}
+
