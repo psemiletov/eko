@@ -341,8 +341,6 @@ CWaveform::CWaveform (QWidget *parent): QWidget (parent)
 
   init_state = true;
   scale_factor = 1.0;
-  //section_from = 0;
-  //section_to = width() - 1;
   
   max_undos = 3;
     
@@ -483,7 +481,6 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
       event->accept();
       return;
      } 
-
 
   if (event->key() == Qt::Key_Delete)
      {
@@ -820,6 +817,8 @@ void CWaveform::fix_selection_bounds()
       sel_end_frames = t;
       selection_selected = 1;
      }
+     
+     
  /*
  //выравнивание по размеру буфера, той или иной границы выделения
     
@@ -942,6 +941,9 @@ void CWaveform::undo_take_shot (int type, int param)
 void CWaveform::delete_selected()
 {
   if (! selected)
+     return;
+
+  if ((frames_end() - frames_start() > fb->length_frames))
      return;
 
   undo_take_shot (UNDO_DELETE);

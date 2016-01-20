@@ -400,6 +400,7 @@ CFloatBuffer* CFloatBuffer::resample (size_t new_rate)
 CFloatBuffer* CFloatBuffer::delete_range (size_t frames_start, size_t frames_end)
 {
   size_t delrange = frames_end - frames_start;
+  
   size_t new_buffer_frames_count = length_frames - delrange;
   
   CFloatBuffer *tfb = new CFloatBuffer (new_buffer_frames_count, channels); 

@@ -43,10 +43,7 @@ public:
   QString id;
 
   bool ronly;
-  
- // int samplerate;
- // int format;
-  
+    
   CFloatBuffer *float_input_buffer;
   QStringList extensions;
   QString error_string;
@@ -121,8 +118,5 @@ public:
 
 void file_formats_init();
 void file_formats_done();
-
-float* load_from_lame (QString &fname);
-
 
 #endif // TIO_H

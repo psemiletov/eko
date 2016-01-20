@@ -4,20 +4,7 @@
 
 started at 25 July 2010
  *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 3 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   aint with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   This program is Public Domain                                       *
  ***************************************************************************/
 
 
@@ -839,12 +826,9 @@ void CEKO::newFile()
   
   new_document->wave_edit->waveform->recalc_view();
   new_document->wave_edit->waveform->prepare_image();
-  
   new_document->wave_edit->waveform->init_state = false;
   new_document->wave_edit->timeruler->init_state = false;
-  
   new_document->wave_edit->waveform->update();
-
   
   main_tab_widget->setCurrentIndex (idx_tab_edit);
 }
@@ -4937,26 +4921,13 @@ void CEKO::generate_noise()
 
   float amplitude = db2lin((float) sp_amplitude.value());
 
-  qDebug() << "new_document->wave_edit->waveform->fb->samplerate " << new_document->wave_edit->waveform->fb->samplerate;
-
   size_t frames_count = len_seconds * new_document->wave_edit->waveform->fb->samplerate;
 
-  qDebug() << "frames_count: " << frames_count;
 
   CFloatBuffer *tfb = new CFloatBuffer (frames_count, settings->value ("def_channels", 1).toInt());
   tfb->samplerate = new_document->wave_edit->waveform->fb->samplerate;
-  
-  /*
+ 
   for (size_t ch = 0; ch < tfb->channels; ch++)  
-      if (! MakeNoise (tfb->buffer[ch],
-                   frames_count,
-                   new_document->wave_edit->waveform->fb->samplerate,
-                   amplitude,
-                   ntype))
-     qDebug() << "! MakeNoise";
-*/
-
- for (size_t ch = 0; ch < tfb->channels; ch++)  
      {
       float *buf;
       

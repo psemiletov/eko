@@ -517,19 +517,6 @@ bool CTioPlainAudio::save_16bit_pcm (const QString &fname)
 }
 
 
-float* load_from_lame (QString &fname)
-{
- //lame '--decode'
-  QString command;
-  command = "lame --decode \"" + fname + "\" " + fname + "wav";
-  int exit_code = QProcess::execute (command);
-  qDebug() << exit_code;
-  
-  if (exit_code < 0)
-     return 0;
-}
-
-
 CTioProxy::CTioProxy()
 {
   //qDebug() << "CTioProxy::CTioProxy";
@@ -589,8 +576,6 @@ CTioProxy::~CTioProxy()
 
 CFloatBuffer* CTioProxy::load (const QString &fname)
 {
- qDebug() << "CTioProxy::load " << fname; 
-
   QString ext = file_get_ext (fname);
 
   QString command; 
@@ -614,15 +599,12 @@ CFloatBuffer* CTioProxy::load (const QString &fname)
           }   
      }
 
-//  qDebug() << "command: " << command;
-  
   if (command.isEmpty() || command.isNull())
     return 0;
   
   command = command.replace ("@FILEIN", fname);
   command = command.replace ("@FILEOUT", temp_mp3_fname);
-  
-  
+    
   QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
   
   QTime tm;
@@ -640,11 +622,8 @@ CFloatBuffer* CTioProxy::load (const QString &fname)
   if (file_exists (temp_mp3_fname))
      {
       CTioPlainAudio *pa = new CTioPlainAudio (true);
-      CFloatBuffer *f = pa->load (temp_mp3_fname);
-      //samplerate = pa->samplerate;
-      //format = pa->format;
-
-      return f;
+      CFloatBuffer *fb = pa->load (temp_mp3_fname);
+      return fb;
      }
 }
 
