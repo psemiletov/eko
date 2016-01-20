@@ -19,7 +19,7 @@ void CFxRack::tv_activated (const QModelIndex &index)
      effects.at(i)->show_ui();
 }
 
-
+/*
 void CFxRack::add_entry (AFx *f, bool checked)
 {
   QStandardItem *item = new QStandardItem (f->name);
@@ -34,7 +34,7 @@ void CFxRack::add_entry (AFx *f, bool checked)
 
   model->appendRow (item);
 }
-
+*/
 
 void CFxRack::ins_entry (AFx *f)
 {
@@ -46,7 +46,7 @@ void CFxRack::ins_entry (AFx *f)
                   Qt::ItemIsDragEnabled | Qt::ItemIsUserCheckable |
                   Qt::ItemIsDropEnabled);
 
-  AFx *tfx = f->self_create();
+  AFx *tfx = f;//f->self_create();
 
   int i = get_sel_index();
   if (i == -1)

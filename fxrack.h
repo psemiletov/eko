@@ -36,7 +36,7 @@ public:
   CFxRack (QObject *parent = 0);
   ~CFxRack();
 
-  void add_entry (AFx *f, bool checked = true);
+//  void add_entry (AFx *f, bool checked = true);
   void ins_entry (AFx *f);
 
   //const QModelIndex index_from_name (const QString &name);

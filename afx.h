@@ -52,6 +52,8 @@ public:
   QString id;
 
   AFx();
+  
+  
   virtual ~AFx();
 
   virtual size_t execute (float **input, float **output, size_t frames) = 0;
@@ -70,6 +72,8 @@ public:
   void show_ui();
 
   virtual AFx* self_create() = 0;
+  
+  static QString get_id() {return QString ("AFx");};
 };
 
 

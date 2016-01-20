@@ -40,6 +40,9 @@ public:
 
   QString save_params_to_string();
   void load_params_from_string (const QString &s);
+  
+  static QString get_name() {return QString (tr ("Simple Amp"));};
+  static AFx* create_self() {return new CFxSimpleAmp;}
 
 
 public slots:
@@ -69,6 +72,9 @@ public:
 
   QString save_params_to_string();
   void load_params_from_string (const QString &s);
+
+  static QString get_name() {return QString (tr ("Simple Overdrive"));};
+  static AFx* create_self() {return new CFxSimpleOverdrive;}
   
 public slots:
 
@@ -105,11 +111,13 @@ public:
   QString save_params_to_string() {return QString ("");};
   void load_params_from_string (const QString &s) {};
 
+  static QString get_name() {return QString (tr ("Simple delay"));};
+  static AFx* create_self() {return new CFxDelay;}
+  
 public slots:
 
   void spb_mixlevel_changed (double value);
   void spb_time_changed (double value);
-
 };
 
 
@@ -128,11 +136,15 @@ public:
 
   CFxSimpleFilter();
 
-   QString save_params_to_string() {return QString ("");};
+  QString save_params_to_string() {return QString ("");};
   void load_params_from_string (const QString &s) {};
   
-  AFx* self_create();
+  static QString get_name() {return QString (tr ("Simple Filter"));};
+  static AFx* create_self() {return new CFxSimpleFilter;}
 
+  AFx* self_create();
+  
+  
   size_t execute (float **input, float **output, size_t frames);
   void reset_params (size_t srate, size_t ch);
 
@@ -164,8 +176,13 @@ public:
 
   AFx* self_create();
 
- QString save_params_to_string() {return QString ("");};
- void load_params_from_string (const QString &s) {};
+  static QString get_name() {return QString (tr ("Metaluga (overdrive/dist pedal)"));};
+  static AFx* create_self() {return new CFxMetaluga;}
+
+  QString save_params_to_string() {return QString ("");};
+  void load_params_from_string (const QString &s) {};
+  
+  
 
   size_t execute (float **input, float **output, size_t frames);
   void reset_params (size_t srate, size_t ch);
@@ -198,10 +215,14 @@ public:
   //~CFxMetaluga();
 
 
- QString save_params_to_string() {return QString ("");};
+  QString save_params_to_string() {return QString ("");};
   void load_params_from_string (const QString &s) {};
   
   AFx* self_create();
+
+  static QString get_name() {return QString (tr ("Jest' (overdrive/dist)"));};
+  static AFx* create_self() {return new CFxJest;}
+
 
   size_t execute (float **input, float **output, size_t frames);
   void reset_params (size_t srate, size_t ch);
@@ -233,6 +254,9 @@ public:
 
   QString save_params_to_string() {return QString ("");};
   void load_params_from_string (const QString &s) {};
+  
+  static QString get_name() {return QString (tr ("Vynil Taste"));};
+  static AFx* create_self() {return new CFxVynil;}
   
   AFx* self_create();
 
