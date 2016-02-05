@@ -48,11 +48,10 @@ public:
   QLabel *l_caption;
   QLabel *l_subcaption;
   
-  QString name;
-  QString id;
+  QString classname;
+  QString modulename;
 
   AFx();
-  
   
   virtual ~AFx();
 
@@ -72,8 +71,9 @@ public:
   void show_ui();
 
   virtual AFx* self_create() = 0;
-  
-  static QString get_id() {return QString ("AFx");};
+
+  static QString get_modulename() {return QString ("AFx");};
+ // static QString get_classname() {return QString ("AFx");};
 };
 
 

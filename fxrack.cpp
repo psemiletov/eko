@@ -9,6 +9,8 @@
 #include "gui_utils.h"
 #include "fxrack.h"
 
+CFxList *avail_fx;
+
 
 void CFxRack::tv_activated (const QModelIndex &index)
 {
@@ -36,9 +38,40 @@ void CFxRack::add_entry (AFx *f, bool checked)
 }
 */
 
+
+void CFxRack::add_entry_silent (AFx *f, bool bypass)
+{
+  QStandardItem *item = new QStandardItem (f->modulename);
+  item->setCheckable (true);
+  
+  if (f->bypass)
+     item->setCheckState (Qt::Unchecked);
+  else   
+     item->setCheckState (Qt::Checked);
+
+  item->setFlags (Qt::ItemIsSelectable | Qt::ItemIsEnabled |
+                  Qt::ItemIsDragEnabled | Qt::ItemIsUserCheckable |
+                  Qt::ItemIsDropEnabled);
+
+  AFx *tfx = f;
+
+  int i = get_sel_index();
+  if (i == -1)
+     {
+      model->appendRow (item);
+      effects.append (tfx);
+     }
+  else
+      {
+       model->insertRow (i, item);
+       effects.insert (i, tfx);
+      }
+}
+
+
 void CFxRack::ins_entry (AFx *f)
 {
-  QStandardItem *item = new QStandardItem (f->name);
+  QStandardItem *item = new QStandardItem (f->modulename);
   item->setCheckable (true);
   item->setCheckState (Qt::Checked);
 
@@ -135,6 +168,9 @@ CFxRack::CFxRack (QObject *parent): QObject (parent)
 
 
   inserts = new QWidget;
+  
+  inserts->setWindowTitle (tr ("Inserts"));
+  //inserts->setWindowFlags (Qt::Window | Qt::Tool);
 
   QVBoxLayout *v_box = new QVBoxLayout;
   inserts->setLayout (v_box);
@@ -179,7 +215,7 @@ void CFxRack::add_fx()
 
   ins_entry (f);
 
-  print_fx_list();
+//  print_fx_list();
 }
 
 
@@ -208,7 +244,9 @@ CFxRack::~CFxRack()
           delete f;
          }
  
-  delete avail_fx;
+  //delete avail_fx;
+  
+  inserts->close();
 }
 
 
@@ -274,7 +312,7 @@ void CFxTreeView::mouseMoveEvent (QMouseEvent *event)
 void CFxRack::print_fx_list()
 {
   foreach (AFx *f, effects)
-          qDebug() << f->name;
+          qDebug() << f->modulename;
 }
 
 

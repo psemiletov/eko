@@ -41,7 +41,7 @@ public:
   QString save_params_to_string();
   void load_params_from_string (const QString &s);
   
-  static QString get_name() {return QString (tr ("Simple Amp"));};
+  static QString get_modulename() {return QString (tr ("Simple Amp"));};
   static AFx* create_self() {return new CFxSimpleAmp;}
 
 
@@ -73,7 +73,7 @@ public:
   QString save_params_to_string();
   void load_params_from_string (const QString &s);
 
-  static QString get_name() {return QString (tr ("Simple Overdrive"));};
+  static QString get_modulename() {return QString (tr ("Simple Overdrive"));};
   static AFx* create_self() {return new CFxSimpleOverdrive;}
   
 public slots:
@@ -92,8 +92,7 @@ public:
   QLabel *label;
   
   CFloatBuffer *fb;  
-  
-  
+    
   QDoubleSpinBox *spb_mixlevel;
   QDoubleSpinBox *spb_time; 
  
@@ -108,10 +107,10 @@ public:
   size_t execute (float **input, float **output, size_t frames);
   void reset_params (size_t srate, size_t ch);
 
-  QString save_params_to_string() {return QString ("");};
-  void load_params_from_string (const QString &s) {};
+  QString save_params_to_string();
+  void load_params_from_string (const QString &s);
 
-  static QString get_name() {return QString (tr ("Simple delay"));};
+  static QString get_modulename() {return QString (tr ("Simple delay"));};
   static AFx* create_self() {return new CFxDelay;}
   
 public slots:
@@ -131,15 +130,14 @@ public:
   QDoubleSpinBox *dsb_reso;
   QComboBox *cmb_filter_mode;
 
-
   CFilter filter;
 
   CFxSimpleFilter();
 
-  QString save_params_to_string() {return QString ("");};
-  void load_params_from_string (const QString &s) {};
+  QString save_params_to_string();
+  void load_params_from_string (const QString &s);
   
-  static QString get_name() {return QString (tr ("Simple Filter"));};
+  static QString get_modulename() {return QString (tr ("Simple Filter"));};
   static AFx* create_self() {return new CFxSimpleFilter;}
 
   AFx* self_create();
@@ -169,18 +167,21 @@ public:
   float tone;
   float level;
   
+  QDial *dial_gain;
+  QDial *dial_drive;
   QDial *dial_tone;
+  QDial *dial_level;
 
   CFxMetaluga();
   ~CFxMetaluga();
 
   AFx* self_create();
 
-  static QString get_name() {return QString (tr ("Metaluga (overdrive/dist pedal)"));};
+  static QString get_modulename() {return QString (tr ("Metaluga (overdrive/dist pedal)"));};
   static AFx* create_self() {return new CFxMetaluga;}
 
-  QString save_params_to_string() {return QString ("");};
-  void load_params_from_string (const QString &s) {};
+  QString save_params_to_string();
+  void load_params_from_string (const QString &s);
   
   
 
@@ -208,19 +209,20 @@ public:
   float drive;
   float tone;
   float level;
-  
+
+  QDial *dial_gain;
+  QDial *dial_drive; 
   QDial *dial_tone;
+  QDial *dial_level;
 
   CFxJest();
-  //~CFxMetaluga();
-
-
-  QString save_params_to_string() {return QString ("");};
-  void load_params_from_string (const QString &s) {};
+  
+  QString save_params_to_string();
+  void load_params_from_string (const QString &s);
   
   AFx* self_create();
 
-  static QString get_name() {return QString (tr ("Jest' (overdrive/dist)"));};
+  static QString get_modulename() {return QString (tr ("Jest' (overdrive/dist)"));};
   static AFx* create_self() {return new CFxJest;}
 
 
@@ -234,7 +236,6 @@ public slots:
   void dial_tone_valueChanged (int value);
   void dial_level_valueChanged (int value);
 };
-
 
 
 class CFxVynil: public AFx
@@ -255,7 +256,7 @@ public:
   QString save_params_to_string() {return QString ("");};
   void load_params_from_string (const QString &s) {};
   
-  static QString get_name() {return QString (tr ("Vynil Taste"));};
+  static QString get_modulename() {return QString (tr ("Vynil Taste"));};
   static AFx* create_self() {return new CFxVynil;}
   
   AFx* self_create();

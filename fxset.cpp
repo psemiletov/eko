@@ -56,29 +56,35 @@ QString CFxSimpleAmp::save_params_to_string()
 
 void CFxSimpleAmp::load_params_from_string (const QString &s)
 {
+//  qDebug() << "CFxSimpleAmp::load_params_from_string - 1";
+
   QStringList ls = s.split (";");
   QHash <QString, QString> h;
   //parsing
 
-  for (int i = 0; i < ls.size(); i++)
+//почему ls.size() - 1? почему так парсится ls? 
+//последний элемент пустой!
+  for (int i = 0; i < ls.size() - 1; i++)
       {
        QStringList lt = ls[i].split ("=");
        h[lt[0]] = lt[1];
       }  
-      
-      
+            
   QStringList lt = h["dial_gain"].split (",");    
   QStringList lt2 = lt[0].split (":");    
       
   dial_gain->setValue (lt2[1].toDouble());    
+  
+//  qDebug() << "CFxSimpleAmp::load_params_from_string - 2";
 }
 
 
 CFxSimpleAmp::CFxSimpleAmp()
 {
-  name = tr ("Simple amplifier");
+  modulename = tr ("Simple amplifier");
+  classname = "CFxSimpleAmp";
   
-  wnd_ui->setWindowTitle (tr ("Simple Amp"));
+  wnd_ui->setWindowTitle (modulename);
 
   set_caption (tr ("<b>Simple amplifier</b>"), tr ("<i>Simple amplifier module</i>"));
 
@@ -175,7 +181,7 @@ void CFxSimpleOverdrive::load_params_from_string (const QString &s)
   QHash <QString, QString> h;
   //parsing
 
-  for (int i = 0; i < ls.size(); i++)
+  for (int i = 0; i < ls.size() - 1; i++)
       {
        QStringList lt = ls[i].split ("=");
        h[lt[0]] = lt[1];
@@ -196,9 +202,10 @@ void CFxSimpleOverdrive::load_params_from_string (const QString &s)
 
 CFxSimpleOverdrive::CFxSimpleOverdrive()
 {
-  name = tr ("Simple Overdrive");  
-  
-  wnd_ui->setWindowTitle (tr ("Simple Overdrive"));
+  modulename = tr ("Simple Overdrive");  
+  classname = "CFxSimpleOverdrive";
+    
+  wnd_ui->setWindowTitle (modulename);
 
   set_caption (tr ("Simple Overdrive"), tr ("Simple overdrive module"));
 
@@ -275,7 +282,6 @@ size_t CFxSimpleOverdrive::execute (float **input, float **output, size_t frames
                if (float_less_than (output[ch][i], -1.0f))
                    output[ch][i] = -1.0f;
                    
-                   
            output[ch][i] *= level;        
           /*         
             if (output[ch][i] > 1.0f)
@@ -286,7 +292,6 @@ size_t CFxSimpleOverdrive::execute (float **input, float **output, size_t frames
                 else
                     output[ch][i] = output[ch][i] - (pow (output[ch][i], 3) / 3 );  
 */
-                   
            }       
       }
 
@@ -296,12 +301,12 @@ size_t CFxSimpleOverdrive::execute (float **input, float **output, size_t frames
 
 CFxDelay::CFxDelay()
 {
-  name = "CFxDelay";
+  classname = "CFxDelay";
+  modulename = tr ("Simple Delay");
   
-  fb = new CFloatBuffer (96000, 2);
+  fb = new CFloatBuffer (196000, 2);
 
-
-  wnd_ui->setWindowTitle (tr ("Simple Delay"));
+  wnd_ui->setWindowTitle (modulename);
   set_caption (tr ("Delay"), tr ("Delay module"));
 
   mixlevel = 1.0f;
@@ -338,6 +343,42 @@ CFxDelay::CFxDelay()
   
   vbl_main->addLayout (hbl_mixlevel);
   vbl_main->addLayout (hbl_time);
+}
+
+
+QString CFxDelay::save_params_to_string()
+{
+  QString result;
+  //format is: paramname=frame_number1:value,frame_numberN:valueN;
+  //it is designed to save automation pairs time:value
+  result += ("spb_mixlevel=0:" + QString::number (spb_mixlevel->value()) + ";");
+  result += ("spb_time=0:" + QString::number (spb_time->value()) + ";");
+  
+  return result;
+}
+
+
+void CFxDelay::load_params_from_string (const QString &s)
+{
+  QStringList ls = s.split (";");
+  QHash <QString, QString> h;
+  //parsing
+
+  for (int i = 0; i < ls.size() - 1; i++)
+      {
+       QStringList lt = ls[i].split ("=");
+       h[lt[0]] = lt[1];
+      }  
+      
+  QStringList lt = h["spb_mixlevel"].split (",");    
+  QStringList lt2 = lt[0].split (":");    
+      
+  spb_mixlevel->setValue (lt2[1].toDouble());    
+  
+  lt = h["spb_time"].split (",");    
+  lt2 = lt[0].split (":");    
+  
+  spb_time->setValue (lt2[1].toDouble());    
 }
 
 
@@ -426,9 +467,10 @@ void CFxSimpleFilter::dsb_reso_valueChanged (double d)
 
 CFxSimpleFilter::CFxSimpleFilter()
 {
-  name = "CFxSimpleFilter";
+  classname = "CFxSimpleFilter";
+  modulename = tr ("Simple Filter");
   
-  wnd_ui->setWindowTitle (tr ("Simple Filter"));
+  wnd_ui->setWindowTitle (modulename);
   set_caption (tr ("Filter"), tr ("Multi-mode filter module"));
 
   
@@ -486,28 +528,51 @@ CFxSimpleFilter::CFxSimpleFilter()
 }
 
 
-AFx* CFxSimpleFilter::self_create()
+QString CFxSimpleFilter::save_params_to_string()
 {
-  return new CFxSimpleFilter;
+  QString result;
+  //format is: paramname=frame_number1:value,frame_numberN:valueN;
+  //it is designed to save automation pairs time:value
+  result += ("dsb_cutoff_freq=0:" + QString::number (dsb_cutoff_freq->value()) + ";");
+  result += ("dsb_reso=0:" + QString::number (dsb_reso->value()) + ";");
+  result += ("cmb_filter_mode=0:" + QString::number (cmb_filter_mode->currentIndex()) + ";");
+  
+  return result;
 }
 
 
-/* C function implementing the simplest lowpass:
- *
- *      y(n) = x(n) + x(n-1)
- *
- */
-float simplp (float *x, float *y,
-              size_t M, float xm1)
+void CFxSimpleFilter::load_params_from_string (const QString &s)
 {
-  y[0] = x[0] + xm1;
+  QStringList ls = s.split (";");
+  QHash <QString, QString> h;
+  //parsing
+
+  for (int i = 0; i < ls.size() - 1; i++)
+      {
+       QStringList lt = ls[i].split ("=");
+       h[lt[0]] = lt[1];
+      }  
+      
+  QStringList lt = h["dsb_cutoff_freq"].split (",");    
+  QStringList lt2 = lt[0].split (":");    
+      
+  dsb_cutoff_freq->setValue (lt2[1].toDouble());    
   
-  for (size_t n = 1; n < M ; n++) 
-       {
-        y[n] =  x[n]  + x[n-1];
-       } 
-       
-  return x[M-1];
+  lt = h["dsb_reso"].split (",");    
+  lt2 = lt[0].split (":");    
+  
+  dsb_reso->setValue (lt2[1].toDouble());    
+  
+  lt = h["cmb_filter_mode"].split (",");    
+  lt2 = lt[0].split (":");    
+  
+  cmb_filter_mode->setCurrentIndex (lt2[1].toInt());
+}
+
+
+AFx* CFxSimpleFilter::self_create()
+{
+  return new CFxSimpleFilter;
 }
 
 
@@ -522,65 +587,7 @@ size_t CFxSimpleFilter::execute (float **input, float **output, size_t frames)
       }
 
   return frames;
-
 }
-
-
-/*
-
-
-One pole LP and HP
-
-References : Posted by Bram
-Code :
-LP:
-recursion: tmp = (1-p)*in + p*tmp with output = tmp
-coefficient: p = (2-cos(x)) - sqrt((2-cos(x))^2 - 1) with x = 2*pi*cutoff/samplerate
-coeficient approximation: p = (1 - 2*cutoff/samplerate)^2
-
-HP:
-recursion: tmp = (p-1)*in - p*tmp with output = tmp
-coefficient: p = (2+cos(x)) - sqrt((2+cos(x))^2 - 1) with x = 2*pi*cutoff/samplerate
-coeficient approximation: p = (2*cutoff/samplerate)^2
-
-
-*/
-
-
-/*
-
-LP and HP filter
-
-Type : biquad, tweaked butterworth
-References : Posted by Patrice Tarrabia
-Code :
-r  = rez amount, from sqrt(2) to ~ 0.1
-f  = cutoff frequency
-(from ~0 Hz to SampleRate/2 - though many
-synths seem to filter only  up to SampleRate/4)
-
-The filter algo:
-out(n) = a1 * in + a2 * in(n-1) + a3 * in(n-2) - b1*out(n-1) - b2*out(n-2)
-
-Lowpass:
-      c = 1.0 / tan(pi * f / sample_rate);
-
-      a1 = 1.0 / ( 1.0 + r * c + c * c);
-      a2 = 2* a1;
-      a3 = a1;
-      b1 = 2.0 * ( 1.0 - c*c) * a1;
-      b2 = ( 1.0 - r * c + c * c) * a1;
-
-Hipass:
-      c = tan(pi * f / sample_rate);
-
-      a1 = 1.0 / ( 1.0 + r * c + c * c);
-      a2 = -2*a1;
-      a3 = a1;
-      b1 = 2.0 * ( c*c - 1.0) * a1;
-      b2 = ( 1.0 - r * c + c * c) * a1;
-
-*/
 
 
 void CFxSimpleFilter::reset_params (size_t srate, size_t ch)
@@ -594,7 +601,8 @@ void CFxSimpleFilter::reset_params (size_t srate, size_t ch)
 
 CFxMetaluga::CFxMetaluga()
 {
-  name = tr ("Metaluga (overdrive/dist pedal)");
+  modulename = tr ("Metaluga (overdrive/dist pedal)");
+  classname = "CFxMetaluga";
   
   wnd_ui->setWindowTitle (tr ("Metaluga"));
 
@@ -611,7 +619,7 @@ CFxMetaluga::CFxMetaluga()
   QHBoxLayout *hbl_gain = new QHBoxLayout;
   
   QLabel *l = new QLabel (tr ("Gain"));
-  QDial *dial_gain = new QDial;
+  dial_gain = new QDial;
   dial_gain->setNotchesVisible (true);
 
   dial_gain->setWrapping (false);
@@ -629,7 +637,7 @@ CFxMetaluga::CFxMetaluga()
   QHBoxLayout *hbl_drive = new QHBoxLayout;
   
   l = new QLabel (tr ("Drive"));
-  QDial *dial_drive = new QDial;
+  dial_drive = new QDial;
   dial_drive->setNotchesVisible (true);
 
   dial_drive->setWrapping (false);
@@ -656,7 +664,6 @@ CFxMetaluga::CFxMetaluga()
   dial_tone->setRange (1, 100);
   dial_tone->setValue (50);
 
-
   hbl_tone->addWidget (l);
   hbl_tone->addWidget (dial_tone);
   
@@ -667,7 +674,7 @@ CFxMetaluga::CFxMetaluga()
 
   QLabel *l_level = new QLabel (tr ("Output level"));
 
-  QDial *dial_level = new QDial;
+  dial_level = new QDial;
   dial_level->setWrapping (false);
   connect (dial_level, SIGNAL(valueChanged(int)), this, SLOT(dial_level_valueChanged(int)));
   dial_level->setRange (-90, 0);
@@ -686,12 +693,53 @@ CFxMetaluga::CFxMetaluga()
     "background: qlineargradient(x1:0, y1:0, x2:0, y2:1,"
                 "stop:0 #000000, stop:1 #363636);}";
   
-
-
-  
   w_caption->setStyleSheet (qstl);  
   l_caption->setStyleSheet ("color: white;");  
   l_subcaption->setStyleSheet ("color: white;");  
+}
+
+
+QString CFxMetaluga::save_params_to_string()
+{
+  QString result;
+  //format is: paramname=frame_number1:value,frame_numberN:valueN;
+  //it is designed to save automation pairs time:value
+  result += ("dial_gain=0:" + QString::number (dial_gain->value()) + ";");
+  result += ("dial_drive=0:" + QString::number (dial_drive->value()) + ";");
+  result += ("dial_tone=0:" + QString::number (dial_tone->value()) + ";");
+  result += ("dial_level=0:" + QString::number (dial_level->value()) + ";");
+  
+  return result;
+}
+
+
+void CFxMetaluga::load_params_from_string (const QString &s)
+{
+  QStringList ls = s.split (";");
+  QHash <QString, QString> h;
+  //parsing
+
+  for (int i = 0; i < ls.size() - 1; i++)
+      {
+       QStringList lt = ls[i].split ("=");
+       h[lt[0]] = lt[1];
+      }  
+      
+  QStringList lt = h["dial_gain"].split (",");    
+  QStringList lt2 = lt[0].split (":");    
+  dial_gain->setValue (lt2[1].toDouble());    
+  
+  lt = h["dial_drive"].split (",");    
+  lt2 = lt[0].split (":");    
+  dial_drive->setValue (lt2[1].toDouble());    
+  
+  lt = h["dial_tone"].split (",");    
+  lt2 = lt[0].split (":");    
+  dial_tone->setValue (lt2[1].toDouble());    
+
+  lt = h["dial_level"].split (",");    
+  lt2 = lt[0].split (":");    
+  dial_level->setValue (lt2[1].toDouble());    
 }
 
 
@@ -782,7 +830,8 @@ void CFxMetaluga::dial_level_valueChanged (int value)
 
 CFxJest::CFxJest()
 {
-  name = tr ("Jest' (overdrive/dist)");
+  modulename = tr ("Jest' (overdrive/dist)");
+  classname = "CFxJest";
   
   wnd_ui->setWindowTitle (tr ("Jest'"));
 
@@ -799,7 +848,7 @@ CFxJest::CFxJest()
   QHBoxLayout *hbl_gain = new QHBoxLayout;
   
   QLabel *l = new QLabel (tr ("Gain"));
-  QDial *dial_gain = new QDial;
+  dial_gain = new QDial;
   dial_gain->setNotchesVisible (true);
 
   dial_gain->setWrapping (false);
@@ -817,7 +866,7 @@ CFxJest::CFxJest()
   QHBoxLayout *hbl_drive = new QHBoxLayout;
   
   l = new QLabel (tr ("Drive"));
-  QDial *dial_drive = new QDial;
+  dial_drive = new QDial;
   dial_drive->setNotchesVisible (true);
 
   dial_drive->setWrapping (false);
@@ -854,7 +903,7 @@ CFxJest::CFxJest()
 
   QLabel *l_level = new QLabel (tr ("Output level"));
 
-  QDial *dial_level = new QDial;
+  dial_level = new QDial;
   dial_level->setWrapping (false);
   connect (dial_level, SIGNAL(valueChanged(int)), this, SLOT(dial_level_valueChanged(int)));
   dial_level->setRange (-90, 0);
@@ -875,8 +924,52 @@ CFxJest::CFxJest()
   
   
   w_caption->setStyleSheet (qstl);  
-  
 }
+
+
+QString CFxJest::save_params_to_string()
+{
+  QString result;
+  //format is: paramname=frame_number1:value,frame_numberN:valueN;
+  //it is designed to save automation pairs time:value
+  result += ("dial_gain=0:" + QString::number (dial_gain->value()) + ";");
+  result += ("dial_drive=0:" + QString::number (dial_drive->value()) + ";");
+  result += ("dial_tone=0:" + QString::number (dial_tone->value()) + ";");
+  result += ("dial_level=0:" + QString::number (dial_level->value()) + ";");
+  
+  return result;
+}
+
+
+void CFxJest::load_params_from_string (const QString &s)
+{
+  QStringList ls = s.split (";");
+  QHash <QString, QString> h;
+  //parsing
+
+  for (int i = 0; i < ls.size() - 1; i++)
+      {
+       QStringList lt = ls[i].split ("=");
+       h[lt[0]] = lt[1];
+      }  
+      
+  QStringList lt = h["dial_gain"].split (",");    
+  QStringList lt2 = lt[0].split (":");    
+  dial_gain->setValue (lt2[1].toDouble());    
+  
+  lt = h["dial_drive"].split (",");    
+  lt2 = lt[0].split (":");    
+  dial_drive->setValue (lt2[1].toDouble());    
+  
+  lt = h["dial_tone"].split (",");    
+  lt2 = lt[0].split (":");    
+  dial_tone->setValue (lt2[1].toDouble());    
+
+  lt = h["dial_level"].split (",");    
+  lt2 = lt[0].split (":");    
+  dial_level->setValue (lt2[1].toDouble());    
+}
+
 
 
 void CFxJest::dial_gain_valueChanged (int value)
@@ -890,7 +983,6 @@ void CFxJest::dial_gain_valueChanged (int value)
 
 void CFxJest::dial_drive_valueChanged (int value)
 {
-  
   filter.set_resonance (scale_val (value, 1, 26, 0.001, 0.999f));
 }
 
@@ -955,9 +1047,10 @@ void CFxVynil::dial_scratches_amount_valueChanged (int value)
 
 CFxVynil::CFxVynil()
 {
-  name = tr ("Vynil Taste");
+  modulename = tr ("Vynil Taste");
+  classname = "CFxVynil";
   
-  wnd_ui->setWindowTitle (tr ("Vynil Taste"));
+  wnd_ui->setWindowTitle (modulename);
   set_caption (tr ("Vynil Taste"), tr ("Scratches generator module"));
 
   QHBoxLayout *hbl_scratches = new QHBoxLayout;

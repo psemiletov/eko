@@ -1,7 +1,6 @@
 #include "fxlist.h"
 #include "fxset.h"
 
-
 CFxList::CFxList()
 {
   /*list.append (new CFxSimpleAmp);
@@ -12,14 +11,22 @@ CFxList::CFxList()
   list.append (new CFxMetaluga);
   list.append (new CFxJest);
   */
-  hash[CFxSimpleAmp::get_name()] = CFxSimpleAmp::create_self;
-  hash[CFxSimpleOverdrive::get_name()] = CFxSimpleOverdrive::create_self;
-  hash[CFxDelay::get_name()] = CFxDelay::create_self;
-  hash[CFxSimpleFilter::get_name()] = CFxSimpleFilter::create_self;
-  
-  hash[CFxVynil::get_name()] = CFxVynil::create_self;
-  hash[CFxMetaluga::get_name()] = CFxMetaluga::create_self;
-  hash[CFxJest::get_name()] = CFxJest::create_self;
+  modulenames[CFxSimpleAmp::get_modulename()] = CFxSimpleAmp::create_self;
+  modulenames[CFxSimpleOverdrive::get_modulename()] = CFxSimpleOverdrive::create_self;
+  modulenames[CFxDelay::get_modulename()] = CFxDelay::create_self;
+  modulenames[CFxSimpleFilter::get_modulename()] = CFxSimpleFilter::create_self;
+  modulenames[CFxVynil::get_modulename()] = CFxVynil::create_self;
+  modulenames[CFxMetaluga::get_modulename()] = CFxMetaluga::create_self;
+  modulenames[CFxJest::get_modulename()] = CFxJest::create_self;
+
+
+  classnames["CFxSimpleAmp"] = CFxSimpleAmp::create_self;
+  classnames["CFxSimpleOverdrive"] = CFxSimpleOverdrive::create_self;
+  classnames["CFxDelay"] = CFxDelay::create_self;
+  classnames["CFxSimpleFilter"] = CFxSimpleFilter::create_self;
+  classnames["CFxVynil"] = CFxVynil::create_self;
+  classnames["CFxMetaluga"] = CFxMetaluga::create_self;
+  classnames["CFxJest"] = CFxJest::create_self;
   
 }
 
@@ -42,7 +49,7 @@ AFx *CFxList::find_by_name (const QString &fxname)
       }    
 
   return 0;*/
-  return hash[fxname]();
+  return modulenames[fxname]();
 }
 
 
@@ -54,7 +61,7 @@ QStringList CFxList::names()
           l.append (f->name);
   return l;        */
   
-  QStringList l = hash.keys();
+  QStringList l = modulenames.keys();
   l.sort();
   return l;
 }

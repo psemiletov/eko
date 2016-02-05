@@ -86,7 +86,6 @@ CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len, size_t channe
             buffer[ch][i] = interleaved_buffer[c++];
            }     
       }
-      
 }
   
 
@@ -181,7 +180,7 @@ void CFloatBuffer::copy_to_pos (CFloatBuffer *other, size_t offset_from, size_t 
 
 
 void CFloatBuffer::copy_channel_to_pos (CFloatBuffer *other, size_t ch_from, size_t ch_to,
-                            size_t offset_from, size_t size, size_t offset_to)
+                                        size_t offset_from, size_t size, size_t offset_to)
 {
   if (size > length_frames)
      return;
@@ -400,7 +399,6 @@ CFloatBuffer* CFloatBuffer::resample (size_t new_rate)
 CFloatBuffer* CFloatBuffer::delete_range (size_t frames_start, size_t frames_end)
 {
   size_t delrange = frames_end - frames_start;
-  
   size_t new_buffer_frames_count = length_frames - delrange;
   
   CFloatBuffer *tfb = new CFloatBuffer (new_buffer_frames_count, channels); 

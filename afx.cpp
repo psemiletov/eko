@@ -9,8 +9,8 @@ AFx::AFx()
   float_buffer = 0;
  
   state = FXS_STOP;
-  name = "AFx";
-  id = "AFx";
+  classname = "AFx";
+  modulename = "AFx";
 
   samplerate = 1;
   channels = 1;//chann;

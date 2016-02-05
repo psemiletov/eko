@@ -768,6 +768,9 @@ void CWaveform::cut_selected()
   if (! selected)
      return;
 
+  if ((frames_end() - frames_start() > fb->length_frames))
+     return;
+
   copy_selected();
   
   undo_take_shot (UNDO_DELETE);
