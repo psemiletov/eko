@@ -11,6 +11,7 @@ Peter Semiletov
 #include <QImage>
 #include <QTextCodec>
 #include <QByteArray>
+#include <QMap>
 
 #include "gui_utils.h"
 #include "utils.h"
@@ -126,6 +127,26 @@ QHash <QString, QString> hash_load_keyval (const QString &fname)
 }
 
 
+QMap <QString, QString> map_load_keyval (const QString &fname)
+{
+  QMap <QString, QString> result;
+
+  if (! file_exists (fname))
+     return result;
+
+  QStringList l = qstring_load (fname).split ("\n");
+
+  foreach (QString s, l)
+          {
+           QStringList sl = s.split ("=");
+           if (sl.size() > 1)
+               result.insert (sl[0], sl[1]);
+          }
+
+  return result;
+}
+
+
 bool is_image (const QString &filename)
 {
   QList <QByteArray> a = QImageReader::supportedImageFormats();
@@ -142,6 +163,17 @@ bool is_image (const QString &filename)
 
 
 QString hash_keyval_to_string (const QHash <QString, QString> &h)
+{
+  QStringList l;
+
+  foreach (QString s, h.keys())
+          l.prepend (s.append ("=").append (h.value (s)));
+
+  return l.join ("\n").trimmed();
+}
+
+
+QString map_keyval_to_string (const QMap <QString, QString> &h)
 {
   QStringList l;
 

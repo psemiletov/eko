@@ -66,7 +66,6 @@ signals:
  void dir_changed (const QString &path);
  void current_file_changed (const QString &path, const QString &just_name);
 
-
 protected:
 
   void mouseMoveEvent (QMouseEvent *event);

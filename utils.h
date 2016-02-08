@@ -48,6 +48,10 @@ void qstring_list_print (const QStringList &l);
 bool qstring_save (const QString &fileName, const QString &data, const char *enc = "UTF-8");
 QString qstring_load (const QString &fileName, const char *enc = "UTF-8");
 
+QMap <QString, QString> map_load_keyval (const QString &fname);
+QString map_keyval_to_string (const QMap <QString, QString> &h);
+
+
 QStringList read_dir_entries (const QString &path);
 QHash<QString, QString> hash_load (const QString &fname);
 QHash<QString, QString> hash_load_keyval (const QString &fname);

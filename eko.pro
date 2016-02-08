@@ -42,7 +42,8 @@ SOURCES += eko.cpp \
     afx.cpp \
     fxlist.cpp \
     noisegen.cpp \
-    db.cpp
+    db.cpp \
+    fxpresets.cpp
 #    tinyplayer.cpp
 
 HEADERS += eko.h \
@@ -64,7 +65,8 @@ HEADERS += eko.h \
     afx.h \
     fxlist.h \
     noisegen.h \
-    db.h
+    db.h \
+    fxpresets.h
 #    tinyplayer.h
 
 

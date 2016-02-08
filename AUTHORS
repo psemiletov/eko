@@ -1,10 +1,10 @@
 Code and design:
+
 Peter 'Roxton' Semiletov <tea@list.ru, http://semiletov.org>
 
-noise generator: Dominic Mazzoni (from Audacity code)
 Standalone DX headers for MinGW - https://github.com/lifthrasiir/w32api-directx-standalone
 
-Libraries:
+Used libraries:
 
 libsndfile, libsamplerate (http://www.mega-nerd.com/libsndfile/, http://www.mega-nerd.com/SRC/) by Erik de Castro Lopo
 Portaudio - http://www.portaudio.com

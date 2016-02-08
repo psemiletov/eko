@@ -13,6 +13,7 @@
 
 
 #include "floatbuffer.h"
+#include "fxpresets.h"
 
 
 enum FxState {
@@ -40,6 +41,8 @@ public:
   
   size_t channels;
   size_t samplerate;
+  
+  CFxPresets *presets;
   
   QWidget *wnd_ui;
   QVBoxLayout *vbl_main;

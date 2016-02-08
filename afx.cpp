@@ -20,10 +20,15 @@ AFx::AFx()
   vbl_main = new QVBoxLayout;
   wnd_ui->setLayout (vbl_main);
 
+  presets = new CFxPresets;
+  
+
   w_caption = new QWidget; 
   QVBoxLayout *vbl_caption = new QVBoxLayout;
   w_caption->setLayout (vbl_caption);
   
+  
+  vbl_main->addWidget (presets);
   vbl_main->addWidget (w_caption);
   
   l_caption = new QLabel;
@@ -39,6 +44,8 @@ AFx::AFx()
   
   w_caption->setObjectName ("w_caption");
   w_caption->setStyleSheet (qstl);
+  
+  
 }
 
 
