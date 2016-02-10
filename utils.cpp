@@ -335,3 +335,26 @@ QString str_from_locale (const char *s)
   
   return cd->toUnicode(encodedString);
 }
+
+
+QAction* menu_add_item (QObject *obj,
+                      QMenu *menu,
+                      const QString &caption,
+                      const char *method,
+                      const QString &shortkt,
+                      const QString &iconpath
+                     )
+{
+  QAction *act = new QAction (caption, obj);
+
+  if (! shortkt.isEmpty())
+     act->setShortcut (shortkt);
+
+  if (! iconpath.isEmpty())
+     act->setIcon (QIcon (iconpath));
+
+  obj->connect (act, SIGNAL(triggered()), obj, method);
+  menu->addAction (act);
+  return act;
+}
+

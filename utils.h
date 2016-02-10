@@ -10,6 +10,7 @@ Peter Semiletov
 #include <QHash>
 #include <QFileInfo>
 #include <QStringList>
+#include <QAction>
 
 #include <cmath>
 #include <limits>
@@ -172,5 +173,14 @@ inline float scale_val (float val, float from_min, float from_max, float to_min,
   return (val - from_min) * (to_max - to_min) / 
           (from_max - from_min) + to_min;
 }
+
+QAction* menu_add_item (QObject *obj,
+                      QMenu *menu,
+                      const QString &caption,
+                      const char *method,
+                      const QString &shortkt = "",
+                      const QString &iconpath = ""
+                     );
+
 
 #endif

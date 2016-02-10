@@ -1,6 +1,6 @@
 #include <QHBoxLayout>
 #include <QPushButton>
-
+#include <QMenu>
 
 #include "fxpresets.h"
 #include "utils.h"
@@ -19,6 +19,16 @@ CFxPresets::CFxPresets (QWidget *parent): QWidget (parent)
   connect (cmb_presets, SIGNAL(currentIndexChanged (const QString &)),
            this, SLOT(cmb_presets_currentIndexChanged (const QString &)));
 
+  QMenu *menu = new QMenu;
+  bt_menu->setMenu (menu);
+  
+  menu_add_item (this, menu, tr ("Bank new"), SLOT (bank_new_click()), "", "");
+  menu_add_item (this, menu, tr ("Bank load"), SLOT (bank_load_click()), "", "");
+  menu_add_item (this, menu, tr ("Bank save"), SLOT (bank_save_click()), "", "");
+  menu_add_item (this, menu, tr ("Bank save as"), SLOT (bank_save_as_click()), "", "");
+
+  menu_add_item (this, menu, tr ("Preset save"), SLOT (preset_save()), "", "");
+  menu_add_item (this, menu, tr ("Preset save as"), SLOT (preset_save_as()), "", "");
   
 }
 
@@ -46,4 +56,53 @@ void CFxPresets::save_presets_file (const QString &fname)
 void CFxPresets::cmb_presets_currentIndexChanged (const QString &text)
 {
   emit preset_changed (map[text]);
+}
+
+
+void CFxPresets::bank_new_click()
+{
+
+
+}
+ 
+
+void CFxPresets::bank_save_click()
+{
+
+
+}
+
+
+void CFxPresets::bank_save_as_click()
+{
+
+
+}
+
+
+void CFxPresets::bank_load_click()
+{
+
+
+}
+
+
+void CFxPresets::update_presets()
+{
+
+
+}
+
+
+void CFxPresets::preset_save_as()
+{
+
+
+}
+ 
+
+void CFxPresets::preset_save()
+{
+
+
 }
