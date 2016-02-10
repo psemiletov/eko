@@ -1,6 +1,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QMenu>
+#include <QFileDialog>
 
 #include "fxpresets.h"
 #include "utils.h"
@@ -33,8 +34,11 @@ CFxPresets::CFxPresets (QWidget *parent): QWidget (parent)
 }
 
 
-void CFxPresets::load_presets_file (const QString &fname)
+void CFxPresets::load_bank_file (const QString &fname)
 {
+  if (fname.isNull() || fname.isEmpty())
+     return;
+
   cmb_presets->clear();
   map.clear();
   map = map_load_keyval (fname);
@@ -43,7 +47,7 @@ void CFxPresets::load_presets_file (const QString &fname)
 }
 
 
-void CFxPresets::save_presets_file (const QString &fname)
+void CFxPresets::save_bank_file (const QString &fname)
 {
   if (fname.startsWith (":"))
      return;
@@ -61,7 +65,8 @@ void CFxPresets::cmb_presets_currentIndexChanged (const QString &text)
 
 void CFxPresets::bank_new_click()
 {
-
+  path_bank = "";
+  map.clear();
 
 }
  
@@ -75,22 +80,30 @@ void CFxPresets::bank_save_click()
 
 void CFxPresets::bank_save_as_click()
 {
-
+  QString f = QFileDialog::getSaveFileName (this, tr ("Save File"), banks_path);
+  if (f.isNull())
+     return;
+  
+  path_bank = f;
 
 }
 
 
 void CFxPresets::bank_load_click()
 {
+  QString f = QFileDialog::getOpenFileName (this, tr ("Open File"), banks_path);  
+  if (f.isNull())
+     return;
+  
+  path_bank = f;
 
-
+  save_bank_file (path_bank);
 }
 
 
 void CFxPresets::update_presets()
 {
-
-
+  
 }
 
 

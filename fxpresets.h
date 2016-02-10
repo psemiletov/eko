@@ -13,7 +13,9 @@ Q_OBJECT
 
 public:
 
-  QString presets_path;
+  QString banks_path; //path to the plugin's banks
+  
+  QString path_bank; //full path of the current bank
 
   QMap <QString, QString> map;
 
@@ -25,8 +27,8 @@ public:
 
   void update_presets();
 
-  void load_presets_file (const QString &fname);
-  void save_presets_file (const QString &fname);
+  void load_bank_file (const QString &fname);
+  void save_bank_file (const QString &fname);
   
 signals:
 
