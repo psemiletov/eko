@@ -13,6 +13,8 @@ Q_OBJECT
 
 public:
 
+  QString preset_data;
+
   QString banks_path; //path to the plugin's banks
   
   QString path_bank; //full path of the current bank
@@ -33,6 +35,8 @@ public:
 signals:
 
   void preset_changed (const QString &path);
+  void save_request();
+  
 
 public slots:
 

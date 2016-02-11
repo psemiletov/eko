@@ -2,6 +2,7 @@
 #include <QPushButton>
 #include <QMenu>
 #include <QFileDialog>
+#include <QInputDialog>
 
 #include "fxpresets.h"
 #include "utils.h"
@@ -109,13 +110,23 @@ void CFxPresets::update_presets()
 
 void CFxPresets::preset_save_as()
 {
-
-
+  bool ok;
+  QString text = QInputDialog::getText(this, tr("Save preset as"),
+                                         tr("Name:"), QLineEdit::Normal,
+                                         "", &ok);
+    if (ok && !text.isEmpty())
+        {
+         emit save_request();
+         map[text] = preset_data;
+         cmb_presets->addItem (text);
+        }
 }
  
 
 void CFxPresets::preset_save()
 {
-
+  emit save_request();
+  
+  map[cmb_presets->currentText()] = preset_data;
 
 }
