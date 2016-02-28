@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QMap>
+#include <QMenu>
 #include <QWidget>
 #include <QComboBox>
 
@@ -13,28 +14,31 @@ Q_OBJECT
 
 public:
 
+  QMenu *menu;
+
   QString preset_data;
 
   QString banks_path; //path to the plugin's banks
-  
+
+   
   QString path_bank; //full path of the current bank
 
   QMap <QString, QString> map;
 
   QComboBox *cmb_presets;
-
   
 
   CFxPresets (QWidget *parent = 0);
 
-  void update_presets();
-
   void load_bank_file (const QString &fname);
   void save_bank_file (const QString &fname);
   
+  void create_bank_dir();
+  void update_banks_list (const QString &path);
+  
 signals:
 
-  void preset_changed (const QString &path);
+  void preset_changed (const QString &text);
   void save_request();
   
 
@@ -49,6 +53,9 @@ public slots:
  
   void preset_save_as();
   void preset_save();
+
+  void bank_selected();
+
 
 };
 

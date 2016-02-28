@@ -1,14 +1,18 @@
 #include <QHBoxLayout>
 #include <QPushButton>
-#include <QMenu>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QDir>
+#include <QDebug>
 
 #include "fxpresets.h"
 #include "utils.h"
+#include "gui_utils.h"
+
 
 CFxPresets::CFxPresets (QWidget *parent): QWidget (parent)
 {
+  
   QHBoxLayout *h_box = new QHBoxLayout;
   setLayout (h_box);
   
@@ -21,7 +25,7 @@ CFxPresets::CFxPresets (QWidget *parent): QWidget (parent)
   connect (cmb_presets, SIGNAL(currentIndexChanged (const QString &)),
            this, SLOT(cmb_presets_currentIndexChanged (const QString &)));
 
-  QMenu *menu = new QMenu;
+  menu = new QMenu;
   bt_menu->setMenu (menu);
   
   menu_add_item (this, menu, tr ("Bank new"), SLOT (bank_new_click()), "", "");
@@ -31,7 +35,6 @@ CFxPresets::CFxPresets (QWidget *parent): QWidget (parent)
 
   menu_add_item (this, menu, tr ("Preset save"), SLOT (preset_save()), "", "");
   menu_add_item (this, menu, tr ("Preset save as"), SLOT (preset_save_as()), "", "");
-  
 }
 
 
@@ -68,19 +71,23 @@ void CFxPresets::bank_new_click()
 {
   path_bank = "";
   map.clear();
-
+  cmb_presets->clear();
 }
  
 
 void CFxPresets::bank_save_click()
 {
-
-
+  if (path_bank.isEmpty())
+     bank_save_as_click();
+  else   
+      save_bank_file (path_bank);
 }
 
 
 void CFxPresets::bank_save_as_click()
 {
+  create_bank_dir();
+
   QString f = QFileDialog::getSaveFileName (this, tr ("Save File"), banks_path);
   if (f.isNull())
      return;
@@ -97,14 +104,7 @@ void CFxPresets::bank_load_click()
      return;
   
   path_bank = f;
-
   save_bank_file (path_bank);
-}
-
-
-void CFxPresets::update_presets()
-{
-  
 }
 
 
@@ -126,7 +126,49 @@ void CFxPresets::preset_save_as()
 void CFxPresets::preset_save()
 {
   emit save_request();
-  
   map[cmb_presets->currentText()] = preset_data;
+}
 
+
+void CFxPresets::create_bank_dir()
+{
+  if (banks_path == "")
+     return;
+    
+  QDir dr;
+  dr.setPath (banks_path);
+ 
+  if (! dr.exists())
+     dr.mkpath (banks_path);
+}    
+
+
+void CFxPresets::bank_selected()
+{
+  QAction *a = qobject_cast<QAction *>(sender());
+  QString fname (banks_path);
+  fname.append ("/").append (a->text());
+  
+  load_bank_file (fname);
+}
+
+
+void CFxPresets::update_banks_list (const QString &path)
+{
+  banks_path = path;
+
+  int i = banks_path.lastIndexOf ("/");
+  QString fxname = banks_path.left (i);
+  
+  qDebug() << "update_banks_list fxname:::::" << fxname; 
+
+  QStringList l1 = read_dir_entries (banks_path);
+  QStringList l2 = read_dir_entries (":/fxpresets" + fxname);
+
+
+  l1 += l2;
+
+  create_menu_from_list (this, menu,
+                         l1,
+                         SLOT (bank_selected()));
 }

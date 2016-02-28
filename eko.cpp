@@ -79,6 +79,8 @@ public:
 };
 
 
+extern QString g_fxpresets_path;
+
 extern QHash <QString, QString> global_palette;
 extern QSettings *settings;
 extern int meter_cps;
@@ -438,7 +440,11 @@ void CEKO::create_paths()
   dr.setPath (dir_themes);
   if (! dr.exists())
      dr.mkpath (dir_themes);
-   
+     
+  g_fxpresets_path = dir_config.append ("/fxpresets");
+  dr.setPath (g_fxpresets_path);
+  if (! dr.exists())
+     dr.mkpath (g_fxpresets_path);
 }
 
 

@@ -22,6 +22,8 @@ AFx::AFx()
 
   presets = new CFxPresets;
   
+  connect (presets, SIGNAL(save_request()), this, SLOT(slot_save_request()));
+  connect (presets, SIGNAL(preset_changed (const QString &)), this, SLOT(slot_preset_changed (const QString &)));
 
   w_caption = new QWidget; 
   QVBoxLayout *vbl_caption = new QVBoxLayout;
@@ -85,3 +87,14 @@ void AFx::reset_params (size_t srate, size_t chann)
   channels = chann;
 }
 
+
+void AFx::slot_preset_changed (const QString &text)
+{
+  load_params_from_string (text);
+}
+
+
+void AFx::slot_save_request()
+{
+  presets->preset_data = save_params_to_string();
+}

@@ -77,6 +77,13 @@ public:
 
   static QString get_modulename() {return QString ("AFx");};
  // static QString get_classname() {return QString ("AFx");};
+ 
+public slots:
+
+  void slot_preset_changed (const QString &text);
+  void slot_save_request();
+  
+ 
 };
 
 

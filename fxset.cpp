@@ -19,6 +19,9 @@
 #include "fxset.h"
 #include "utils.h"
 
+
+QString g_fxpresets_path;
+
 /*
 
 {
@@ -93,6 +96,8 @@ CFxSimpleAmp::CFxSimpleAmp()
     "background-color: #ffaa00;}";
   
   w_caption->setStyleSheet (qstl);
+
+  presets->update_banks_list (g_fxpresets_path + "/" + classname);
 
   gain = 1.0f;
 
@@ -205,6 +210,8 @@ CFxSimpleOverdrive::CFxSimpleOverdrive()
   modulename = tr ("Simple Overdrive");  
   classname = "CFxSimpleOverdrive";
     
+  presets->update_banks_list (g_fxpresets_path + "/" + classname);
+  
   wnd_ui->setWindowTitle (modulename);
 
   set_caption (tr ("Simple Overdrive"), tr ("Simple overdrive module"));
@@ -303,6 +310,9 @@ CFxDelay::CFxDelay()
 {
   classname = "CFxDelay";
   modulename = tr ("Simple Delay");
+  
+  presets->update_banks_list (g_fxpresets_path + "/" + classname);
+
   
   fb = new CFloatBuffer (196000, 2);
 
@@ -470,6 +480,8 @@ CFxSimpleFilter::CFxSimpleFilter()
   classname = "CFxSimpleFilter";
   modulename = tr ("Simple Filter");
   
+  presets->update_banks_list (g_fxpresets_path + "/" + classname);
+  
   wnd_ui->setWindowTitle (modulename);
   set_caption (tr ("Filter"), tr ("Multi-mode filter module"));
 
@@ -603,6 +615,9 @@ CFxMetaluga::CFxMetaluga()
 {
   modulename = tr ("Metaluga (overdrive/dist pedal)");
   classname = "CFxMetaluga";
+  
+  presets->update_banks_list (g_fxpresets_path + "/" + classname);
+
   
   wnd_ui->setWindowTitle (tr ("Metaluga"));
 
@@ -833,6 +848,9 @@ CFxJest::CFxJest()
   modulename = tr ("Jest' (overdrive/dist)");
   classname = "CFxJest";
   
+  presets->update_banks_list (g_fxpresets_path + "/" + classname);
+
+  
   wnd_ui->setWindowTitle (tr ("Jest'"));
 
   set_caption (tr ("<b>Jest'</b>"), tr ("<i>Soviet peregrooz pedal</i>"));
@@ -1049,6 +1067,9 @@ CFxVynil::CFxVynil()
 {
   modulename = tr ("Vynil Taste");
   classname = "CFxVynil";
+
+  presets->update_banks_list (g_fxpresets_path + "/" + classname);
+
   
   wnd_ui->setWindowTitle (modulename);
   set_caption (tr ("Vynil Taste"), tr ("Scratches generator module"));
