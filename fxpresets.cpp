@@ -25,9 +25,14 @@ CFxPresets::CFxPresets (QWidget *parent): QWidget (parent)
   connect (cmb_presets, SIGNAL(currentIndexChanged (const QString &)),
            this, SLOT(cmb_presets_currentIndexChanged (const QString &)));
 
+
+  menu_banks = new QMenu (tr ("Banks"));
+ 
   menu = new QMenu;
   bt_menu->setMenu (menu);
-  
+ 
+  menu->addMenu (menu_banks);
+   
   menu_add_item (this, menu, tr ("Bank new"), SLOT (bank_new_click()), "", "");
   menu_add_item (this, menu, tr ("Bank load"), SLOT (bank_load_click()), "", "");
   menu_add_item (this, menu, tr ("Bank save"), SLOT (bank_save_click()), "", "");
@@ -45,7 +50,7 @@ void CFxPresets::load_bank_file (const QString &fname)
 
   cmb_presets->clear();
   map.clear();
-  map = map_load_keyval (fname);
+  map = map_load_keyval (fname, "^I^S^");
   
   cmb_presets->addItems (map.keys());
 }
@@ -56,7 +61,12 @@ void CFxPresets::save_bank_file (const QString &fname)
   if (fname.startsWith (":"))
      return;
      
-  QString s = map_keyval_to_string (map);
+  qDebug() << "CFxPresets::save_bank_file "  << fname;
+     
+  QString s = map_keyval_to_string (map, "^I^S^");
+  
+  qDebug() << s;
+  
   qstring_save (fname, s);
 }
 
@@ -77,7 +87,7 @@ void CFxPresets::bank_new_click()
 
 void CFxPresets::bank_save_click()
 {
-  if (path_bank.isEmpty())
+  if (! file_exists (path_bank) || path_bank.indexOf (":") == 0)
      bank_save_as_click();
   else   
       save_bank_file (path_bank);
@@ -93,7 +103,7 @@ void CFxPresets::bank_save_as_click()
      return;
   
   path_bank = f;
-
+  save_bank_file (path_bank);
 }
 
 
@@ -104,7 +114,7 @@ void CFxPresets::bank_load_click()
      return;
   
   path_bank = f;
-  save_bank_file (path_bank);
+  load_bank_file (path_bank);
 }
 
 
@@ -158,17 +168,16 @@ void CFxPresets::update_banks_list (const QString &path)
   banks_path = path;
 
   int i = banks_path.lastIndexOf ("/");
-  QString fxname = banks_path.left (i);
+  QString fxname = banks_path.right (banks_path.length() - i - 1);
   
   qDebug() << "update_banks_list fxname:::::" << fxname; 
 
   QStringList l1 = read_dir_entries (banks_path);
   QStringList l2 = read_dir_entries (":/fxpresets" + fxname);
 
-
   l1 += l2;
 
-  create_menu_from_list (this, menu,
+  create_menu_from_list (this, menu_banks,
                          l1,
                          SLOT (bank_selected()));
 }

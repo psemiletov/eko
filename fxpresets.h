@@ -15,6 +15,7 @@ Q_OBJECT
 public:
 
   QMenu *menu;
+  QMenu *menu_banks;
 
   QString preset_data;
 

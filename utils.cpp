@@ -127,7 +127,7 @@ QHash <QString, QString> hash_load_keyval (const QString &fname)
 }
 
 
-QMap <QString, QString> map_load_keyval (const QString &fname)
+QMap <QString, QString> map_load_keyval (const QString &fname, const QString &sep)
 {
   QMap <QString, QString> result;
 
@@ -138,7 +138,7 @@ QMap <QString, QString> map_load_keyval (const QString &fname)
 
   foreach (QString s, l)
           {
-           QStringList sl = s.split ("=");
+           QStringList sl = s.split (sep);
            if (sl.size() > 1)
                result.insert (sl[0], sl[1]);
           }
@@ -173,12 +173,12 @@ QString hash_keyval_to_string (const QHash <QString, QString> &h)
 }
 
 
-QString map_keyval_to_string (const QMap <QString, QString> &h)
+QString map_keyval_to_string (const QMap <QString, QString> &h, const QString &sep)
 {
   QStringList l;
 
   foreach (QString s, h.keys())
-          l.prepend (s.append ("=").append (h.value (s)));
+          l.prepend (s.append (sep).append (h.value (s)));
 
   return l.join ("\n").trimmed();
 }

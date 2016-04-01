@@ -49,8 +49,8 @@ void qstring_list_print (const QStringList &l);
 bool qstring_save (const QString &fileName, const QString &data, const char *enc = "UTF-8");
 QString qstring_load (const QString &fileName, const char *enc = "UTF-8");
 
-QMap <QString, QString> map_load_keyval (const QString &fname);
-QString map_keyval_to_string (const QMap <QString, QString> &h);
+QMap <QString, QString> map_load_keyval (const QString &fname, const QString &sep);
+QString map_keyval_to_string (const QMap <QString, QString> &h, const QString &sep);
 
 
 QStringList read_dir_entries (const QString &path);
