@@ -253,8 +253,8 @@ public:
 
   CFxVynil();
 
-  QString save_params_to_string() {return QString ("");};
-  void load_params_from_string (const QString &s) {};
+  QString save_params_to_string();
+  void load_params_from_string (const QString &s);
   
   static QString get_modulename() {return QString (tr ("Vynil Taste"));};
   static AFx* create_self() {return new CFxVynil;}

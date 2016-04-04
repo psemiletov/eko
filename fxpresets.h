@@ -18,6 +18,7 @@ public:
   QMenu *menu_banks;
 
   QString preset_data;
+  QString fxname;
 
   QString banks_path; //path to the plugin's banks
 

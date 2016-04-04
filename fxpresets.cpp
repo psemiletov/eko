@@ -61,11 +61,11 @@ void CFxPresets::save_bank_file (const QString &fname)
   if (fname.startsWith (":"))
      return;
      
-  qDebug() << "CFxPresets::save_bank_file "  << fname;
+//  qDebug() << "CFxPresets::save_bank_file "  << fname;
      
   QString s = map_keyval_to_string (map, "^I^S^");
   
-  qDebug() << s;
+  //qDebug() << s;
   
   qstring_save (fname, s);
 }
@@ -104,6 +104,9 @@ void CFxPresets::bank_save_as_click()
   
   path_bank = f;
   save_bank_file (path_bank);
+ 
+  menu_banks->clear();
+  update_banks_list (banks_path);
 }
 
 
@@ -114,7 +117,7 @@ void CFxPresets::bank_load_click()
      return;
   
   path_bank = f;
-  load_bank_file (path_bank);
+  load_bank_file (banks_path);
 }
 
 
@@ -135,6 +138,12 @@ void CFxPresets::preset_save_as()
 
 void CFxPresets::preset_save()
 {
+  if (cmb_presets->currentText().isNull())
+     {
+      preset_save_as();
+      return;
+     }
+  
   emit save_request();
   map[cmb_presets->currentText()] = preset_data;
 }
@@ -168,7 +177,7 @@ void CFxPresets::update_banks_list (const QString &path)
   banks_path = path;
 
   int i = banks_path.lastIndexOf ("/");
-  QString fxname = banks_path.right (banks_path.length() - i - 1);
+  fxname = banks_path.right (banks_path.length() - i - 1);
   
   qDebug() << "update_banks_list fxname:::::" << fxname; 
 

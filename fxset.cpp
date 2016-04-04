@@ -402,11 +402,11 @@ void CFxDelay::spb_time_changed (double value)
 {
   delay_msecs = value;
   
-  qDebug() << "delay_msecs: " << delay_msecs; 
-  qDebug() << "fb->samplerate: " << fb->samplerate; 
+  //qDebug() << "delay_msecs: " << delay_msecs; 
+  //qDebug() << "fb->samplerate: " << fb->samplerate; 
   
   fb->ringbuffer_set_length (fb->samplerate * delay_msecs);
-  qDebug() << fb->ringbuffer_length;
+  //qDebug() << fb->ringbuffer_length;
 }
 
 
@@ -1156,5 +1156,39 @@ void CFxVynil::reset_params (size_t srate, size_t ch)
 void CFxVynil::spb_mixlevel_changed (double value)
 {
   mixlevel = db2lin (value);
+}
+
+
+QString CFxVynil::save_params_to_string()
+{
+  QString result;
+  //format is: paramname=frame_number1:value,frame_numberN:valueN;
+  //it is designed to save automation pairs time:value
+  result += ("spb_mixlevel=0:" + QString::number (spb_mixlevel->value()) + ";");
+  result += ("dial_scratches_amount=0:" + QString::number (dial_scratches_amount->value()) + ";");
+  
+  return result;
+}
+
+
+void CFxVynil::load_params_from_string (const QString &s)
+{
+  QStringList ls = s.split (";");
+  QHash <QString, QString> h;
+  //parsing
+
+  for (int i = 0; i < ls.size() - 1; i++)
+      {
+       QStringList lt = ls[i].split ("=");
+       h[lt[0]] = lt[1];
+      }  
+      
+  QStringList lt = h["spb_mixlevel"].split (",");    
+  QStringList lt2 = lt[0].split (":");    
+  spb_mixlevel->setValue (lt2[1].toDouble());    
+  
+  lt = h["dial_scratches_amount"].split (",");    
+  lt2 = lt[0].split (":");    
+  dial_scratches_amount->setValue (lt2[1].toDouble());    
 }
 
