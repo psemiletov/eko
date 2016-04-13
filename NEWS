@@ -1,18 +1,15 @@
 _____________________________________________________
        ===== NEWS ABOUT EKO ====                 
 
-                   EKO 5.0.0, January 2016                         
+                   EKO 5.1.0, April 2016                         
 _____________________________________________________
 
 http://semiletov.org/eko (stable ver. with win32 builds)
 https://github.com/psemiletov/eko (development ver.)
 _____________________________________________________
 
-   Hello! The fifth EKO's code has been heavy rewritten to share the codebase with my new project, the minimalistic DAW - Wavylon. Also there are many errors were fixed, and limitations eliminated. But what is changed for the user?
-   EKO becomes more stable. Some new realtime FX - two guitar pedals emulators, the filter and the delay module. But they are will be more useful with Wavylon. 
-   So there is not so much visible and audible changes but the inner changes allows me to move EKO forward. 
+   Hi. This release features FX presets engine, and the new effect Vynil Taste that simulates vynil plate noises.
    
-
    Stay tuned.
 
    Peter Semiletov, tea@list.ru
