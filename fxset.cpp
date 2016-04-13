@@ -19,6 +19,9 @@
 #include "fxset.h"
 #include "utils.h"
 
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif
 
 QString g_fxpresets_path;
 

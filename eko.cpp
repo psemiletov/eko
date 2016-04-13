@@ -54,6 +54,9 @@ started at 25 July 2010
 
 #define C_METER_CPS 32;
 
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif
 
 bool b_altmenu;
 bool b_monitor_input;
