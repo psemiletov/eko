@@ -4,27 +4,27 @@
 <context>
     <name>CAboutWindow</name>
     <message>
-        <location filename="../eko.cpp" line="2646"/>
+        <location filename="../eko.cpp" line="2636"/>
         <source>Code</source>
         <translation>Код</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2647"/>
+        <location filename="../eko.cpp" line="2637"/>
         <source>Acknowledgements</source>
         <translation>Благодарности</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2648"/>
+        <location filename="../eko.cpp" line="2638"/>
         <source>Translations</source>
         <translation>Переводы</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2649"/>
+        <location filename="../eko.cpp" line="2639"/>
         <source>Packages</source>
         <translation>Пакеты</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2657"/>
+        <location filename="../eko.cpp" line="2647"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
@@ -32,37 +32,37 @@
 <context>
     <name>CChangeFormatWindow</name>
     <message>
-        <location filename="../eko.cpp" line="3752"/>
+        <location filename="../eko.cpp" line="3742"/>
         <source>Format</source>
         <translation>Формат</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3759"/>
+        <location filename="../eko.cpp" line="3749"/>
         <source>Subtype</source>
         <translation>Подтип</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3766"/>
+        <location filename="../eko.cpp" line="3756"/>
         <source>Samplerate</source>
         <translation>Частота оцифровки</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3773"/>
+        <location filename="../eko.cpp" line="3763"/>
         <source>Channels</source>
         <translation>Каналы</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3781"/>
+        <location filename="../eko.cpp" line="3771"/>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3782"/>
+        <location filename="../eko.cpp" line="3772"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3793"/>
+        <location filename="../eko.cpp" line="3783"/>
         <source>Sound file format</source>
         <translation>Формат звукового файла</translation>
     </message>
@@ -70,44 +70,44 @@
 <context>
     <name>CDocument</name>
     <message>
-        <location filename="../document.cpp" line="1185"/>
+        <location filename="../document.cpp" line="1190"/>
         <source>file type of %1 is not supported</source>
         <translation>Тип файла %1 не поддерживается</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1197"/>
+        <location filename="../document.cpp" line="1202"/>
         <source>cannot open %1 because of: %2</source>
         <translation>Не могу открыть %1, ибо %2</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1235"/>
+        <location filename="../document.cpp" line="1240"/>
         <source>elapsed: %1 ms</source>
         <translation>затрачено: %1 мс </translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1250"/>
-        <location filename="../document.cpp" line="1280"/>
-        <location filename="../document.cpp" line="1385"/>
+        <location filename="../document.cpp" line="1255"/>
+        <location filename="../document.cpp" line="1285"/>
+        <location filename="../document.cpp" line="1390"/>
         <source>cannot save %1 because of: %2</source>
         <translation>не могу сохранить %1, ибо %2</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1294"/>
+        <location filename="../document.cpp" line="1299"/>
         <source>%1 is saved</source>
         <translation>%1 сохранён</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1214"/>
+        <location filename="../document.cpp" line="1219"/>
         <source>%1 is open</source>
         <translation>%1 открыт</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1295"/>
+        <location filename="../document.cpp" line="1300"/>
         <source>elapsed: %1 milliseconds</source>
         <translation>затрачено: %1 мс </translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1308"/>
+        <location filename="../document.cpp" line="1313"/>
         <source>new[%1]</source>
         <translation>новый[%1]</translation>
     </message>
@@ -115,7 +115,7 @@
 <context>
     <name>CEKO</name>
     <message>
-        <location filename="../eko.cpp" line="573"/>
+        <location filename="../eko.cpp" line="566"/>
         <source>edit</source>
         <translation>править</translation>
     </message>
@@ -128,174 +128,174 @@
         <translation type="obsolete">Все (*);;WAV-файлы (*.wav);;Сжатыя файлы (*.ogg *.flac)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="978"/>
+        <location filename="../eko.cpp" line="968"/>
         <source>This file is open in the read-only mode. You can save it with another name using &lt;b&gt;Save as&lt;/b&gt;</source>
         <translation>Файл открыт в режиме только для чтения. Можете сохранить его под другим именем через &lt;b&gt;Сохранить как&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1058"/>
-        <location filename="../eko.cpp" line="2676"/>
-        <location filename="../eko.cpp" line="5296"/>
+        <location filename="../eko.cpp" line="1048"/>
+        <location filename="../eko.cpp" line="2666"/>
+        <location filename="../eko.cpp" line="5273"/>
         <source>%1 already exists
 Do you want to overwrite?</source>
         <translation>%1 уже существует
 Желаете перезаписать?</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1093"/>
+        <location filename="../eko.cpp" line="1083"/>
         <source>Test</source>
         <translation>Проверка</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1096"/>
+        <location filename="../eko.cpp" line="1086"/>
         <source>New</source>
         <translation>Новый</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1098"/>
+        <location filename="../eko.cpp" line="1088"/>
         <source>Create a new file</source>
         <translation>Создать новый файл</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1104"/>
+        <location filename="../eko.cpp" line="1094"/>
         <source>Open file</source>
         <translation>Открыть файл</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1105"/>
+        <location filename="../eko.cpp" line="1095"/>
         <source>Open an existing file</source>
         <translation>Открыть существующий файл</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1112"/>
+        <location filename="../eko.cpp" line="1102"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1114"/>
+        <location filename="../eko.cpp" line="1104"/>
         <source>Save the document to disk</source>
         <translation>Сохранить документ на диск</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1117"/>
+        <location filename="../eko.cpp" line="1107"/>
         <source>Save As</source>
         <translation>Сохранить как</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1118"/>
+        <location filename="../eko.cpp" line="1108"/>
         <source>Save the document under a new name</source>
         <translation>Сохранить документ под именем</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1121"/>
+        <location filename="../eko.cpp" line="1111"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1123"/>
+        <location filename="../eko.cpp" line="1113"/>
         <source>Exit the application</source>
         <translation>Выйти из программы</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1129"/>
+        <location filename="../eko.cpp" line="1119"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1131"/>
+        <location filename="../eko.cpp" line="1121"/>
         <source>Cut the current selection&apos;s contents to the clipboard</source>
         <translation>Вырезать текущее выделение в буфер обмена</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1137"/>
+        <location filename="../eko.cpp" line="1127"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1139"/>
+        <location filename="../eko.cpp" line="1129"/>
         <source>Copy the current selection&apos;s contents to the clipboard</source>
         <translation>Копировать текущее выделение в буфер обмена</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1146"/>
+        <location filename="../eko.cpp" line="1136"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1148"/>
+        <location filename="../eko.cpp" line="1138"/>
         <source>Paste the clipboard&apos;s contents into the current selection</source>
         <translation>Вставить из буфера обмена</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1151"/>
+        <location filename="../eko.cpp" line="1141"/>
         <source>Undo</source>
         <translation>Отменить</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1155"/>
+        <location filename="../eko.cpp" line="1145"/>
         <source>Redo</source>
         <translation>Переделать</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1158"/>
+        <location filename="../eko.cpp" line="1148"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1161"/>
+        <location filename="../eko.cpp" line="1151"/>
         <source>About Qt</source>
         <translation>О Qt</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1164"/>
+        <location filename="../eko.cpp" line="1154"/>
         <source>Play/Pause (Space)</source>
         <translation>Играть/Пауза (пробел)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1165"/>
+        <location filename="../eko.cpp" line="1155"/>
         <source>Play/Pause</source>
         <translation>Играть/Пауза</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1168"/>
-        <location filename="../eko.cpp" line="1169"/>
+        <location filename="../eko.cpp" line="1158"/>
+        <location filename="../eko.cpp" line="1159"/>
         <source>Stop</source>
         <translation>Остановить</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1176"/>
-        <location filename="../eko.cpp" line="1419"/>
+        <location filename="../eko.cpp" line="1166"/>
+        <location filename="../eko.cpp" line="1409"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1183"/>
+        <location filename="../eko.cpp" line="1173"/>
         <source>Record</source>
         <translation>Запись</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1184"/>
-        <location filename="../eko.cpp" line="2973"/>
+        <location filename="../eko.cpp" line="1174"/>
+        <location filename="../eko.cpp" line="2963"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1185"/>
+        <location filename="../eko.cpp" line="1175"/>
         <source>Last closed file</source>
         <translation>Последний закрытый файл</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1189"/>
+        <location filename="../eko.cpp" line="1179"/>
         <source>Change format</source>
         <translation>Изменить формат</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1190"/>
+        <location filename="../eko.cpp" line="1180"/>
         <source>File info</source>
         <translation>Сведения о файле</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1197"/>
+        <location filename="../eko.cpp" line="1187"/>
         <source>Save as different</source>
         <translation>Сохранить иначе</translation>
     </message>
@@ -304,22 +304,22 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Сохранить запасную копию</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1200"/>
+        <location filename="../eko.cpp" line="1190"/>
         <source>Save timestamped version</source>
         <translation>Сохранить версию по времени</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1201"/>
+        <location filename="../eko.cpp" line="1191"/>
         <source>Save session</source>
         <translation>Сохранить сессию</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1205"/>
+        <location filename="../eko.cpp" line="1195"/>
         <source>Import/Export</source>
         <translation>Импорт/Экспорт</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1207"/>
+        <location filename="../eko.cpp" line="1197"/>
         <source>Import from RAW</source>
         <translation>Импорт из RAW</translation>
     </message>
@@ -328,38 +328,38 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Экспорт в RAW</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1214"/>
+        <location filename="../eko.cpp" line="1204"/>
         <source>File actions</source>
         <translation>Действия над файлом</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1215"/>
+        <location filename="../eko.cpp" line="1205"/>
         <source>Reload</source>
         <translation>Перечитать</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1217"/>
+        <location filename="../eko.cpp" line="1207"/>
         <source>Recent files</source>
         <translation>Последние файлы</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1218"/>
+        <location filename="../eko.cpp" line="1208"/>
         <source>Sessions</source>
         <translation>Сессии</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1222"/>
+        <location filename="../eko.cpp" line="1212"/>
         <source>Close current</source>
         <translation>Закрыть текущий файл</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1227"/>
-        <location filename="../eko.cpp" line="1425"/>
+        <location filename="../eko.cpp" line="1217"/>
+        <location filename="../eko.cpp" line="1415"/>
         <source>Edit</source>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1234"/>
+        <location filename="../eko.cpp" line="1224"/>
         <source>Copy to new</source>
         <translation>Копировать в новый</translation>
     </message>
@@ -368,72 +368,72 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Удалить</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1238"/>
+        <location filename="../eko.cpp" line="1228"/>
         <source>Trim</source>
         <translation>Обрезать</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1242"/>
+        <location filename="../eko.cpp" line="1232"/>
         <source>Copy current file name</source>
         <translation>Копировать имя текущего файла</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1246"/>
+        <location filename="../eko.cpp" line="1236"/>
         <source>Select all</source>
         <translation>Выделить всё</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1247"/>
+        <location filename="../eko.cpp" line="1237"/>
         <source>Deselect</source>
         <translation>Снять выделение</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1255"/>
+        <location filename="../eko.cpp" line="1245"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1258"/>
+        <location filename="../eko.cpp" line="1248"/>
         <source>Find</source>
         <translation>Найти</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1259"/>
+        <location filename="../eko.cpp" line="1249"/>
         <source>Find next</source>
         <translation>Найти дальше</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1260"/>
+        <location filename="../eko.cpp" line="1250"/>
         <source>Find previous</source>
         <translation>Найти назад</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1263"/>
+        <location filename="../eko.cpp" line="1253"/>
         <source>Functions</source>
         <translation>Функции</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1796"/>
+        <location filename="../eko.cpp" line="1786"/>
         <source>Open Directory</source>
         <translation>Открыть каталог</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1892"/>
+        <location filename="../eko.cpp" line="1882"/>
         <source>Use Alt key to access main menu</source>
         <translation>Использовать клавишу Alt для доступа к главному меню</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1922"/>
+        <location filename="../eko.cpp" line="1912"/>
         <source>Temp directory</source>
         <translation>Временный каталог</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1928"/>
+        <location filename="../eko.cpp" line="1918"/>
         <source>Select</source>
         <translation>Выберите</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1955"/>
+        <location filename="../eko.cpp" line="1945"/>
         <source>Ogg vorbis quality on saving</source>
         <translation>Качество сохранения в Ogg Vorbis</translation>
     </message>
@@ -454,22 +454,22 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Линейное</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3685"/>
+        <location filename="../eko.cpp" line="3675"/>
         <source>samplerate: %1</source>
         <translation>частота оцифровки: %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3686"/>
+        <location filename="../eko.cpp" line="3676"/>
         <source>channels: %1</source>
         <translation>каналы: %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4022"/>
+        <location filename="../eko.cpp" line="4012"/>
         <source>RMS is %1 dB</source>
         <translation>RMS равна %1 дБ</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4554"/>
+        <location filename="../eko.cpp" line="4544"/>
         <source>?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -478,18 +478,18 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Какой канал?</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4413"/>
+        <location filename="../eko.cpp" line="4403"/>
         <source>Sine wave parameters</source>
         <translation>Параметры синусоиды</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4421"/>
+        <location filename="../eko.cpp" line="4411"/>
         <source>Frequency</source>
         <translation>Частота</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4433"/>
-        <location filename="../eko.cpp" line="4887"/>
+        <location filename="../eko.cpp" line="4423"/>
+        <location filename="../eko.cpp" line="4877"/>
         <source>Duration in seconds</source>
         <translation>Длительность в секундах</translation>
     </message>
@@ -498,19 +498,19 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Амплитуда во float</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4462"/>
-        <location filename="../eko.cpp" line="4916"/>
+        <location filename="../eko.cpp" line="4452"/>
+        <location filename="../eko.cpp" line="4906"/>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4463"/>
-        <location filename="../eko.cpp" line="4917"/>
+        <location filename="../eko.cpp" line="4453"/>
+        <location filename="../eko.cpp" line="4907"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4555"/>
+        <location filename="../eko.cpp" line="4545"/>
         <source>How many milliseconds?</source>
         <translation>Сколько миллисекунд?</translation>
     </message>
@@ -519,22 +519,22 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Фильтр</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1237"/>
+        <location filename="../eko.cpp" line="1227"/>
         <source>Delete (Del)</source>
         <translation>Удалить (Delete)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1316"/>
+        <location filename="../eko.cpp" line="1306"/>
         <source>Analyze</source>
         <translation>Анализ</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1337"/>
+        <location filename="../eko.cpp" line="1327"/>
         <source>Nav</source>
         <translation>Нав</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1343"/>
+        <location filename="../eko.cpp" line="1333"/>
         <source>Play looped on/off</source>
         <translation>Играть в петле вкл/выкл</translation>
     </message>
@@ -547,142 +547,142 @@ Do you want to overwrite?</source>
         <translation type="obsolete">К сохранённому месту</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1350"/>
+        <location filename="../eko.cpp" line="1340"/>
         <source>Next tab</source>
         <translation>Следующая вкладка</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1351"/>
+        <location filename="../eko.cpp" line="1341"/>
         <source>Prev tab</source>
         <translation>Предыдущая вкладка</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1352"/>
+        <location filename="../eko.cpp" line="1342"/>
         <source>Focus the Famous input field</source>
         <translation>Фокус в Знаменитое поле ввода</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1353"/>
+        <location filename="../eko.cpp" line="1343"/>
         <source>Focus the editor</source>
         <translation>Фокус в редактор</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1355"/>
+        <location filename="../eko.cpp" line="1345"/>
         <source>Fm</source>
         <translation>Фп</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1358"/>
+        <location filename="../eko.cpp" line="1348"/>
         <source>File operations</source>
         <translation>Действия над файлами</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1361"/>
+        <location filename="../eko.cpp" line="1351"/>
         <source>Create new directory</source>
         <translation>Создать новый каталог</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1362"/>
+        <location filename="../eko.cpp" line="1352"/>
         <source>Rename</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1363"/>
+        <location filename="../eko.cpp" line="1353"/>
         <source>Delete file</source>
         <translation>Удалить файл</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1365"/>
+        <location filename="../eko.cpp" line="1355"/>
         <source>File information</source>
         <translation>Сведения о файле</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1368"/>
+        <location filename="../eko.cpp" line="1358"/>
         <source>Full info</source>
         <translation>Полные сведения</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1371"/>
+        <location filename="../eko.cpp" line="1361"/>
         <source>Go to home dir</source>
         <translation>В домашний каталог</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1372"/>
+        <location filename="../eko.cpp" line="1362"/>
         <source>Refresh current dir</source>
         <translation>Обновить текущий каталог</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1374"/>
+        <location filename="../eko.cpp" line="1364"/>
         <source>Select by regexp</source>
         <translation>Отметить по регэкспу</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1375"/>
+        <location filename="../eko.cpp" line="1365"/>
         <source>Deselect by regexp</source>
         <translation>Снять выделение по регэкспу</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1378"/>
+        <location filename="../eko.cpp" line="1368"/>
         <source>View</source>
         <translation>Вид</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1381"/>
+        <location filename="../eko.cpp" line="1371"/>
         <source>Palettes</source>
         <translation>Палитры</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1389"/>
+        <location filename="../eko.cpp" line="1379"/>
         <source>Profiles</source>
         <translation>Профили</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1392"/>
+        <location filename="../eko.cpp" line="1382"/>
         <source>Save profile</source>
         <translation>Сохранить профиль</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1396"/>
+        <location filename="../eko.cpp" line="1386"/>
         <source>Toggle fullscreen</source>
         <translation>Переключить полноэкранный режим</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1397"/>
+        <location filename="../eko.cpp" line="1387"/>
         <source>Stay on top</source>
         <translation>Поверх других окон</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1400"/>
+        <location filename="../eko.cpp" line="1390"/>
         <source>Help</source>
         <translation>Помощь</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1408"/>
+        <location filename="../eko.cpp" line="1398"/>
         <source>NEWS</source>
         <translation>Новости</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1411"/>
+        <location filename="../eko.cpp" line="1401"/>
         <source>License</source>
         <translation>Лицензия</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1431"/>
+        <location filename="../eko.cpp" line="1421"/>
         <source>Transport</source>
         <translation>Транспорт</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1434"/>
+        <location filename="../eko.cpp" line="1424"/>
         <source>looped</source>
         <translation>петля</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1441"/>
+        <location filename="../eko.cpp" line="1431"/>
         <source>Current time: </source>
         <translation>Текущее время:</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1451"/>
+        <location filename="../eko.cpp" line="1441"/>
         <source>Ready</source>
         <translation>Готово</translation>
     </message>
@@ -691,67 +691,67 @@ Do you want to overwrite?</source>
         <translation type="obsolete">%1 сохранён</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1812"/>
+        <location filename="../eko.cpp" line="1802"/>
         <source>tune</source>
         <translation>ладить</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1823"/>
+        <location filename="../eko.cpp" line="1813"/>
         <source>Interface font</source>
         <translation>Шрифт интерфейса</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1840"/>
+        <location filename="../eko.cpp" line="1830"/>
         <source>Icons size</source>
         <translation>Размер иконок</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1861"/>
+        <location filename="../eko.cpp" line="1851"/>
         <source>UI style</source>
         <translation>Стиль интерфейса</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1865"/>
+        <location filename="../eko.cpp" line="1855"/>
         <source>Amplitude meter bar in dB</source>
         <translation>Показывать шкалу амплитуды в дБ</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1911"/>
+        <location filename="../eko.cpp" line="1901"/>
         <source>Interface</source>
         <translation>Интерфейс</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1940"/>
+        <location filename="../eko.cpp" line="1930"/>
         <source>Set default format for new files</source>
         <translation>Задать формат по умолчанию для новых файлов</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2013"/>
+        <location filename="../eko.cpp" line="2003"/>
         <source>Max undo items per file</source>
         <translation>Количество отмен на файл</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2022"/>
+        <location filename="../eko.cpp" line="2012"/>
         <source>Restore the last session on start-up</source>
         <translation>Загружать последнюю сессию при запуске</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2026"/>
+        <location filename="../eko.cpp" line="2016"/>
         <source>Override locale</source>
         <translation>Перекрыть локаль</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1869"/>
+        <location filename="../eko.cpp" line="1859"/>
         <source>Use traditional File Save/Open dialogs</source>
         <translation>Использовать традиционные окна Открыть/Сохранить</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="563"/>
+        <location filename="../eko.cpp" line="556"/>
         <source>FIF</source>
         <translation>ЗПВ</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="718"/>
+        <location filename="../eko.cpp" line="711"/>
         <source>text browser</source>
         <translation>смотрелка текста</translation>
     </message>
@@ -768,97 +768,97 @@ Do you want to overwrite?</source>
         <translation type="obsolete">СЕРВЕР JACK НЕ ЗАПУЩЕН! ЗАПУСТИТЕ ЕГО ВРУЧНУЮ И ПЕРЕЗАГРУЗИТЕ EKO!</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1235"/>
+        <location filename="../eko.cpp" line="1225"/>
         <source>Copy to new (default format)</source>
         <translation>Копировать в новый (с форматом по умолчанию)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1267"/>
+        <location filename="../eko.cpp" line="1257"/>
         <source>Silence</source>
         <translation>Тишина</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1270"/>
+        <location filename="../eko.cpp" line="1260"/>
         <source>Insert silence</source>
         <translation>Вставить тишину</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1271"/>
+        <location filename="../eko.cpp" line="1261"/>
         <source>Silence selection</source>
         <translation>Заглушить выделение ваще</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1274"/>
+        <location filename="../eko.cpp" line="1264"/>
         <source>Generate</source>
         <translation>Генератор</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1277"/>
+        <location filename="../eko.cpp" line="1267"/>
         <source>Sine wave</source>
         <translation>Синусоида</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1278"/>
+        <location filename="../eko.cpp" line="1268"/>
         <source>Noise</source>
         <translation>Шум</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1281"/>
+        <location filename="../eko.cpp" line="1271"/>
         <source>Channels</source>
         <translation>Каналы</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1284"/>
+        <location filename="../eko.cpp" line="1274"/>
         <source>Stereo to mono</source>
         <translation>Стерео в моно</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1285"/>
+        <location filename="../eko.cpp" line="1275"/>
         <source>Mono to stereo 50%</source>
         <translation>Моно в стерео 50%</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1286"/>
+        <location filename="../eko.cpp" line="1276"/>
         <source>Mono to stereo full</source>
         <translation>Моно в стерео по полной</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1287"/>
+        <location filename="../eko.cpp" line="1277"/>
         <source>5.1 to stereo</source>
         <translation>5.1 в стерео</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1288"/>
+        <location filename="../eko.cpp" line="1278"/>
         <source>5.1 to stereo (another algorhythm)</source>
         <translation>5.1 в стерео (другой алгоритм)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1291"/>
+        <location filename="../eko.cpp" line="1281"/>
         <source>Swap channels</source>
         <translation>Поменять каналы местами</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1292"/>
+        <location filename="../eko.cpp" line="1282"/>
         <source>Copy channel</source>
         <translation>Копировать канал</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1293"/>
+        <location filename="../eko.cpp" line="1283"/>
         <source>Mute channel</source>
         <translation>Заглушить канал</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1296"/>
+        <location filename="../eko.cpp" line="1286"/>
         <source>Fade</source>
         <translation>Фэйд</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1299"/>
+        <location filename="../eko.cpp" line="1289"/>
         <source>Fade in</source>
         <translation>Нарастание</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1300"/>
+        <location filename="../eko.cpp" line="1290"/>
         <source>Fade out</source>
         <translation>Затухание</translation>
     </message>
@@ -867,57 +867,57 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Усиление</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1306"/>
+        <location filename="../eko.cpp" line="1296"/>
         <source>Normalize</source>
         <translation>Нормализовать</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1319"/>
+        <location filename="../eko.cpp" line="1309"/>
         <source>RMS</source>
         <translation>RMS</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1320"/>
+        <location filename="../eko.cpp" line="1310"/>
         <source>Levels</source>
         <translation>Уровни</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1323"/>
+        <location filename="../eko.cpp" line="1313"/>
         <source>DC Offset</source>
         <translation>Сдвиг DC</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1326"/>
+        <location filename="../eko.cpp" line="1316"/>
         <source>Detect DC offset</source>
         <translation>Найти сдвиг DC</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1327"/>
+        <location filename="../eko.cpp" line="1317"/>
         <source>Fix DC offset manually</source>
         <translation>Исправить сдвиг DC вручную</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1328"/>
+        <location filename="../eko.cpp" line="1318"/>
         <source>Fix DC offset auto</source>
         <translation>Исправить сдвиг DC автоматически</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1331"/>
+        <location filename="../eko.cpp" line="1321"/>
         <source>Other</source>
         <translation>Другое</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1334"/>
+        <location filename="../eko.cpp" line="1324"/>
         <source>Reverse</source>
         <translation>Перевернуть</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1384"/>
+        <location filename="../eko.cpp" line="1374"/>
         <source>Themes</source>
         <translation>Темы</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1394"/>
+        <location filename="../eko.cpp" line="1384"/>
         <source>Show/hide FX Rack</source>
         <translation>Показать/спрятать стойку эффектов</translation>
     </message>
@@ -926,37 +926,37 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Качество переоцифровки при воспроизведении</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="939"/>
+        <location filename="../eko.cpp" line="929"/>
         <source>All (*);;WAV files (*.wav);;Compressed files (*.ogg *.flac *.mp3)</source>
         <translation>Все (*);;WAVы (*.wav);;Сжатыя файлы (*.ogg *.flac *.mp3)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1208"/>
+        <location filename="../eko.cpp" line="1198"/>
         <source>Export to MP3</source>
         <translation>Вывод в MP3</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1303"/>
+        <location filename="../eko.cpp" line="1293"/>
         <source>Dynamics</source>
         <translation>Динамика</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1307"/>
+        <location filename="../eko.cpp" line="1297"/>
         <source>Apply volume envelope</source>
         <translation>Применить огибающую динамики</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1308"/>
+        <location filename="../eko.cpp" line="1298"/>
         <source>Remove volume envelope</source>
         <translation>Удалить огибающую громкости</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1404"/>
+        <location filename="../eko.cpp" line="1394"/>
         <source>System check</source>
         <translation>Проверка системы</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1944"/>
+        <location filename="../eko.cpp" line="1934"/>
         <source>MP3 encode command</source>
         <translation>Команда для кодирования в MP3</translation>
     </message>
@@ -965,32 +965,32 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Паннер:</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="1991"/>
+        <location filename="../eko.cpp" line="1981"/>
         <source>MP3 and video decoder (restart EKO to apply):</source>
         <translation>Декодер для видео и MP3 (надо перезапустить EKO):</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2059"/>
+        <location filename="../eko.cpp" line="2049"/>
         <source>Common</source>
         <translation>Общие</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2071"/>
+        <location filename="../eko.cpp" line="2061"/>
         <source>Sound devices</source>
         <translation>Звуковые устройства</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2079"/>
+        <location filename="../eko.cpp" line="2069"/>
         <source>Output</source>
         <translation>Вывод</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2091"/>
+        <location filename="../eko.cpp" line="2081"/>
         <source>Input</source>
         <translation>Ввод</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2114"/>
+        <location filename="../eko.cpp" line="2104"/>
         <source>Mono recording mode</source>
         <translation>Режим записи моно</translation>
     </message>
@@ -999,264 +999,264 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Смешивать оба канала</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="737"/>
+        <location filename="../eko.cpp" line="730"/>
         <source>&lt;b&gt;EKO %1 @ http://semiletov.org/eko&lt;/b&gt;&lt;br&gt;or &lt;i&gt;https://github.com/psemiletov/eko&lt;/i&gt;&lt;br&gt;by Peter Semiletov (tea@list.ru)&lt;br&gt;read the Manual under the &lt;i&gt;learn&lt;/i&gt; tab!</source>
         <translation>&lt;b&gt;EKO %1 @ http://semiletov.org/eko&lt;/b&gt;&lt;br&gt;и &lt;i&gt;https://github.com/psemiletov/eko&lt;/i&gt;&lt;br&gt;разработчик Петр Семилетов (tea@list.ru)&lt;br&gt;читайте руководство на вкладке &lt;i&gt;узнать&lt;/i&gt;!</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2121"/>
+        <location filename="../eko.cpp" line="2111"/>
         <source>Use left channel</source>
         <translation>Использовать левый канал</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2122"/>
+        <location filename="../eko.cpp" line="2112"/>
         <source>Use right channel</source>
         <translation>Использовать правый канал</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2137"/>
+        <location filename="../eko.cpp" line="2127"/>
         <source>Buffer size (in frames)</source>
         <translation>Размер буфера (в кадрах)</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2166"/>
+        <location filename="../eko.cpp" line="2156"/>
         <source>Monitor input</source>
         <translation>Мониторить вход</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2200"/>
+        <location filename="../eko.cpp" line="2190"/>
         <source>Assign</source>
         <translation>Назначить</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2201"/>
+        <location filename="../eko.cpp" line="2191"/>
         <source>Remove</source>
         <translation>Удалить привязку</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2215"/>
+        <location filename="../eko.cpp" line="2205"/>
         <source>Keyboard</source>
         <translation>Клавиатура</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2358"/>
+        <location filename="../eko.cpp" line="2348"/>
         <source>learn</source>
         <translation>узнать</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2398"/>
+        <location filename="../eko.cpp" line="2388"/>
         <source>%1 - saved</source>
         <translation>%1 - сохранён</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2400"/>
+        <location filename="../eko.cpp" line="2390"/>
         <source>Cannot save %1</source>
         <translation>Не могу сохранить %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2798"/>
-        <location filename="../eko.cpp" line="2856"/>
-        <location filename="../eko.cpp" line="3100"/>
-        <location filename="../eko.cpp" line="3293"/>
+        <location filename="../eko.cpp" line="2788"/>
+        <location filename="../eko.cpp" line="2846"/>
+        <location filename="../eko.cpp" line="3090"/>
+        <location filename="../eko.cpp" line="3283"/>
         <source>Enter the name</source>
         <translation>Введите имя</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2799"/>
-        <location filename="../eko.cpp" line="2857"/>
-        <location filename="../eko.cpp" line="3101"/>
-        <location filename="../eko.cpp" line="3294"/>
+        <location filename="../eko.cpp" line="2789"/>
+        <location filename="../eko.cpp" line="2847"/>
+        <location filename="../eko.cpp" line="3091"/>
+        <location filename="../eko.cpp" line="3284"/>
         <source>Name:</source>
         <translation>Имя:</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2800"/>
+        <location filename="../eko.cpp" line="2790"/>
         <source>new_directory</source>
         <translation>новый_каталог</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2858"/>
+        <location filename="../eko.cpp" line="2848"/>
         <source>new_session</source>
         <translation>новая сессия</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2929"/>
+        <location filename="../eko.cpp" line="2919"/>
         <source>Name</source>
         <translation>Имя</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2940"/>
+        <location filename="../eko.cpp" line="2930"/>
         <source>Go</source>
         <translation>Перейти</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2943"/>
+        <location filename="../eko.cpp" line="2933"/>
         <source>Home</source>
         <translation>Домой</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2946"/>
+        <location filename="../eko.cpp" line="2936"/>
         <source>Refresh</source>
         <translation>Освежить</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2947"/>
+        <location filename="../eko.cpp" line="2937"/>
         <source>Operations</source>
         <translation>Действия</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="2976"/>
+        <location filename="../eko.cpp" line="2966"/>
         <source>Save as</source>
         <translation>Сохранить как</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3012"/>
+        <location filename="../eko.cpp" line="3002"/>
         <source>&lt;b&gt;Bookmarks&lt;/b&gt;</source>
         <translation>&lt;b&gt;Закладки&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3052"/>
+        <location filename="../eko.cpp" line="3042"/>
         <source>manage</source>
         <translation>зырить</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3102"/>
+        <location filename="../eko.cpp" line="3092"/>
         <source>new</source>
         <translation>новый</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3131"/>
+        <location filename="../eko.cpp" line="3121"/>
         <source>Are you sure to delete
 %1?</source>
         <translation>Вы уверены, что хотите удалить
 %1?</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3175"/>
+        <location filename="../eko.cpp" line="3165"/>
         <source>file name: %1</source>
         <translation>имя файла: %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3176"/>
+        <location filename="../eko.cpp" line="3166"/>
         <source>size: %1 kbytes</source>
         <translation>размер: %1 kbytes</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3177"/>
+        <location filename="../eko.cpp" line="3167"/>
         <source>created: %1</source>
         <translation>создан: %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3178"/>
+        <location filename="../eko.cpp" line="3168"/>
         <source>modified: %1</source>
         <translation>изменен: %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3295"/>
+        <location filename="../eko.cpp" line="3285"/>
         <source>new_profile</source>
         <translation>новый профиль</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3478"/>
+        <location filename="../eko.cpp" line="3468"/>
         <source>Error!</source>
         <translation>Ошибка!</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3479"/>
+        <location filename="../eko.cpp" line="3469"/>
         <source>Something wrong!
  Try to select another sound port[s] at Tune - Sound options page, or release the sound device from another application use.</source>
         <translation>Что-то не так
 Попробуйте выбрать другие звуковые порты в Ладить - Звуковые устройства, либо звук используется другой программой.</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="3553"/>
+        <location filename="../eko.cpp" line="3543"/>
         <source>Cannot open the temporary file with the recorded sound.</source>
         <translation>Не могу открыть временный файл с записанным звуком.</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4233"/>
+        <location filename="../eko.cpp" line="4223"/>
         <source>Normalize to dB</source>
         <translation>Нормализовать к дБ</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4234"/>
+        <location filename="../eko.cpp" line="4224"/>
         <source>dB:</source>
         <translation>дБ:</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4335"/>
-        <location filename="../eko.cpp" line="4363"/>
+        <location filename="../eko.cpp" line="4325"/>
+        <location filename="../eko.cpp" line="4353"/>
         <source>Which channel?</source>
         <translation>Который канал?</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4445"/>
-        <location filename="../eko.cpp" line="4899"/>
+        <location filename="../eko.cpp" line="4435"/>
+        <location filename="../eko.cpp" line="4889"/>
         <source>Amplitude in dB</source>
         <translation>Амплитуда в дБ</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4773"/>
+        <location filename="../eko.cpp" line="4763"/>
         <source>average level in samples = %1</source>
         <translation>средний уровень в сэмплах = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4774"/>
+        <location filename="../eko.cpp" line="4764"/>
         <source>average level in dB = %1</source>
         <translation>средний уровень в дБ = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4775"/>
+        <location filename="../eko.cpp" line="4765"/>
         <source>max level in samples = %1</source>
         <translation>наибольший уровень в сэмплах = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4776"/>
+        <location filename="../eko.cpp" line="4766"/>
         <source>max level in dB = %1</source>
         <translation>наибольший уровень в дБ = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4777"/>
+        <location filename="../eko.cpp" line="4767"/>
         <source>min level in samples = %1</source>
         <translation>наименьший уровень в сэмплах = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4778"/>
+        <location filename="../eko.cpp" line="4768"/>
         <source>min level in dB = %1</source>
         <translation>наименьший уровень в дБ = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4803"/>
+        <location filename="../eko.cpp" line="4793"/>
         <source>DC offset in samples = %1</source>
         <translation>Смещение DC в сэмплах = %1</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4813"/>
+        <location filename="../eko.cpp" line="4803"/>
         <source>fix DC offset</source>
         <translation>исправить смещение DC</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4813"/>
+        <location filename="../eko.cpp" line="4803"/>
         <source>Offset in samples:</source>
         <translation>Смещение в сэмплах:</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4866"/>
+        <location filename="../eko.cpp" line="4856"/>
         <source>Noise parameters</source>
         <translation>Параметры шума</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4874"/>
+        <location filename="../eko.cpp" line="4864"/>
         <source>Type</source>
         <translation>Тип</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4876"/>
+        <location filename="../eko.cpp" line="4866"/>
         <source>White</source>
         <translation>Белый</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="4877"/>
+        <location filename="../eko.cpp" line="4867"/>
         <source>Pink</source>
         <translation>Розовый, как фламинго</translation>
     </message>
@@ -1265,48 +1265,48 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Коричневый</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5097"/>
+        <location filename="../eko.cpp" line="5074"/>
         <source>&lt;b&gt;Press Stop to stop recording!&lt;/b&gt;</source>
         <translation>&lt;b&gt;Нажмите Стоп чтобы остановить запись!&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5149"/>
+        <location filename="../eko.cpp" line="5126"/>
         <source>There is no plugin file</source>
         <translation>Нет файла плагина</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5458"/>
-        <location filename="../eko.cpp" line="5476"/>
+        <location filename="../eko.cpp" line="5435"/>
+        <location filename="../eko.cpp" line="5453"/>
         <source>FFMPEG is not installed</source>
         <translation>FFMPEG не установлен</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5461"/>
-        <location filename="../eko.cpp" line="5479"/>
+        <location filename="../eko.cpp" line="5438"/>
+        <location filename="../eko.cpp" line="5456"/>
         <source>FFMPEG is installed, video files and MP3 import: enabled</source>
         <translation>FFMPEG установлен, импортирование видеофайлов и MP3: включено</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5466"/>
-        <location filename="../eko.cpp" line="5484"/>
+        <location filename="../eko.cpp" line="5443"/>
+        <location filename="../eko.cpp" line="5461"/>
         <source>Mplayer is not installed</source>
         <translation>Mplayer не установлен</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5469"/>
-        <location filename="../eko.cpp" line="5487"/>
+        <location filename="../eko.cpp" line="5446"/>
+        <location filename="../eko.cpp" line="5464"/>
         <source>Mplayer is installed, video files and MP3 import: enabled</source>
         <translation>Mplayer установлен, импортирование видеофайлов и MP3: включено</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5499"/>
-        <location filename="../eko.cpp" line="5511"/>
+        <location filename="../eko.cpp" line="5476"/>
+        <location filename="../eko.cpp" line="5488"/>
         <source>Input latency: %1 ms</source>
         <translation>Входная задержка: % мс</translation>
     </message>
     <message>
-        <location filename="../eko.cpp" line="5500"/>
-        <location filename="../eko.cpp" line="5512"/>
+        <location filename="../eko.cpp" line="5477"/>
+        <location filename="../eko.cpp" line="5489"/>
         <source>Output latency: %1 ms</source>
         <translation>Выходная задержка: % мс</translation>
     </message>
@@ -1314,33 +1314,38 @@ Do you want to overwrite?</source>
 <context>
     <name>CFxDelay</name>
     <message>
-        <location filename="../fxset.cpp" line="304"/>
+        <location filename="../fxset.cpp" line="312"/>
         <source>Simple Delay</source>
         <translation>Простая задержка</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="305"/>
+        <location filename="../fxset.cpp" line="320"/>
         <source>Delay</source>
         <translation>Задержка</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="305"/>
+        <location filename="../fxset.cpp" line="320"/>
         <source>Delay module</source>
         <translation>Модуль задержки</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="311"/>
+        <location filename="../fxset.cpp" line="326"/>
         <source>Delayed signal level</source>
         <translation>Уровень задержанного сигнала</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="326"/>
+        <location filename="../fxset.cpp" line="341"/>
         <source>Time (seconds)</source>
         <translation>Время (секунды)</translation>
     </message>
     <message>
         <source>Time (mseconds)</source>
         <translation type="obsolete">Время</translation>
+    </message>
+    <message>
+        <location filename="../fxset.h" line="113"/>
+        <source>Simple delay</source>
+        <translation>Простая задержка</translation>
     </message>
 </context>
 <context>
@@ -1350,12 +1355,12 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Жесть овердрайв/дисторшн</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="787"/>
+        <location filename="../fxset.cpp" line="854"/>
         <source>Jest&apos;</source>
         <translation>Жесть</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="789"/>
+        <location filename="../fxset.cpp" line="856"/>
         <source>&lt;b&gt;Jest&apos;&lt;/b&gt;</source>
         <translation>&lt;b&gt;Жесть&lt;/b&gt;</translation>
     </message>
@@ -1368,32 +1373,33 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Жесть советский перегруз</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="785"/>
+        <location filename="../fxset.cpp" line="848"/>
+        <location filename="../fxset.h" line="225"/>
         <source>Jest&apos; (overdrive/dist)</source>
         <translation>Жесть (овердрайв/дисторшн)</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="789"/>
+        <location filename="../fxset.cpp" line="856"/>
         <source>&lt;i&gt;Soviet peregrooz pedal&lt;/i&gt;</source>
         <translation>&lt;i&gt;Советская примочка перегруза&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="801"/>
+        <location filename="../fxset.cpp" line="868"/>
         <source>Gain</source>
         <translation>Порог</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="819"/>
+        <location filename="../fxset.cpp" line="886"/>
         <source>Drive</source>
         <translation>Драйв</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="836"/>
+        <location filename="../fxset.cpp" line="903"/>
         <source>Tone</source>
         <translation>Тон</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="855"/>
+        <location filename="../fxset.cpp" line="922"/>
         <source>Output level</source>
         <translation>Выход</translation>
     </message>
@@ -1401,12 +1407,12 @@ Do you want to overwrite?</source>
 <context>
     <name>CFxMetaluga</name>
     <message>
-        <location filename="../fxset.cpp" line="599"/>
+        <location filename="../fxset.cpp" line="622"/>
         <source>Metaluga</source>
         <translation>Металюга</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="601"/>
+        <location filename="../fxset.cpp" line="624"/>
         <source>&lt;b&gt;Metaluga&lt;/b&gt;</source>
         <translation>&lt;b&gt;Металюга&lt;/b&gt;</translation>
     </message>
@@ -1415,32 +1421,33 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Металюга: примочка овердрайва/дисторшна</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="597"/>
+        <location filename="../fxset.cpp" line="616"/>
+        <location filename="../fxset.h" line="180"/>
         <source>Metaluga (overdrive/dist pedal)</source>
         <translation>Металюга (овердрайв/дисторшн)</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="601"/>
+        <location filename="../fxset.cpp" line="624"/>
         <source>&lt;i&gt;Overdrive/distortion pedal&lt;/i&gt;</source>
         <translation>&lt;i&gt;Овердрайв/дисторшн примочка&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="613"/>
+        <location filename="../fxset.cpp" line="636"/>
         <source>Gain</source>
         <translation>Порог</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="631"/>
+        <location filename="../fxset.cpp" line="654"/>
         <source>Drive</source>
         <translation>Драйв</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="649"/>
+        <location filename="../fxset.cpp" line="672"/>
         <source>Tone</source>
         <translation>Тон</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="668"/>
+        <location filename="../fxset.cpp" line="690"/>
         <source>Output level</source>
         <translation>Выход</translation>
     </message>
@@ -1457,14 +1464,82 @@ Do you want to overwrite?</source>
     </message>
 </context>
 <context>
+    <name>CFxPresets</name>
+    <message>
+        <location filename="../fxpresets.cpp" line="20"/>
+        <source>Menu</source>
+        <translation>Меню</translation>
+    </message>
+    <message>
+        <location filename="../fxpresets.cpp" line="29"/>
+        <source>Banks</source>
+        <translation>Банки</translation>
+    </message>
+    <message>
+        <location filename="../fxpresets.cpp" line="36"/>
+        <source>Bank new</source>
+        <translation>Новый банк</translation>
+    </message>
+    <message>
+        <location filename="../fxpresets.cpp" line="37"/>
+        <source>Bank load</source>
+        <translation>Загрузить банк</translation>
+    </message>
+    <message>
+        <location filename="../fxpresets.cpp" line="38"/>
+        <source>Bank save</source>
+        <translation>Сохранить банк</translation>
+    </message>
+    <message>
+        <location filename="../fxpresets.cpp" line="39"/>
+        <source>Bank save as</source>
+        <translation>Сохранить банк как</translation>
+    </message>
+    <message>
+        <location filename="../fxpresets.cpp" line="41"/>
+        <source>Preset save</source>
+        <translation>Сохранить пресет</translation>
+    </message>
+    <message>
+        <location filename="../fxpresets.cpp" line="42"/>
+        <source>Preset save as</source>
+        <translation>Сохранить пресет как</translation>
+    </message>
+    <message>
+        <location filename="../fxpresets.cpp" line="101"/>
+        <source>Save File</source>
+        <translation>Сохранить файл</translation>
+    </message>
+    <message>
+        <location filename="../fxpresets.cpp" line="115"/>
+        <source>Open File</source>
+        <translation>Открыть файл</translation>
+    </message>
+    <message>
+        <location filename="../fxpresets.cpp" line="127"/>
+        <source>Save preset as</source>
+        <translation>Сохранить пресет как</translation>
+    </message>
+    <message>
+        <location filename="../fxpresets.cpp" line="128"/>
+        <source>Name:</source>
+        <translation>Имя:</translation>
+    </message>
+</context>
+<context>
     <name>CFxRack</name>
     <message>
-        <location filename="../fxrack.cpp" line="169"/>
+        <location filename="../fxrack.cpp" line="172"/>
+        <source>Inserts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../fxrack.cpp" line="205"/>
         <source>Select</source>
         <translation>Выберите</translation>
     </message>
     <message>
-        <location filename="../fxrack.cpp" line="169"/>
+        <location filename="../fxrack.cpp" line="205"/>
         <source>Available effects</source>
         <translation>Доступные эффекты</translation>
     </message>
@@ -1472,12 +1547,12 @@ Do you want to overwrite?</source>
 <context>
     <name>CFxRackWindow</name>
     <message>
-        <location filename="../document.cpp" line="1708"/>
+        <location filename="../document.cpp" line="1713"/>
         <source>Apply</source>
         <translation>Применить</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1741"/>
+        <location filename="../document.cpp" line="1746"/>
         <source>Volume</source>
         <translation>Громкость</translation>
     </message>
@@ -1486,7 +1561,7 @@ Do you want to overwrite?</source>
         <translation type="obsolete">Панорама</translation>
     </message>
     <message>
-        <location filename="../document.cpp" line="1756"/>
+        <location filename="../document.cpp" line="1761"/>
         <source>Mixer</source>
         <translation>Микшер</translation>
     </message>
@@ -1498,27 +1573,27 @@ Do you want to overwrite?</source>
 <context>
     <name>CFxSimpleAmp</name>
     <message>
-        <location filename="../fxset.cpp" line="79"/>
+        <location filename="../fxset.cpp" line="87"/>
         <source>Simple amplifier</source>
         <translation>Простой усилок</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="81"/>
+        <location filename="../fxset.h" line="44"/>
         <source>Simple Amp</source>
         <translation>Простой усилок</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="83"/>
+        <location filename="../fxset.cpp" line="92"/>
         <source>&lt;b&gt;Simple amplifier&lt;/b&gt;</source>
         <translation>&lt;b&gt;Усилок&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="83"/>
+        <location filename="../fxset.cpp" line="92"/>
         <source>&lt;i&gt;Simple amplifier module&lt;/i&gt;</source>
         <translation>&lt;i&gt;Модуль простейшего усиления сигнала&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="95"/>
+        <location filename="../fxset.cpp" line="106"/>
         <source>Input gain: </source>
         <translation>Входной порог:</translation>
     </message>
@@ -1563,47 +1638,48 @@ Do you want to overwrite?</source>
 <context>
     <name>CFxSimpleFilter</name>
     <message>
-        <location filename="../fxset.cpp" line="431"/>
+        <location filename="../fxset.cpp" line="481"/>
+        <location filename="../fxset.h" line="140"/>
         <source>Simple Filter</source>
         <translation>Простой фильтр</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="432"/>
+        <location filename="../fxset.cpp" line="486"/>
         <source>Filter</source>
         <translation>Фильтр</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="432"/>
+        <location filename="../fxset.cpp" line="486"/>
         <source>Multi-mode filter module</source>
         <translation>Модуль многорежимного фильтра</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="437"/>
+        <location filename="../fxset.cpp" line="491"/>
         <source>Mode:</source>
         <translation>Режим:</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="440"/>
+        <location filename="../fxset.cpp" line="494"/>
         <source>Lowpass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="441"/>
+        <location filename="../fxset.cpp" line="495"/>
         <source>Highpass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="442"/>
+        <location filename="../fxset.cpp" line="496"/>
         <source>Bandpass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="456"/>
+        <location filename="../fxset.cpp" line="510"/>
         <source>Cut-off freq (hZ)</source>
         <translation>Частота среза (hZ)</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="473"/>
+        <location filename="../fxset.cpp" line="527"/>
         <source>Resonance</source>
         <translation>Резонанс</translation>
     </message>
@@ -1633,24 +1709,24 @@ Do you want to overwrite?</source>
 <context>
     <name>CFxSimpleOverdrive</name>
     <message>
-        <location filename="../fxset.cpp" line="199"/>
-        <location filename="../fxset.cpp" line="201"/>
-        <location filename="../fxset.cpp" line="203"/>
+        <location filename="../fxset.cpp" line="210"/>
+        <location filename="../fxset.cpp" line="217"/>
+        <location filename="../fxset.h" line="76"/>
         <source>Simple Overdrive</source>
         <translation>Простой овердрайв</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="203"/>
+        <location filename="../fxset.cpp" line="217"/>
         <source>Simple overdrive module</source>
         <translation>Простой модуль перегруза</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="211"/>
+        <location filename="../fxset.cpp" line="225"/>
         <source>Gain</source>
         <translation>Порог</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="226"/>
+        <location filename="../fxset.cpp" line="240"/>
         <source>Output level: </source>
         <translation>Выходной уровень:</translation>
     </message>
@@ -1658,24 +1734,24 @@ Do you want to overwrite?</source>
 <context>
     <name>CFxVynil</name>
     <message>
-        <location filename="../fxset.cpp" line="958"/>
-        <location filename="../fxset.cpp" line="960"/>
-        <location filename="../fxset.cpp" line="961"/>
+        <location filename="../fxset.cpp" line="1068"/>
+        <location filename="../fxset.cpp" line="1075"/>
+        <location filename="../fxset.h" line="259"/>
         <source>Vynil Taste</source>
         <translation>Вкус винила</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="961"/>
+        <location filename="../fxset.cpp" line="1075"/>
         <source>Scratches generator module</source>
         <translation>Модуль генератора царапин</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="965"/>
+        <location filename="../fxset.cpp" line="1079"/>
         <source>Amount</source>
         <translation>Количество</translation>
     </message>
     <message>
-        <location filename="../fxset.cpp" line="983"/>
+        <location filename="../fxset.cpp" line="1097"/>
         <source>Scratches signal level</source>
         <translation>Уровень сигнала царапин</translation>
     </message>
@@ -1734,8 +1810,8 @@ Do you want to overwrite?</source>
 <context>
     <name>CTioProxy</name>
     <message>
-        <location filename="../tio.cpp" line="654"/>
-        <location filename="../tio.cpp" line="661"/>
+        <location filename="../tio.cpp" line="633"/>
+        <location filename="../tio.cpp" line="640"/>
         <source>saving of this format is not supported</source>
         <translation>сохранение этого формата не поддерживается</translation>
     </message>
