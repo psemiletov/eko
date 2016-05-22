@@ -482,11 +482,15 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
   if (! other)
      return;
 
+  size_t pos_frames_corrected = pos_frames;
+  if (pos_frames > length_frames)
+     pos_frames_corrected = length_frames;
+
   if (samplerate != other->samplerate) //TEST IT!
      {
       //qDebug() << "TEST IT!";
       CFloatBuffer *fb = other->resample (samplerate);
-      paste_at (fb, pos_frames);
+      paste_at (fb, pos_frames_corrected);
       delete fb;
       return;
      }
@@ -512,7 +516,7 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
   //из старого буфера в новый, копируем все по позицию position_in_frames 
   for (size_t ch = 0; ch < channels; ch++)
       {
-       memcpy (sum->buffer[ch], buffer[ch], pos_frames * sizeof (float));
+       memcpy (sum->buffer[ch], buffer[ch], pos_frames_corrected * sizeof (float));
       }
   
 
@@ -520,19 +524,24 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
 
   for (size_t ch = 0; ch < channels; ch++)
       {
-       memcpy (sum->buffer[ch] + pos_frames, temp_buffer->buffer[ch], 
+       memcpy (sum->buffer[ch] + pos_frames_corrected, temp_buffer->buffer[ch], 
                temp_buffer->length_frames * sizeof (float));
       }
 
  //перематываем новый в позицию position_in_frames + temp_buffer->float_buffer->length_frames и
  // копируем в него остаток старого буфера
 
-  size_t tail = length_frames - pos_frames;
+  size_t tail = length_frames - pos_frames_corrected;
+
+  cout << "tail: " << tail <<  endl;
+  cout  << "pos_frames: " << pos_frames_corrected << endl;
+  //qDebug() << "temp_buffer->length_frames: " << pos_frames;
+  
 
   for (size_t ch = 0; ch < channels; ch++)
       {
-       memcpy (sum->buffer[ch] + pos_frames + temp_buffer->length_frames, 
-               buffer[ch] + pos_frames, 
+       memcpy (sum->buffer[ch] + pos_frames_corrected + temp_buffer->length_frames, 
+               buffer[ch] + pos_frames_corrected, 
                tail * sizeof (float));
       }
           
@@ -541,7 +550,7 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
   delete sum;
   delete temp_buffer;
   
-  offset = pos_frames;
+  offset = pos_frames_corrected;
 }
 
 
