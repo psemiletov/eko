@@ -4332,14 +4332,13 @@ void CEKO::fn_copy_channel()
          
   if (channel > d->wave_edit->waveform->fb->channels)
      return;
-     
-     
+          
   
   delete sound_clipboard;
   
   sound_clipboard = new CFloatBuffer (d->wave_edit->waveform->fb->length_frames, 1);
   memcpy (sound_clipboard->buffer[0], 
-          d->wave_edit->waveform->fb->buffer[channel], 
+          d->wave_edit->waveform->fb->buffer[channel - 1], 
           d->wave_edit->waveform->fb->length_frames * sizeof (float));
 }
 
@@ -4364,7 +4363,7 @@ void CEKO::fn_mute_channel()
 
   d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
 
-  memset (d->wave_edit->waveform->fb->buffer[channel], 0, 
+  memset (d->wave_edit->waveform->fb->buffer[channel - 1], 0, 
           d->wave_edit->waveform->fb->length_frames * sizeof (float));  
   
   d->wave_edit->waveform->magic_update();
