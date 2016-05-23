@@ -321,8 +321,7 @@ main window callbacks
   
   void fn_copy_channel();
   void fn_mute_channel();
-
-
+  
   void fn_fade_out();
   void fn_fade_in();
 

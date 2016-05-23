@@ -303,10 +303,11 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
   if (play_r)  
      {
       if (dsp->temp_float_buffer->channels == 2)
-         memcpy (pchannels[1], dsp->temp_float_buffer->buffer[1], frameCount * sizeof (float));
+          memcpy (pchannels[1], dsp->temp_float_buffer->buffer[1], frameCount * sizeof (float));
       }      
   else
-      memset (pchannels[1], 0, frameCount * sizeof (float));
+      if (dsp->temp_float_buffer->channels == 2)
+         memset (pchannels[1], 0, frameCount * sizeof (float));
    
   
   return paContinue; 	
