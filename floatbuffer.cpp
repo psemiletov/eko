@@ -192,7 +192,7 @@ void CFloatBuffer::copy_channel_to_pos (CFloatBuffer *other, size_t ch_from, siz
   if (reminder < size)
      return;
   
-   memcpy (other->buffer[ch_to] + offset_to, buffer[ch_from] + offset_from, size * sizeof (float));
+  memcpy (other->buffer[ch_to] + offset_to, buffer[ch_from] + offset_from, size * sizeof (float));
 }
 
 

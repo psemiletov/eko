@@ -4338,9 +4338,18 @@ void CEKO::fn_copy_channel()
   delete sound_clipboard;
   
   sound_clipboard = new CFloatBuffer (d->wave_edit->waveform->fb->length_frames, 1);
-  memcpy (sound_clipboard->buffer[0], 
-          d->wave_edit->waveform->fb->buffer[channel - 1], 
-          d->wave_edit->waveform->fb->length_frames * sizeof (float));
+ // memcpy (sound_clipboard->buffer[0], 
+   //       d->wave_edit->waveform->fb->buffer[channel - 1], 
+     //     d->wave_edit->waveform->fb->length_frames * sizeof (float));
+     
+  
+  d->wave_edit->waveform->fb->copy_channel_to_pos (sound_clipboard, channel - 1, 0,
+                            0, d->wave_edit->waveform->fb->length_frames, 0);
+    
+     
+  sound_clipboard->copy_params (d->wave_edit->waveform->fb);
+  sound_clipboard->channels = 1;
+    
 }
 
 
