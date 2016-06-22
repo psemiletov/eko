@@ -1,14 +1,14 @@
 _____________________________________________________
        ===== NEWS ABOUT EKO ====                 
 
-                   EKO 5.1.0, April 2016                         
+                   EKO 5.2.0, April 22 2016                         
 _____________________________________________________
 
 http://semiletov.org/eko (stable ver. with win32 builds)
 https://github.com/psemiletov/eko (development ver.)
 _____________________________________________________
 
-   Hi. This release features FX presets engine, and the new effect Vynil Taste that simulates vynil plate noises.
+   Channel handling fixes, some GUI improvements.
    
    Stay tuned.
 
