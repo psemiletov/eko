@@ -1920,10 +1920,12 @@ void CWaveform::prepare_image()
   if (frames_per_section == 0)
      return;
 
+
+
   size_t sections = get_section_to() - get_section_from();
   int image_height = height();
   int channel_height = image_height / fb->channels;
-  
+
   if (minmaxes)
      delete minmaxes;
 
@@ -1976,6 +1978,17 @@ void CWaveform::prepare_image()
   painter.setPen (cl_waveform_foreground);
     
   img.fill (cl_waveform_background.rgb()); 
+  
+  //check if empty
+  if (fb->length_frames == 32)
+     {
+      painter.drawLine (QPoint (0, 0), QPoint (width(), height()));
+      painter.drawLine (QPoint (0, height()), QPoint (width(), 0));
+     
+      waveform_image = img;
+      return;
+     }
+
 
 //draw amplitude bars    
   for (int ch = 0; ch < fb->channels; ch++)    
