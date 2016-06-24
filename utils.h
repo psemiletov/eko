@@ -11,6 +11,7 @@ Peter Semiletov
 #include <QFileInfo>
 #include <QStringList>
 #include <QAction>
+#include <QTime>
 
 #include <cmath>
 #include <limits>
@@ -64,9 +65,13 @@ QByteArray file_load (const QString &fileName);
 
 
 QString change_file_ext (const QString &s, const QString &ext);
-//QString get_insert_image (const QString &file_name, const QString &full_path, const QString &markup_mode);
 
+QStringList read_dir_files (const QString &path);
 
+float get_value_with_default (const QStringRef &val, float def);
+size_t get_value_with_default (const QStringRef &val, size_t def);
+int get_value_with_default (const QStringRef &val, int def);
+QString get_value_with_default (const QStringRef &val, const QString &def);
 
 inline int get_value (int total, int perc)
 {
@@ -182,5 +187,29 @@ QAction* menu_add_item (QObject *obj,
                       const QString &iconpath = ""
                      );
 
+
+inline QString frames_to_time_str (size_t frames, size_t samplerate)
+{
+  size_t msecs = (float) frames / samplerate * 1000;
+
+  QTime a (0, 0);
+  a = a.addMSecs ((int) msecs);       
+         
+ return a.toString ("hh:mm:ss.zzz");  
+}
+
+inline size_t msecs_to_frames (size_t msecs, size_t samplerate)
+{
+  return samplerate * msecs / 1000;
+}
+
+
+inline QTime frames_to_time (size_t frames, size_t samplerate)
+{
+  size_t msecs = (float) frames / samplerate * 1000;
+  QTime a (0, 0);
+  a = a.addMSecs ((int) msecs);
+  return a;
+}
 
 #endif
