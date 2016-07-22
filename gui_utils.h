@@ -10,6 +10,7 @@
 #include <QDialog>
 #include <QListWidget>
 
+
 class CTextListWindow: public QDialog
 {
   Q_OBJECT
@@ -48,16 +49,6 @@ void create_menu_from_dir_dir (QObject *handler,
                                const char *method
                                );
 
-
-
-QImage image_scale_by (const QImage &source,
-                       bool by_side,
-                       int value,
-                       Qt::TransformationMode mode);
-
-
-//QString mod_to_string (Qt::KeyboardModifiers k);
-//QString keycode_to_string (int k);
 
 QLineEdit* new_line_edit (QBoxLayout *layout, const QString &label, const QString &def_value);
 QSpinBox* new_spin_box (QBoxLayout *layout, const QString &label, int min, int max, int value, int step = 1);
