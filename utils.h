@@ -16,6 +16,7 @@ Peter Semiletov
 #include <cmath>
 #include <limits>
 
+
 class CFilesList: public QObject
 {
 public:
@@ -39,39 +40,44 @@ public:
 };
 
 
-QString hash_keyval_to_string (const QHash<QString, QString> &h);
-QString hash_get_val (QHash<QString, QString> &h, const QString &key, const QString &def_val);
-
-QString file_get_ext (const QString &file_name);
-
-bool file_exists (const QString &fileName);
-void qstring_list_print (const QStringList &l);
-
 bool qstring_save (const QString &fileName, const QString &data, const char *enc = "UTF-8");
 QString qstring_load (const QString &fileName, const char *enc = "UTF-8");
 
-QMap <QString, QString> map_load_keyval (const QString &fname, const QString &sep);
-QString map_keyval_to_string (const QMap <QString, QString> &h, const QString &sep);
-
-
-QStringList read_dir_entries (const QString &path);
-QHash<QString, QString> hash_load (const QString &fname);
-QHash<QString, QString> hash_load_keyval (const QString &fname);
-QHash<QString, QString> stringlist_to_hash (const QStringList &l);
-QString hash_keyval_to_string (QHash<QString, QString> *h);
-bool is_image (const QString &filename);
 QString string_between (const QString &source, const QString &sep1, const QString &sep2);
-QByteArray file_load (const QString &fileName);
+QString str_from_locale (const char *s);
 
-
-QString change_file_ext (const QString &s, const QString &ext);
-
-QStringList read_dir_files (const QString &path);
 
 float get_value_with_default (const QStringRef &val, float def);
 size_t get_value_with_default (const QStringRef &val, size_t def);
 int get_value_with_default (const QStringRef &val, int def);
 QString get_value_with_default (const QStringRef &val, const QString &def);
+
+QString hash_keyval_to_string (const QHash<QString, QString> &h);
+QString hash_get_val (QHash<QString, QString> &h, const QString &key, const QString &def_val);
+
+QMap <QString, QString> map_load_keyval (const QString &fname, const QString &sep);
+QString map_keyval_to_string (const QMap <QString, QString> &h, const QString &sep);
+
+QHash<QString, QString> hash_load (const QString &fname);
+QHash<QString, QString> hash_load_keyval (const QString &fname);
+QHash<QString, QString> stringlist_to_hash (const QStringList &l);
+
+
+QByteArray file_load (const QString &fileName);
+
+QString file_get_ext (const QString &file_name);
+QString change_file_ext (const QString &s, const QString &ext);
+
+bool file_exists (const QString &fileName);
+
+QStringList read_dir_entries (const QString &path);
+QStringList read_dir_files (const QString &path);
+
+void qstring_list_print (const QStringList &l);
+bool is_image (const QString &filename);
+
+size_t round_to (size_t value, size_t to, bool inc);
+
 
 inline int get_value (int total, int perc)
 {
@@ -109,24 +115,15 @@ inline QString get_file_path (const QString &fileName)
 }
 
 
-double input_double_value (const QString &caption, const QString &lbl,
-                           double minval, double maxval, double defval, double step);
-
-
-
-size_t round_to (size_t value, size_t to, bool inc);
-
-
-
 inline bool float_greater_than (float a, float b)
 {
-    return (a - b) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * std::numeric_limits<double>::epsilon());
+  return (a - b) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * std::numeric_limits<double>::epsilon());
 }
 
 
 inline bool float_less_than (float a, float b)
 {
-    return (b - a) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * std::numeric_limits<double>::epsilon());
+  return (b - a) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * std::numeric_limits<double>::epsilon());
 }
 
 
@@ -170,22 +167,11 @@ inline float conv_to_db (float v, float v_min, float v_max, float range_negative
 }
 
 
-QString str_from_locale (const char *s);
-
-
 inline float scale_val (float val, float from_min, float from_max, float to_min, float to_max)
 {
   return (val - from_min) * (to_max - to_min) / 
           (from_max - from_min) + to_min;
 }
-
-QAction* menu_add_item (QObject *obj,
-                      QMenu *menu,
-                      const QString &caption,
-                      const char *method,
-                      const QString &shortkt = "",
-                      const QString &iconpath = ""
-                     );
 
 
 inline QString frames_to_time_str (size_t frames, size_t samplerate)
@@ -197,6 +183,7 @@ inline QString frames_to_time_str (size_t frames, size_t samplerate)
          
  return a.toString ("hh:mm:ss.zzz");  
 }
+
 
 inline size_t msecs_to_frames (size_t msecs, size_t samplerate)
 {

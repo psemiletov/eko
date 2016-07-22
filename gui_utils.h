@@ -21,6 +21,13 @@ public:
 };
 
 
+QAction* menu_add_item (QObject *obj,
+                        QMenu *menu,
+                        const QString &caption,
+                        const char *method,
+                        const QString &shortkt = "",
+                        const QString &iconpath = ""
+                      );
 
 void create_menu_from_list (QObject *handler,
                             QMenu *menu,
@@ -55,6 +62,8 @@ QImage image_scale_by (const QImage &source,
 QLineEdit* new_line_edit (QBoxLayout *layout, const QString &label, const QString &def_value);
 QSpinBox* new_spin_box (QBoxLayout *layout, const QString &label, int min, int max, int value, int step = 1);
 
+double input_double_value (const QString &caption, const QString &lbl,
+                           double minval, double maxval, double defval, double step);
 
 QComboBox* new_combobox (QBoxLayout *layout,
                          const QString &label,

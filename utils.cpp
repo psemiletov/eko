@@ -17,15 +17,6 @@ Peter Semiletov
 #include "utils.h"
 
 
-bool file_exists (const QString &fileName)
-{
-  if (fileName.isNull() || fileName.isEmpty())
-     return false;
-
-  return QFile::exists (fileName);
-}
-
-
 QString qstring_load (const QString &fileName, const char *enc)
 {
   QFile file (fileName);
@@ -37,13 +28,6 @@ QString qstring_load (const QString &fileName, const char *enc)
   in.setCodec (enc);
 
   return in.readAll();
-}
-
-
-void qstring_list_print (const QStringList &l)
-{
-  foreach (QString s, l)
-          qDebug() << s;
 }
 
 
@@ -61,23 +45,109 @@ bool qstring_save (const QString &fileName, const QString &data, const char *enc
 }
 
 
-QStringList read_dir_entries (const QString &path)
+QString string_between (const QString &source,
+                        const QString &sep1,
+                        const QString &sep2)
 {
-  QDir dir (path);
-  return dir.entryList (QDir::AllEntries | QDir::NoDotAndDotDot);
+  QString result;
+  int pos1 = source.indexOf (sep1);
+  if (pos1 == -1)
+     return result;
+
+  int pos2 = source.indexOf (sep2, pos1 + sep1.size());
+  if (pos2 == -1)
+     return result;
+
+  pos1 += sep1.size();
+  
+  result = source.mid (pos1, pos2 - pos1);
+  return result;
 }
 
 
-QString file_get_ext (const QString &file_name)
+QString str_from_locale (const char *s)
 {
-  if (file_name.isNull() || file_name.isEmpty())
-      return QString();
+  QTextCodec *cd = QTextCodec::codecForLocale();
+  QByteArray encodedString = s;
+  
+  return cd->toUnicode(encodedString);
+}
 
-  int i = file_name.lastIndexOf (".");
-  if (i == -1)
-      return QString();
 
-  return file_name.mid (i + 1).toLower();
+QString get_value_with_default (const QStringRef &val, const QString &def)
+{
+  QString s = val.toString();
+  if (! s.isEmpty())
+    return s;
+  else
+      return def;
+}
+
+
+int get_value_with_default (const QStringRef &val, int def)
+{
+  QString s = val.toString();
+  if (! s.isEmpty())
+    return s.toInt();
+  else
+      return def;
+}
+
+
+size_t get_value_with_default (const QStringRef &val, size_t def)
+{
+  QString s = val.toString();
+  if (! s.isEmpty())
+    return (size_t) val.toInt();
+  else
+      return def;
+}
+
+
+float get_value_with_default (const QStringRef &val, float def)
+{
+  QString s = val.toString();
+  if (! s.isEmpty())
+    return s.toFloat();
+  else
+      return def;
+}
+
+
+QString hash_keyval_to_string (const QHash <QString, QString> &h)
+{
+  QStringList l;
+
+  foreach (QString s, h.keys())
+          l.prepend (s.append ("=").append (h.value (s)));
+
+  return l.join ("\n").trimmed();
+}
+
+
+QString map_keyval_to_string (const QMap <QString, QString> &h, const QString &sep)
+{
+  QStringList l;
+
+  foreach (QString s, h.keys())
+          l.prepend (s.append (sep).append (h.value (s)));
+
+  return l.join ("\n").trimmed();
+}
+
+
+QString hash_get_val (QHash<QString, QString> &h,
+                      const QString &key,
+                      const QString &def_val)
+{
+  QString result = h.value (key);
+  if (result.isNull() || result.isEmpty())
+     {
+      result = def_val;
+      h.insert (key, def_val);
+     }
+
+  return result;
 }
 
 
@@ -147,78 +217,6 @@ QMap <QString, QString> map_load_keyval (const QString &fname, const QString &se
 }
 
 
-bool is_image (const QString &filename)
-{
-  QList <QByteArray> a = QImageReader::supportedImageFormats();
-
-  foreach (QByteArray x, a)
-          {
-           QString t (x.data());
-           if (filename.endsWith (t.prepend ("."), Qt::CaseInsensitive))
-              return true;
-          } 
-
-  return false;
-}
-
-
-QString hash_keyval_to_string (const QHash <QString, QString> &h)
-{
-  QStringList l;
-
-  foreach (QString s, h.keys())
-          l.prepend (s.append ("=").append (h.value (s)));
-
-  return l.join ("\n").trimmed();
-}
-
-
-QString map_keyval_to_string (const QMap <QString, QString> &h, const QString &sep)
-{
-  QStringList l;
-
-  foreach (QString s, h.keys())
-          l.prepend (s.append (sep).append (h.value (s)));
-
-  return l.join ("\n").trimmed();
-}
-
-
-QString hash_get_val (QHash<QString, QString> &h,
-                      const QString &key,
-                      const QString &def_val)
-{
-  QString result = h.value (key);
-  if (result.isNull() || result.isEmpty())
-     {
-      result = def_val;
-      h.insert (key, def_val);
-     }
-
-  return result;
-}
-
-
-QString string_between (const QString &source,
-                        const QString &sep1,
-                        const QString &sep2)
-{
-  QString result;
-  int pos1 = source.indexOf (sep1);
-  if (pos1 == -1)
-     return result;
-
-  int pos2 = source.indexOf (sep2, pos1 + sep1.size());
-  if (pos2 == -1)
-     return result;
-
-  pos1 += sep1.size();
-  
-  result = source.mid (pos1, pos2 - pos1);
-  return result;
-}
-
-
 QByteArray file_load (const QString &fileName)
 {
   QFile file (fileName);
@@ -229,6 +227,19 @@ QByteArray file_load (const QString &fileName)
 
   b = file.readAll();
   return b;
+}
+
+
+QString file_get_ext (const QString &file_name)
+{
+  if (file_name.isNull() || file_name.isEmpty())
+      return QString();
+
+  int i = file_name.lastIndexOf (".");
+  if (i == -1)
+      return QString();
+
+  return file_name.mid (i + 1).toLower();
 }
 
 
@@ -247,22 +258,27 @@ QString change_file_ext (const QString &s, const QString &ext)
 }
 
 
-bool file_is_writable (const QString &fname)
+bool file_exists (const QString &fileName)
 {
-  QFile f (fname);  
-  return f.isWritable();
+  if (fileName.isNull() || fileName.isEmpty())
+     return false;
+
+  return QFile::exists (fileName);
 }
 
 
-bool file_is_readable (const QString &fname)
+QStringList read_dir_entries (const QString &path)
 {
-  QFile f (fname);  
-  return f.isReadable();
+  QDir dir (path);
+  return dir.entryList (QDir::AllEntries | QDir::NoDotAndDotDot);
 }
 
 
-
-
+QStringList read_dir_files (const QString &path)
+{
+  QDir dir (path);
+  return dir.entryList (QDir::Files | QDir::NoDotAndDotDot);
+}
 void CFilesList::iterate (QFileInfo &fi)
 {
   if (fi.isDir())
@@ -327,79 +343,8 @@ size_t round_to (size_t value, size_t to, bool inc)
 }
 
 
-QString str_from_locale (const char *s)
+void qstring_list_print (const QStringList &l)
 {
-
-  QTextCodec *cd = QTextCodec::codecForLocale();
-  QByteArray encodedString = s;
-  
-  return cd->toUnicode(encodedString);
-}
-
-
-QAction* menu_add_item (QObject *obj,
-                      QMenu *menu,
-                      const QString &caption,
-                      const char *method,
-                      const QString &shortkt,
-                      const QString &iconpath
-                     )
-{
-  QAction *act = new QAction (caption, obj);
-
-  if (! shortkt.isEmpty())
-     act->setShortcut (shortkt);
-
-  if (! iconpath.isEmpty())
-     act->setIcon (QIcon (iconpath));
-
-  obj->connect (act, SIGNAL(triggered()), obj, method);
-  menu->addAction (act);
-  return act;
-}
-
-QStringList read_dir_files (const QString &path)
-{
-  QDir dir (path);
-  return dir.entryList (QDir::Files | QDir::NoDotAndDotDot);
-}
-
-
-QString get_value_with_default (const QStringRef &val, const QString &def)
-{
-  QString s = val.toString();
-  if (! s.isEmpty())
-    return s;
-  else
-      return def;
-}
-
-
-int get_value_with_default (const QStringRef &val, int def)
-{
-  QString s = val.toString();
-  if (! s.isEmpty())
-    return s.toInt();
-  else
-      return def;
-}
-
-
-size_t get_value_with_default (const QStringRef &val, size_t def)
-{
-  QString s = val.toString();
-  if (! s.isEmpty())
-    return (size_t) val.toInt();
-  else
-      return def;
-}
-
-
-float get_value_with_default (const QStringRef &val, float def)
-{
-  QString s = val.toString();
-  if (! s.isEmpty())
-    return s.toFloat();
-  else
-      return def;
+  foreach (QString s, l)
+          qDebug() << s;
 }
