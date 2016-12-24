@@ -585,7 +585,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
               
            selected = true;   
           }
-       
+      
      
       update();
 
@@ -1675,29 +1675,6 @@ void CFxRackWindow::dial_gain_valueChanged (int value)
    dsp->gain = f;
 }
 
-/*
-void CFxRackWindow::dial_pan_valueChanged (int value)
-{
-   //0 - left, 0.5 - middle, 1 - right
-   
-   if (value == 0)
-      {
-       dsp->pan = 0.5;
-       return;
-      }
-   
-   if (value < 0)
-      {
-       int v = (100 - value * -1);
-       dsp->pan = get_fvalue (0.5f, v);
-      }
-   
-   if (value > 0)
-      {
-       dsp->pan = get_fvalue (0.5f, value) + 0.5f;
-      }
-}
-*/
 
 CFxRackWindow::CFxRackWindow()
 {
@@ -1991,7 +1968,7 @@ void CWaveform::prepare_image()
 
 
 //draw amplitude bars    
-  for (int ch = 0; ch < fb->channels; ch++)    
+  for (size_t ch = 0; ch < fb->channels; ch++)    
   for (size_t x = 0; x < sections; x++)
       {
        int ymax = channel_height - (int)((minmaxes->values[ch]->max_values->samples[x] + 1) * 0.5f * channel_height);
@@ -2001,8 +1978,8 @@ void CWaveform::prepare_image()
        QPoint p2 (x, ymax + channel_height * ch);
  
        painter.drawLine (p1, p2);
-       
-       /*
+    
+    /*   
        if ((minmaxes->values[ch]->max_values->samples[x] >= 1) || (minmaxes->values[ch]->min_values->samples[x] <= -1))
           {
            painter.setPen (QColor (Qt::red));
@@ -2011,7 +1988,7 @@ void CWaveform::prepare_image()
           }
           
        painter.setPen (cl_waveform_foreground);
-       */   
+     */
       }        
 
 
@@ -2027,7 +2004,7 @@ void CWaveform::prepare_image()
    
   //int ten = get_value (channel_height / 2, 10) / 2;  
        
-  for (int ch = 0; ch < fb->channels; ch++)    
+  for (size_t ch = 0; ch < fb->channels; ch++)    
       {
       
       //draw axis

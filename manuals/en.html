@@ -27,7 +27,7 @@ Menus:<br>
 <a href="#mni_nav">Nav</a><br>
 <a href="#mni_fm">Fm</a><br>
 <a href="#mni_view">View</a><br>
-<a href="#mni_prefs">Tune tab (Preferences)</a><br>
+<a href="#mni_prefs">Options tab (Preferences)</a><br>
 <a href="#mni_notes">Notes</a><br>
 <a href="#mni_author">Other author's projects</a><br>
 <a href="#mni_donate">Donate</a>
@@ -56,7 +56,7 @@ Menus:<br>
 <a name="mni_start"></a>
 <h3>Basic setup</h3>
 
-<p>Before using EKO, set up the input and output devices/ports at <b>Tune - Sound devices</b> page. If recording or playback does not work (usually the error log is "Invalid number of channels"), try another option. It's important to choose the proper pair of the ports. They are must be on the same sound card, and use the same API. For example, on my M-Audio Audiophile 24/96 I use the ALSA API device "M-Audio Audio Audiophile 24/96: ICE1712 multi (hw:0,0)" as the input and the output device. On Win32 you can try, for example, MME API device "Sound Mapper - Input" and "Sound Mapper - Output", or some DirectX options.</p>
+<p>Before using EKO, set up the input and output devices/ports at <b>Options - Sound devices</b> page. If recording or playback does not work (usually the error log is "Invalid number of channels"), try another option. It's important to choose the proper pair of the ports. They are must be on the same sound card, and use the same API. For example, on my M-Audio Audiophile 24/96 I use the ALSA API device "M-Audio Audio Audiophile 24/96: ICE1712 multi (hw:0,0)" as the input and the output device. On Win32 you can try, for example, MME API device "Sound Mapper - Input" and "Sound Mapper - Output", or some DirectX options.</p>
 
 <p>The "Invalid number of channels" error message can also appear if the sound device is currently used by another application (web browser, etc.).</p>
 
@@ -79,11 +79,11 @@ Menus:<br>
 <a name="mni_recording"></a>
 <h3>Recording</h3>
 
-<p>To record a sound file, use <b>File - Record</b>, Press "Stop" button when done. To set up sound format, go to the <b>Tune - Common</b> page, and there press "Set default format for new files" button. Due to some Portaudio issues with ALSA, EKO opens the input sound device in stereo mode. But then, if the "mono recording" option is selected, on saving file EKO takes just one channel, left or right. Customize this on <b>Tune - Sound devices</b>.</p>
+<p>To record a sound file, use <b>File - Record</b>, Press "Stop" button when done. To set up sound format, go to the <b>Options - Common</b> page, and there press "Set default format for new files" button. Due to some Portaudio issues with ALSA, EKO opens the input sound device in stereo mode. But then, if the "mono recording" option is selected, on saving file EKO takes just one channel, left or right. Customize this on <b>Options - Sound devices</b>.</p>
 
-<p>When recording, EKO uses temporary file at the temporary directory, system's by default. You can redefine EKO temp directory at <b>Tune - Common</b>. So the maximum length of the recording depends on the free space of the disk partition where your temporary directory is located.</p>
+<p>When recording, EKO uses temporary file at the temporary directory, system's by default. You can redefine EKO temp directory at <b>Options - Common</b>. So the maximum length of the recording depends on the free space of the disk partition where your temporary directory is located.</p>
 
-<p>To hear what you record while recording turn on the <b>Tune - Sound devices - Monitor input</b> option.</p>
+<p>To hear what you record while recording turn on the <b>Options - Sound devices - Monitor input</b> option.</p>
 
 <br>
 <a name="mni_mixer"></a>
@@ -106,7 +106,7 @@ Menus:<br>
 
 <p>2. <b>The toolbars area</b>. Toolbars can be parked at the any side of EKO window. Positions are saved between sessions. To turn the toolbar on and off, use the context menu for the toolbar (right click on the toolbar). If no toolbar is visible, do the right click on the menu bar.</p>
 
-<p>3. <b>The tabbed area</b>. It contains four main tabs - <b>edit</b>, <b>manage</b>, <b>tune</b> and <b>learn</b>. <b>Edit</b> - that where you see opened documents. <b>Manage</b> - the built-in file manager. <b>Tune</b> - here you can change EKO preferences. All changes will be applied immediately. <b>Learn</b> - the built-in User manual. This one.</p>
+<p>3. <b>The tabbed area</b>. It contains four main tabs - <b>editor</b>, <b>files</b>, <b>options</b> and <b>manual</b>. <b>Editor</b> - that where you see opened documents. <b>Files</b> - the built-in file manager. <b>Options</b> - here you can change EKO preferences. All changes will be applied immediately. <b>Manual</b> - the built-in User manual. This one.</p>
 
 <p>4. <b>Logmemo</b>. It is the notification area. Destination: all warnings, information messages, etc.</p>
 
@@ -118,7 +118,7 @@ Menus:<br>
 <a name="mni_manager"></a>
 <h3>File manager</h3>
 
-<p>The EKO's file manager is hidden under the <b>manage</b> tab. It is not an additional bloatware tool, but the essential part of the editor. It replaces the standard File save/open dialogs (by the way, you can bring them back using <b>Tune &gt; Interface &gt; Use traditional File Save/Open dialogs</b> option).</p>
+<p>The EKO's file manager is hidden under the <b>Files</b> tab. It is not an additional bloatware tool, but the essential part of the editor. It replaces the standard File save/open dialogs (by the way, you can bring them back using <b>Options &gt; Interface &gt; Use traditional File Save/Open dialogs</b> option).</p>
 
 <p>Let's see on the shining force of EKO's file manager.</p>
 
@@ -145,13 +145,13 @@ Menus:<br>
 <a name="mni_file"></a>
 <h3>File</h3>
 
-<p><b>New</b>. This menu item creates an empty file with parameters those defined under <b>Tune - Common - Set default format for new files</b>. EKO holds internally all sound data at 32-bit floating point sample values, and external conversion to other formats happens on saving or loading.</p>
+<p><b>New</b>. This menu item creates an empty file with parameters those defined under <b>Options - Common - Set default format for new files</b>. EKO holds internally all sound data at 32-bit floating point sample values, and external conversion to other formats happens on saving or loading.</p>
 
 <p><b>Open</b> - if you are using the build-in file manager, read the <a href="#mni_manager">File manager</a> chapter. Otherwise, use the standard "File open" dialog window.</p>
 
 <p>EKO supports many sound formats using the libsndfile library: WAV, AIFF, AU, RAW, PAF, SVX, NIST, VOC, IRCAM, W64, MAT4, MAT5, PVF, XI, HTK, SDS, AVR, SD2, FLAC, CAF, WVE, OGG and others. WAV PCM is supported from signed 8 bit up to 64 bit double, with any sample rate.</p>
 
-<p>EKO can open, at the read-only mode, MP3 and videofiles (as audio tracks). EKO uses the external tools for that, FFMPEG or Mplayer. You can select the decoder engine at <b>Tune - Common - MP3 and video decoder</b>. FFMPEG is faster. When open such files, EKO uses the temporary wav-file at the temporary directory that you need to set up at <b>Tune - Common - Temp directory</b>, so there are must be enough of available free space.
+<p>EKO can open, at the read-only mode, MP3 and videofiles (as audio tracks). EKO uses the external tools for that, FFMPEG or Mplayer. You can select the decoder engine at <b>Options - Common - MP3 and video decoder</b>. FFMPEG is faster. When open such files, EKO uses the temporary wav-file at the temporary directory that you need to set up at <b>Options - Common - Temp directory</b>, so there are must be enough of available free space.
 </p>
 
 <p>Opening the large videofiles consumes a much of time, because the decoder will decode, and EKO will calculate the sound peak data. So be patient.</p>
@@ -172,7 +172,7 @@ Menus:<br>
 
 <p><b>Import/Export &gt; Import from RAW</b> - allows to open any file as the sound data, using the manually selected data format.</p>
 
-<p><b>Import/Export &gt; Export to MP3</b> - encodes current document's sound data to the MP3-file using the external encoder defined by the command at <b>Tune - Common - MP3 encode command</b> parameter. LAME is used by default.</p>
+<p><b>Import/Export &gt; Export to MP3</b> - encodes current document's sound data to the MP3-file using the external encoder defined by the command at <b>Options - Common - MP3 encode command</b> parameter. LAME is used by default.</p>
 
 <p><b>Recent files</b>. From here you can open one of the dozen recently opened files.</p>
 
@@ -191,14 +191,14 @@ Menus:<br>
 
 <p><b>Copy to new</b>  - copy the selected data to the new file. The new file will have sound format as the source data.</p>
 
-<p><b>Copy to new (default format)</b>  - copy the selected data to the new file. The new file will have sound format as the default sound format for a new file (you can set it at the <b>Tune - Common</b>).</p>
+<p><b>Copy to new (default format)</b>  - copy the selected data to the new file. The new file will have sound format as the default sound format for a new file (you can set it at the <b>Options - Common</b>).</p>
 
 
 <br><br>
 <a name="mni_search"></a>
 <h3>Search</h3>
 
-<p>EKO has no dialog windows for the search. EKO uses the Famous input field (FIF) and menu-driven interface. FIF works in <b>Tune - Keyboard</b> and the manual panel. Type+enter=search, F3 - search next from the cursor position.</p>
+<p>EKO has no dialog windows for the search. EKO uses the Famous input field (FIF) and menu-driven interface. FIF works in <b>Options - Keyboard</b> and the manual panel. Type+enter=search, F3 - search next from the cursor position.</p>
 
 <br>
 <a name="mni_functions"></a>
@@ -248,7 +248,7 @@ Menus:<br>
 
 <br>
 <a name="mni_prefs"></a>
-<h3>Tune tab (Preferences)</h3>
+<h3>Options tab (Preferences)</h3>
 
 <p>On <b>Keyboard</b> tab you can assign the shortcuts with the menu items. To set the new hotkey, select a menu item from the list, then press the hotkey combination at the entry to the right from the list, and press <b>Assign</b> button. To remove the hotkey, select the menu item from the list and press <b>Remove</b> button. To re-assign the hotkey that already in use, do <b>Remove</b> for this shortcut first.</p>
 

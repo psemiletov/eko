@@ -228,9 +228,6 @@ public:
   void set_cursor_by_section (size_t section);
 
   size_t frames_per_section;
-
-  //size_t section_from;
-  //size_t section_to;
   
   size_t sections_total;
 

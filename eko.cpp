@@ -1,5 +1,5 @@
 /***************************************************************************
- *   2010-2015 by Peter Semiletov                                          *
+ *   2010-2016 by Peter Semiletov                                          *
  *   tea@list.ru                                                           *
 
 started at 25 July 2010
@@ -31,6 +31,7 @@ started at 25 July 2010
 #include <QPainter>
 #include <QInputDialog>
 #include <QMimeData>
+#include <QScrollArea>
 
 #include <QProxyStyle>
 #include <QProcess>
@@ -567,7 +568,7 @@ void CEKO::create_main_widget()
 
   mainSplitter->setStretchFactor (1, 1);
 
-  idx_tab_edit = main_tab_widget->addTab (tab_widget, tr ("edit"));
+  idx_tab_edit = main_tab_widget->addTab (tab_widget, tr ("editor"));
   setCentralWidget (main_widget);
 
   connect (tab_widget, SIGNAL(currentChanged(int)), this, SLOT(pageChanged(int)));
@@ -1803,7 +1804,7 @@ void CEKO::createOptions()
 {
   tab_options = new QTabWidget;
 
-  idx_tab_tune = main_tab_widget->addTab (tab_options, tr ("tune"));
+  idx_tab_tune = main_tab_widget->addTab (tab_options, tr ("options"));
   
   QWidget *page_interface = new QWidget (tab_options);
   QHBoxLayout *lt_h = new QHBoxLayout;
@@ -1902,15 +1903,20 @@ void CEKO::createOptions()
   page_interface->setLayout (page_interface_layout);
   page_interface->show();
 
-  tab_options->addTab (page_interface, tr ("Interface"));
+  //tab_options->addTab (page_interface, tr ("Interface"));
+  
+  QScrollArea *scra_interface = new QScrollArea;
+  scra_interface->setWidgetResizable (true);
+  scra_interface->setWidget (page_interface);
+
+  tab_options->addTab (scra_interface, tr ("Interface"));
+
 
   //////////
   
   QWidget *page_common = new QWidget (tab_options);
   QVBoxLayout *page_common_layout = new QVBoxLayout;
   page_common_layout->setAlignment (Qt::AlignTop);
-  
-  
   
   QHBoxLayout *hb_temp_path = new QHBoxLayout;
   QLabel *l_t = new QLabel (tr ("Temp directory"));
@@ -2048,9 +2054,16 @@ void CEKO::createOptions()
       
   
   page_common->setLayout (page_common_layout);
-  page_common->show();
 
-  tab_options->addTab (page_common, tr ("Common"));
+//  page_common->show();
+
+//  tab_options->addTab (page_common, tr ("Common"));
+
+  QScrollArea *scra_common = new QScrollArea;
+  scra_common->setWidgetResizable (true);
+  scra_common->setWidget (page_common);
+
+  tab_options->addTab (scra_common, tr ("Common"));
 
   
 /////////////
@@ -2060,9 +2073,15 @@ void CEKO::createOptions()
   page_soundev_layout->setAlignment (Qt::AlignTop);
 
   page_soundev->setLayout (page_soundev_layout);
-  page_soundev->show();
+  //page_soundev->show();
 
-  tab_options->addTab (page_soundev, tr ("Sound devices"));
+  //tab_options->addTab (page_soundev, tr ("Sound devices"));
+
+  QScrollArea *scra_sounddev = new QScrollArea;
+  scra_sounddev->setWidgetResizable (true);
+  scra_sounddev->setWidget (page_soundev);
+
+  tab_options->addTab (scra_sounddev, tr ("Sound devices"));
 
 
   QHBoxLayout *hb_soundev = new QHBoxLayout;
@@ -2349,7 +2368,7 @@ void CEKO::createManual()
 
   wd_man->setLayout (lv_t);
 
-  idx_tab_learn = main_tab_widget->addTab (wd_man, tr ("learn"));
+  idx_tab_learn = main_tab_widget->addTab (wd_man, tr ("manual"));
 }
 
 
@@ -3043,7 +3062,7 @@ void CEKO::createFman()
 
   fman_home();
   
-  idx_tab_fman = main_tab_widget->addTab (wd_fman, tr ("manage"));
+  idx_tab_fman = main_tab_widget->addTab (wd_fman, tr ("files"));
 }
 
 

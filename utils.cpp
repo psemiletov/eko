@@ -98,7 +98,7 @@ size_t get_value_with_default (const QStringRef &val, size_t def)
 {
   QString s = val.toString();
   if (! s.isEmpty())
-    return (size_t) val.toInt();
+    return (size_t) s.toInt();
   else
       return def;
 }
