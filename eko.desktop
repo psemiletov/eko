@@ -8,4 +8,4 @@ Categories=AudioVideo;Audio;AudioVideoEditing;
 Exec=eko %F
 StartupNotify=false
 Terminal=false
-MimeType=application/x-audacity-project;audio/aac;audio/ac3;audio/mp4;audio/x-ms-wma;video/mpeg;audio/flac;audio/x-flac;audio/mpeg;audio/basic;audio/x-aiff;audio/x-wav;application/ogg;audio/x-vorbis+ogg;
+MimeType=audio/aac;audio/ac3;audio/mp4;audio/x-ms-wma;audio/flac;audio/x-flac;audio/mpeg;audio/basic;audio/x-aiff;audio/x-wav;application/ogg;audio/x-vorbis+ogg;
