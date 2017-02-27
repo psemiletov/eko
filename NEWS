@@ -1,14 +1,14 @@
 _____________________________________________________
        ===== NEWS ABOUT EKO ====                 
 
-                   EKO 5.3.0, September 27 2016                         
+                   EKO 5.3.1, January 20 2017                         
 _____________________________________________________
 
 http://semiletov.org/eko (stable ver. with win32 builds)
 https://github.com/psemiletov/eko (development ver.)
 _____________________________________________________
 
-   Some GUI improvements and tabs captions.
+   Fixes - Qt4-compatibility again.
    
    Stay tuned.
 
