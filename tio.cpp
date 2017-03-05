@@ -80,7 +80,7 @@ CFloatBuffer* CTioPlainAudio::load (const QString &fname)
   //qDebug() << "MAX_INT = " << numeric_limits<int>::max();
 
 
-  qDebug() << "CTioPlainAudio::load - 2";
+  //qDebug() << "CTioPlainAudio::load - 2";
   
 
   return fb;

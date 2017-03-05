@@ -1263,19 +1263,26 @@ bool CDocument::save_with_name (const QString &fileName)
   QString fname = fileName;
   QString ext = file_get_ext (fileName);
   QString fext = file_formats->hextensions.value (fmt);
+ 
+  //int destfmt = file_formats->hextensions.key (ext);
+  
+//  qDebug() << "fext:" << fext;
   
   if (ext.isEmpty())
      fname = fname + "." + fext;
+  
+  //else
+    //  if (ext != fext)
   else
-      if (ext != fext)
-          fname = change_file_ext (fname, fext);
+      fname = change_file_ext (fname, fext);
 
   CTio *tio = holder->tio_handler.get_for_fname (fname);
   
   if (! tio)
      return false;
-
+ 
   tio->float_input_buffer = wave_edit->waveform->fb;
+  
 
   QTime tm;
   tm.start();
@@ -1293,6 +1300,10 @@ bool CDocument::save_with_name (const QString &fileName)
   int elapsed = tm.elapsed();
 
   file_name = fname;
+
+ // qDebug() << "wave_edit->waveform->fb->sndfile_format: " << wave_edit->waveform->fb->sndfile_format;
+
+  //wave_edit->waveform->fb->sndfile_format = destfmt;
 
   set_tab_caption (QFileInfo (file_name).fileName());
 
