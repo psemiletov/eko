@@ -1,4 +1,4 @@
-//VER 8
+//VER 9
 
 #include <iostream>
 #include <math.h>
@@ -359,7 +359,7 @@ CFloatBuffer* CFloatBuffer::convert_to_mono()
 
 //returns the resampled data as a new buffer
 //the source data remains untouched
-CFloatBuffer* CFloatBuffer::resample (size_t new_rate)
+CFloatBuffer* CFloatBuffer::resample (size_t new_rate, int resampler)
 {
   float ratio = (float) 1.0f * new_rate / samplerate; 
   size_t output_frames = (size_t) floor (length_frames * ratio);
@@ -377,7 +377,7 @@ CFloatBuffer* CFloatBuffer::resample (size_t new_rate)
        data.data_in = buffer[ch];
        data.data_out = tfb->buffer[ch];;
  
-       int error = src_simple (&data, SRC_SINC_BEST_QUALITY, 1);
+       int error = src_simple (&data, resampler, 1);
        if (error)
           {
            delete tfb;
@@ -457,14 +457,14 @@ void CFloatBuffer::copy_from (CFloatBuffer *other)
 }
 
 
-void CFloatBuffer::copy_from_w_resample (CFloatBuffer  *other)
+void CFloatBuffer::copy_from_w_resample (CFloatBuffer *other, int resampler)
 {
   if (! other || ! other->buffer[0])
     return;
 
   if (samplerate != other->samplerate) //TEST IT!
      {
-      CFloatBuffer *fb = other->resample (samplerate);
+      CFloatBuffer *fb = other->resample (samplerate, resampler);
       copy_from (fb);
       delete fb;
       return;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   2010 - 2016 by Peter Semiletov                                        *
+ *   2010 - 2017 by Peter Semiletov                                        *
  *   tea@list.ru                                                           *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -67,6 +67,8 @@ CDocumentHolder *documents;
 CFxRackWindow *wnd_fxrack;
 
 SRC_STATE *resampler;
+
+int resample_quality;
 
 int meter_cps;
 int meter_msecs_delay;
@@ -1210,7 +1212,7 @@ bool CDocument::open_file (const QString &fileName, bool set_fname)
 
   wave_edit->waveform->fb = ff;
     
-  ronly = tio->ronly;  
+  ronly = false;//tio->ronly;  
     
   if (set_fname)
      {
@@ -1250,15 +1252,14 @@ bool CDocument::save_with_name (const QString &fileName)
 {
  // qDebug() << "CDocument::save_with_name";
 
-  if (ronly)
+/*  if (ronly)
      {
       holder->log->log (tr ("cannot save %1 because of: %2")
                            .arg (fileName)
                            .arg ("read-only format"));
       return false;                     
-      
      }
-
+*/
   int fmt = wave_edit->waveform->fb->sndfile_format & SF_FORMAT_TYPEMASK;  
   QString fname = fileName;
   QString ext = file_get_ext (fileName);
@@ -1291,7 +1292,6 @@ bool CDocument::save_with_name (const QString &fileName)
      {
       holder->log->log (tr ("cannot save %1 because of: %2")
       //documents->log->log (tr ("cannot save %1 because of: %2")
-      
                            .arg (fname)
                            .arg (tio->error_string));
       return false;

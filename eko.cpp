@@ -82,6 +82,7 @@ public:
      
 };
 
+extern int resample_quality;
 
 extern QString g_fxpresets_path;
 
@@ -463,6 +464,8 @@ void CEKO::readSettings()
 
   fname_def_palette = settings->value ("fname_def_palette", ":/palettes/EKO").toString();
   
+  resample_quality = settings->value ("resample_quality", "0").toInt(); 
+  
   ogg_q = settings->value ("ogg_q", 0.5d).toDouble();
 
   QPoint pos = settings->value ("pos", QPoint (1, 1)).toPoint();
@@ -769,6 +772,10 @@ void CEKO::leaving_tune()
 {
   ogg_q = spb_ogg_q->value();
   settings->setValue ("ogg_q", ogg_q);
+  
+  resample_quality = spb_resample_quality->value();
+  settings->setValue ("resample_quality", resample_quality);
+  
   
   settings->setValue ("mp3_encode", ed_mp3_encode->text());
 }
@@ -2019,6 +2026,20 @@ void CEKO::createOptions()
   lt_maxundos->addWidget (l_maxundos);
   lt_maxundos->addWidget (spb_max_undos);
 
+  QHBoxLayout *lt_resample_quality = new QHBoxLayout;
+ 
+  QLabel *l_resample_quality = new QLabel (tr ("Resample quiality (0 - best, 4 - bad but fast)"));
+  spb_resample_quality = new QSpinBox;
+  spb_resample_quality->setValue (settings->value ("resample_quality", 0).toInt());
+  spb_resample_quality->setMinimum (0);
+  spb_resample_quality->setMaximum (4);
+  
+  //connect (spb_max_undos, SIGNAL(valueChanged (int )), this, SLOT(spb_max_undos_valueChanged (int )));
+
+  lt_resample_quality->addWidget (l_resample_quality);
+  lt_resample_quality->addWidget (spb_resample_quality);
+
+
   QCheckBox *cb_session_restore = new QCheckBox (tr ("Restore the last session on start-up"), tab_options);
   cb_session_restore->setCheckState (Qt::CheckState (settings->value ("session_restore", "0").toInt()));
   connect(cb_session_restore, SIGNAL(stateChanged (int )), this, SLOT(cb_session_restore (int )));
@@ -2041,6 +2062,10 @@ void CEKO::createOptions()
   page_common_layout->addLayout (h_proxy_video_decoder);
 
   page_common_layout->addLayout (hb_mp3_encode);
+
+
+
+  page_common_layout->addLayout (lt_resample_quality);
 
   page_common_layout->addLayout (lt_ogg_q);
 
@@ -3858,9 +3883,11 @@ void CEKO::file_change_format()
   d->wave_edit->waveform->fb->sndfile_format = 0;
   d->wave_edit->waveform->fb->sndfile_format = f | stype; 
   
+  d->ronly = false;
+  
   if (w->cmb_samplerate->currentText().toInt() != w->wf->fb->samplerate)
      {
-      CFloatBuffer *b = d->wave_edit->waveform->fb->resample (w->cmb_samplerate->currentText().toInt());
+      CFloatBuffer *b = d->wave_edit->waveform->fb->resample (w->cmb_samplerate->currentText().toInt(), resample_quality);
       delete d->wave_edit->waveform->fb;
       d->wave_edit->waveform->fb = b;
       d->wave_edit->waveform->magic_update();
@@ -4520,7 +4547,6 @@ void CEKO::generate_sine()
   float curphase = 0.0; // use M_PI/2 for cosine
   float incr = frequency * TWO_PI / new_document->wave_edit->waveform->fb->samplerate;
        
-  qDebug() << "okkkkk";     
          
   for (size_t i = 0; i < frames_count; i++)
       {

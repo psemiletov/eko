@@ -172,6 +172,8 @@ public:
 
   QComboBox *cmb_src;
   QDoubleSpinBox *spb_ogg_q;
+  
+  QSpinBox *spb_resample_quality; 
 
   QComboBox *cmb_sound_dev_out;
   QComboBox *cmb_sound_dev_in;

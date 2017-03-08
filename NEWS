@@ -1,14 +1,14 @@
 _____________________________________________________
        ===== NEWS ABOUT EKO ====                 
 
-                   EKO 5.3.2, March 5 2017                         
+                   EKO 5.3.3, March 8 2017                         
 _____________________________________________________
 
 http://semiletov.org/eko (stable ver. with win32 builds)
 https://github.com/psemiletov/eko (development ver.)
 _____________________________________________________
 
-   Fixes of saving in the different format, faster resampler.
+   More fixes. Resampler options has been added to the settings "Common" page. No "read-only" mode now - when the saving to the original format is not supported, EKO will save to WAV.
    
    Stay tuned.
 

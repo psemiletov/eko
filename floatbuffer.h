@@ -1,7 +1,7 @@
 #ifndef FLOATBUFFER_H
 #define FLOATBUFFER_H
 
-//VER 8
+//VER 9
 
 using namespace std;
 
@@ -70,13 +70,13 @@ public:
   CFloatBuffer* convert_to_stereo (bool full);
   CFloatBuffer* convert_to_mono();
 
-  CFloatBuffer* resample (size_t new_rate);
+  CFloatBuffer* resample (size_t new_rate, int resampler = 0);
 
   CFloatBuffer* delete_range (size_t frames_start, size_t frames_end);
 
   void copy_params (CFloatBuffer *fb);
   void copy_from (CFloatBuffer *other);
-  void copy_from_w_resample (CFloatBuffer  *other);
+  void copy_from_w_resample (CFloatBuffer *other, int resampler = 0);
 
   void paste_at (CFloatBuffer *other, size_t pos_frames);
 
