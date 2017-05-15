@@ -254,11 +254,20 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
              QPoint p1 (x, 1);
              QPoint p2 (x, 12);
 
+             
+             size_t minutes = (waveform->fb->length_frames / waveform->fb->samplerate) / 60;
+             //qDebug() << "minutes: " << minutes;
+
+             bool larger_than_hour = minutes > 60;
+             
              QTime t (0, 0);
              t = t.addSecs ((waveform->get_section_from() + x) / sections_per_second);       
 
              painter.drawLine (p1, p2);
-             painter.drawText (x + 2, 20, t.toString ("mm:ss") + "m");
+             if (! larger_than_hour)
+                painter.drawText (x + 2, 20, t.toString ("mm:ss") + "m");
+             else
+                painter.drawText (x + 2, 20, t.toString ("hh:mm:ss") + "m");
             }
       }        
 
