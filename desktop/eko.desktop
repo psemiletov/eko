@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=TEA
+Terminal=false
+Type=Application
+Icon=eko_icon
+Categories=Application;AudioVideo;Audio;
+StartupNotify=false
+MimeType=text/plain;
+NoDisplay=false
+Version=1.1
+Keywords=sound editor;sound;editor;
+Comment=Simple audio editor with mixer and realtime effects.
+Exec=eko %U

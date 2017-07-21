@@ -106,14 +106,55 @@ unix: {
        }
 
 
-isEmpty(PREFIX):PREFIX = /usr/local #path to install
-BINDIR = $$PREFIX/bin
-DATADIR = $$PREFIX
+       
+win32:{
 
-TARGET = eko
-target.path = $$BINDIR
+isEmpty(PREFIX) {
+PREFIX = /usr/local/bin
+}
 
-INSTALLS += target
+TARGET = bin/eko
+target.path = $$PREFIX
+}
+  
+
+unix:{
+
+isEmpty(PREFIX) {
+PREFIX = /usr/local
+}
+
+message(UNIX HERE)
+
+
+#old PREFIX compatibility hack
+#message($$replace(PREFIX, bin,))
+#message ($$PREFIX)
+PREFIX = $$replace(PREFIX, bin,)
+#message ($$PREFIX)
+#
+
+TARGET = bin/eko
+target.path = $$PREFIX/bin
+desktop.path=$$PREFIX/share/applications
+desktop.files=desktop/tea.desktop
+
+icon64.path = $$PREFIX/share/icons/hicolor/64x64/apps/
+icon64.files += icons/eko_icon.png
+}
+
+  
+       
+#BINDIR = $$PREFIX/bin
+#DATADIR = $$PREFIX
+
+#TARGET = eko
+#target.path = $$BINDIR
+
+INSTALLS += target desktop icon64
+
+#INSTALLS += target
+
 RESOURCES += eko.qrc
 TRANSLATIONS += translations/eko_ru.ts \
                 translations/eko_cs.ts
@@ -128,6 +169,7 @@ DISTFILES += ChangeLog \
     INSTALL \
     icons/* \
     palettes/* \
+    desktop/* \
     manuals/en.html \
     manuals/ru.html \
     translations/* \
@@ -136,7 +178,7 @@ DISTFILES += ChangeLog \
     themes/Smaragd/stylesheet.css \
     themes/TEA/stylesheet.css \
     themes/Turbo/stylesheet.css \
-    themes/Vegan/stylesheet.css
+    themes/Vegan/stylesheet.css    
 
 
 
