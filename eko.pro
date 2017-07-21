@@ -137,7 +137,7 @@ PREFIX = $$replace(PREFIX, bin,)
 TARGET = bin/eko
 target.path = $$PREFIX/bin
 desktop.path=$$PREFIX/share/applications
-desktop.files=desktop/tea.desktop
+desktop.files=desktop/eko.desktop
 
 icon64.path = $$PREFIX/share/icons/hicolor/64x64/apps/
 icon64.files += icons/eko_icon.png
