@@ -623,8 +623,11 @@ CFloatBuffer* CTioProxy::load (const QString &fname)
      {
       CTioPlainAudio *pa = new CTioPlainAudio (true);
       CFloatBuffer *fb = pa->load (temp_mp3_fname);
+      delete pa;
       return fb;
      }
+     
+  return 0;   
 }
 
 

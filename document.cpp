@@ -957,7 +957,7 @@ void CWaveform::delete_selected()
   if (! selected)
      return;
 
-  if ((frames_end() - frames_start() > fb->length_frames))
+  if (frames_end() - frames_start() > fb->length_frames)
      return;
 
   undo_take_shot (UNDO_DELETE);

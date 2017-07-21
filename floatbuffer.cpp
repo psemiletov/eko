@@ -230,7 +230,7 @@ void CFloatBuffer::pbuffer_reset()
   offset = 0;
   
   if (pbuffer)
-     delete pbuffer;
+     delete [] pbuffer;
   
   pbuffer = new float* [channels];
   
@@ -506,6 +506,8 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
   if (channels == other->channels)
      temp_buffer = other->clone();
  
+  if (! temp_buffer)
+     return;
 
   size_t new_buffer_frames_count = temp_buffer->length_frames + length_frames;
   
