@@ -3,7 +3,7 @@ Name:          eko
 Version:       5.3.4
 Release:        %mkrel 1
 Summary:       Eko is a small audio editor with mixer and realtime fx
-Group:         Editors
+Group:         Sound/Editors and Converters
 Vendor:        semiletov
 Distribution:  semiletov
 Packager:      Peter Semiletov <semiletov@gmail.com>
