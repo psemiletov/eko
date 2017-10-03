@@ -1,5 +1,5 @@
 /***************************************************************************
- *   2010-2016 by Peter Semiletov                                          *
+ *   2010-2017 by Peter Semiletov                                          *
  *   tea@list.ru                                                           *
 
 started at 25 July 2010

@@ -1,5 +1,5 @@
  /**************************************************************************
- *   2010-2016 by Peter Semiletov                                          *
+ *   2010-2017 by Peter Semiletov                                          *
  *   tea@list.ru                                                           *
  *                                                                         *
  ***************************************************************************/
@@ -132,37 +132,28 @@ public:
 
   QComboBox *cmb_fif;
   QCheckBox *cb_play_looped;
- 
   QComboBox *cmb_panner;
   
  
   QString man_search_value;
-
   QString opt_shortcuts_string_to_find;
-  QString fman_fname_to_find;
 
   QString dir_profiles;  
   QString dir_last;
   QString dir_config;
   QString dir_sessions;
-
   QString dir_scripts;
   QString dir_palettes;
+  QString dir_themes;
   
   QString fname_def_palette;
-
   QString fname_fif;
-
   QString fname_places_bookmarks;
-  QString dir_themes;
-
-
-
   QString fname_tempparamfile;
+  QString fman_fname_to_find;
 
   QLabel *l_status;
   QProgressBar *pb_status;
-
 
 
   QCheckBox *cb_altmenu;
