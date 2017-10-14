@@ -17,7 +17,7 @@ make install
 ===NOTE FOR PACKAGE MAINTAINERS===
 
 EKO after the compilation is a single binary file (with embeded resources). To override the 
-default installation path (/usr/local/bin) use:
+default installation path (/usr/local, with usr/local/bin for binary) use:
 
 qmake PREFIX=your_path
 make

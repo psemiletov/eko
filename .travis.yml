@@ -12,13 +12,13 @@ install:
     - source /opt/qt58/bin/qt58-env.sh
 
 script:
-  - qmake PREFIX=/usr/local
+  - qmake PREFIX=/usr
   - make -j4
   - sudo apt-get -y install checkinstall
   - sudo checkinstall --pkgname=app --pkgversion="1" --pkgrelease="1" --backup=no --fstrans=no --default --deldoc 
   - mkdir appdir ; cd appdir
   - dpkg -x ../app_1-1_amd64.deb . ; find .
-  - cp ../*.desktop .
+  - cp ../desktop/eko.desktop .
   - cp ../icons/eko_icon.png eko.png
   - cd .. 
   - wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" 
