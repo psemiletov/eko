@@ -1,7 +1,7 @@
 #based on Ercole 'ercolinux' Carpanetto package
 Name:          eko
 Version:       5.3.4
-Release:        %mkrel 1
+Release:       %mkrel 1
 Summary:       Eko is a small audio editor with mixer and realtime fx
 Group:         Sound/Editors and Converters
 Vendor:        semiletov
@@ -9,7 +9,7 @@ Distribution:  semiletov
 Packager:      Peter Semiletov <semiletov@gmail.com>
 URL:           http://semiletov.org/eko/
 Source:        http://semiletov.org/eko/dloads/eko-%{version}.tar.bz2
-License:       GPL V3
+License:       Public Domain
 ## AUTOBUILDREQ-BEGIN
 BuildRequires: glibc-devel
 BuildRequires: libgcc
