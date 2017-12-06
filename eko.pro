@@ -140,7 +140,7 @@ desktop.path=$$PREFIX/share/applications
 desktop.files=desktop/eko.desktop
 
 icon64.path = $$PREFIX/share/icons/hicolor/64x64/apps/
-icon64.files += icons/eko_icon.png
+icon64.files += icons/eko.png
 }
 
   

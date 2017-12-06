@@ -734,7 +734,7 @@ CEKO::CEKO()
   ui_update = false;
   
   setAcceptDrops (true);
-  qApp->setWindowIcon (QIcon (":/icons/eko_icon.png"));
+  qApp->setWindowIcon (QIcon (":/icons/eko.png"));
   log->log (tr ("<b>EKO %1 @ http://semiletov.org/eko</b><br>or <i>https://github.com/psemiletov/eko</i><br>by Peter Semiletov (tea@list.ru)<br>read the Manual under the <i>learn</i> tab!").arg (QString (VERSION_NUMBER)));
   
   idx_tab_edit_activate();
