@@ -1,13 +1,12 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=EKO
 Terminal=false
 Type=Application
 Icon=eko
-Categories=Application;AudioVideo;Audio;
+Categories=AudioVideo;Audio;
 StartupNotify=false
-MimeType=text/plain;
 NoDisplay=false
 Keywords=sound editor;sound;editor;
-Comment=Simple audio editor with mixer and realtime effects.
+Comment=Simple audio editor with mixer and realtime effects
+Comment[ru]=Редактор звука с микшером и эффектами
 Exec=eko %U
