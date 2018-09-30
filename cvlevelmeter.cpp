@@ -107,4 +107,3 @@ void CVLevelMeter::paintEvent (QPaintEvent *event)
  
   event->accept();  
 }
-

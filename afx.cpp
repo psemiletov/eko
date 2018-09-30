@@ -28,8 +28,7 @@ AFx::AFx()
   w_caption = new QWidget; 
   QVBoxLayout *vbl_caption = new QVBoxLayout;
   w_caption->setLayout (vbl_caption);
-  
-  
+    
   vbl_main->addWidget (presets);
   vbl_main->addWidget (w_caption);
   
@@ -40,14 +39,11 @@ AFx::AFx()
   vbl_caption->addWidget (l_subcaption);
 
   QString qstl = "QWidget#w_caption{"
-    "border-radius: 15px;"
-    "background-color: grey;}";
-  
+                 "border-radius: 15px;"
+                 "background-color: grey;}";
   
   w_caption->setObjectName ("w_caption");
   w_caption->setStyleSheet (qstl);
-  
-  
 }
 
 

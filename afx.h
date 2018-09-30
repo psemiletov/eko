@@ -23,7 +23,6 @@ enum FxState {
               };
 
 
-
 class AFx: public QObject
 {
   Q_OBJECT
@@ -34,7 +33,6 @@ public:
 
   bool bypass;
   bool realtime;
-
   bool ui_visible;
   
   CFloatBuffer *float_buffer;  //inner buffer for some purposes
@@ -64,7 +62,6 @@ public:
   
   virtual QString save_params_to_string() = 0;
   virtual void load_params_from_string (const QString &s) = 0;
-
   
   virtual void set_state (FxState s);
   virtual void reset_params (size_t srate, size_t ch);
@@ -76,13 +73,11 @@ public:
   virtual AFx* self_create() = 0;
 
   static QString get_modulename() {return QString ("AFx");};
- // static QString get_classname() {return QString ("AFx");};
  
 public slots:
 
   void slot_preset_changed (const QString &text);
   void slot_save_request();
-  
  
 };
 
