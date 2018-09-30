@@ -1,5 +1,5 @@
 /***************************************************************************
- *   2010 - 2017 by Peter Semiletov                                        *
+ *   2010-2018 by Peter Semiletov                                          *
  *   tea@list.ru                                                           *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -69,7 +69,6 @@ CFxRackWindow *wnd_fxrack;
 SRC_STATE *resampler;
 
 int resample_quality;
-
 int meter_cps;
 int meter_msecs_delay;
 int buffer_size_frames;
@@ -85,7 +84,6 @@ CFloatBuffer *sound_clipboard; //incapsulate it?
 
 //another global variable, also used at the transport code in eko.cpp
 int transport_state = 0;
-
 
 
 inline bool x_nearby (int x, int pos, int width)
@@ -234,42 +232,41 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
         
   for (size_t x = 0; x < sections; x++)
       {
-      if (measure_in_seconds)
-         {
-          if (x % (int)ceil (sections_per_second) == 0)
-            {
-             QPoint p1 (x, 1);
-             QPoint p2 (x, 12);
+       if (measure_in_seconds)
+          {
+           if (x % (int)ceil (sections_per_second) == 0)
+              {
+               QPoint p1 (x, 1);
+               QPoint p2 (x, 12);
 
-             QTime t (0, 0);
-             t = t.addSecs ((waveform->get_section_from() + x) / sections_per_second);       
+               QTime t (0, 0);
+               t = t.addSecs ((waveform->get_section_from() + x) / sections_per_second);       
 
-             painter.drawLine (p1, p2);
-             painter.drawText (x + 2, 20, t.toString ("ss:zzz") + "s");
-            }
-         }
-      else
-         if (x % 60 == 0)
-            {
-             QPoint p1 (x, 1);
-             QPoint p2 (x, 12);
+               painter.drawLine (p1, p2);
+               painter.drawText (x + 2, 20, t.toString ("ss:zzz") + "s");
+             }
+          }
+       else
+           if (x % 60 == 0)
+              {
+               QPoint p1 (x, 1);
+               QPoint p2 (x, 12);
 
-             
-             size_t minutes = (waveform->fb->length_frames / waveform->fb->samplerate) / 60;
+               size_t minutes = (waveform->fb->length_frames / waveform->fb->samplerate) / 60;
              //qDebug() << "minutes: " << minutes;
 
-             bool larger_than_hour = minutes > 60;
+               bool larger_than_hour = minutes > 60;
              
-             QTime t (0, 0);
-             t = t.addSecs ((waveform->get_section_from() + x) / sections_per_second);       
+               QTime t (0, 0);
+               t = t.addSecs ((waveform->get_section_from() + x) / sections_per_second);       
 
-             painter.drawLine (p1, p2);
-             if (! larger_than_hour)
-                painter.drawText (x + 2, 20, t.toString ("mm:ss") + "m");
-             else
-                painter.drawText (x + 2, 20, t.toString ("hh:mm:ss") + "m");
-            }
-      }        
+               painter.drawLine (p1, p2);
+               if (! larger_than_hour)
+                  painter.drawText (x + 2, 20, t.toString ("mm:ss") + "m");
+               else
+                  painter.drawText (x + 2, 20, t.toString ("hh:mm:ss") + "m");
+              }
+       }        
 
   QPainter painter2 (this);
   painter2.drawImage (0, 0, img);
@@ -434,14 +431,10 @@ void CWaveform::scale (int delta)
 {
  //qDebug() << "CWaveform::scale - start";
 
-  if (! fb)
+  if (! fb || frames_per_section == 0)
      return;
 
-  if (frames_per_section == 0)
-     return;
-
-  int old_section_from = get_section_from();
-  int old_frame_from = old_section_from * frames_per_section;
+  int old_frame_from = get_section_from() * frames_per_section;
 
   if (delta > 0)
      scale_factor += 0.1f;
@@ -462,7 +455,6 @@ void CWaveform::scale (int delta)
 
   update();   
   timeruler->update();
-
   //qDebug() << "CWaveform::scale - end";
 }
 
@@ -477,10 +469,6 @@ void CWaveform::wheelEvent (QWheelEvent *event)
 void CWaveform::resizeEvent (QResizeEvent *event)
 {
   recalc_view();
-  
- // section_from = scrollbar->value();
-  //section_to = width() + scrollbar->value();
-  
   prepare_image();
 }
 
@@ -492,6 +480,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
       event->accept();
       return;
      } 
+
 
   if (event->key() == Qt::Key_Delete)
      {
@@ -510,7 +499,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
       event->accept();   
       return;
      }
-  
+
 
   if (event->key() == Qt::Key_Return)
      {
@@ -539,8 +528,8 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
       event->accept();   
       return;
      }
- 
   
+
   if (event->key() == Qt::Key_End)
      {
       set_cursor_value (sections_total - 1);
@@ -597,7 +586,6 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
            selected = true;   
           }
       
-     
       update();
 
       set_cursorpos_text();
@@ -606,7 +594,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
       event->accept();   
       return;
      }
- 
+
 
   if (event->key() == Qt::Key_Right)
      {

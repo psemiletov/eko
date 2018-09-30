@@ -1,5 +1,5 @@
 /***************************************************************************
- *   2010-2016 by Peter Semiletov                            *
+ *   2010-2018 by Peter Semiletov                            *
  *   tea@list.ru                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -186,7 +186,6 @@ public:
   CFloatBuffer *fb;
   CTimeRuler *timeruler;
 
-
   CEnvelope env_vol;
 
   bool show_db; //false if floats
@@ -212,10 +211,8 @@ public:
 
   float scale_factor;
 
-  
   int previous_mouse_pos_x;
-  
-  
+    
   size_t sel_start_frames;
   size_t sel_end_frames;
   
@@ -228,7 +225,6 @@ public:
   void set_cursor_by_section (size_t section);
 
   size_t frames_per_section;
-  
   size_t sections_total;
 
   size_t get_section_from();
@@ -247,8 +243,6 @@ public:
   QColor cl_shadow; 
 
   int waveform_selection_alpha;
-
-
 
   void load_color (const QString &fname);
 
@@ -330,9 +324,7 @@ public:
 
   CDocument *doc;
   CWaveform *waveform;
-  
   QScrollBar *scb_horizontal;
- 
   CTimeRuler *timeruler;
 
   CWaveEdit (QWidget *parent = 0);
@@ -361,7 +353,6 @@ public:
   QHash <QString, QString> fnameswoexts;
     
   CDocumentHolder *holder;
-  
 
   CWaveEdit *wave_edit;
 
@@ -375,20 +366,22 @@ public:
   CDocument (QObject *parent = 0);
   ~CDocument();
 
-  void paste();
-  
-  void create_new();
-  
+
+  int get_tab_idx();
   void set_tab_caption (const QString &fileName);
+
+  void create_new();
   
   bool save_with_name (const QString &fileName);
   bool save_with_name_plain (const QString &fileName);
   
   bool open_file (const QString &fileName, bool set_fname = true);
   void reload();
-  int get_tab_idx();
+
   QString get_triplex();
   void update_title (bool fullname = true);
+
+  void paste();
 
   void effects_state_save();
   void effects_state_restore();
@@ -414,11 +407,9 @@ public:
   
   CTransportControl *transport_control;  
 
-
   CDocument *current;
   
   QString dir_config;
-  
   QString def_palette;
 
   QStatusBar *status_bar;
@@ -477,7 +468,6 @@ public:
   
 //  size_t process (CFloatBuffer *fb, size_t nframes);
   size_t process (CDocument *d, size_t nframes);
-
   size_t process_rec (float **buffer, size_t channels, size_t nframes);
 };
 
@@ -504,12 +494,9 @@ public slots:
 
   void tm_level_meter_timeout();
  // void apply_fx();
-  
   void cb_l_changed (int value);
   void cb_r_changed (int value);
-
   void dial_gain_valueChanged (int value);
-
 
 protected:
 
