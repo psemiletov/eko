@@ -182,7 +182,6 @@ public:
   //top-level link:
   CWaveEdit *wave_edit;
   
-
   CFloatBuffer *fb;
   CTimeRuler *timeruler;
 
@@ -193,8 +192,7 @@ public:
 
   int selection_selected; //0 - non, 1 - left, 2 - right
   int envelope_selected; //-1 - non
-  
-   
+     
   CMinmaxes *minmaxes;   
   QScrollBar *scrollbar;
 

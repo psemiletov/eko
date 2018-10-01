@@ -322,7 +322,7 @@ void CWaveform::timer_timeout()
    
   int cursor_pos_sections = get_cursor_position_sections();
    
-  if (cursor_pos_sections >= get_section_to()) //скачем на следующий экран
+  if (cursor_pos_sections >= (int) get_section_to()) //скачем на следующий экран
      scrollbar->setValue (scrollbar->value() + width());
   
  // if (cursor_pos_sections >= get_selection_end_sections())
@@ -555,7 +555,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
       if (get_cursor_position_sections() != 0)
          set_cursor_by_section (get_cursor_position_sections() - 1);
 
-      if (get_cursor_position_sections() == get_section_from())
+      if (get_cursor_position_sections() == (int) get_section_from())
          {
           if (scrollbar->value() != scrollbar->minimum())
              scrollbar->setValue (scrollbar->value() - 1);         
@@ -600,10 +600,10 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
      {
       set_cursor_by_section (get_cursor_position_sections() + 1);
 
-      if (get_cursor_position_sections() == sections_total)
+      if (get_cursor_position_sections() == (int) sections_total)
          set_cursor_by_section (get_cursor_position_sections() - 1);
   
-      if (get_cursor_position_sections() == get_section_to())
+      if (get_cursor_position_sections() == (int) get_section_to())
          {
           if (scrollbar->value() != scrollbar->maximum())
              scrollbar->setValue (scrollbar->value() + 1);         
@@ -627,7 +627,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
          
        if (event->modifiers() & Qt::ShiftModifier)  
           {
-           if (get_selection_end_sections() != sections_total)
+           if (get_selection_end_sections() != (int) sections_total)
               {
                set_selend_value (get_selection_end_sections() + 1);
                fix_selection_bounds();
@@ -2303,14 +2303,14 @@ void CWaveform::mouseMoveEvent (QMouseEvent *event)
   if (! selected && mouse_pressed)
      {
      // qDebug() << "create selection";
-      if (current_section < previous_mouse_pos_x)
+      if ((int) current_section < previous_mouse_pos_x)
          {
           set_selstart_value (current_section);
           set_selend_value (previous_mouse_pos_x);
           selection_selected = 1;
          }
       else   
-      if (current_section > previous_mouse_pos_x)
+      if ((int) current_section > previous_mouse_pos_x)
          {
           set_selstart_value (previous_mouse_pos_x);
           set_selend_value (current_section);

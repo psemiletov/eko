@@ -72,8 +72,6 @@ CEnvelope::~CEnvelope()
 }
 
 
-
-
 void CEnvelope::insert_wise (int x, int y, int height, size_t maximum)
 {
   CEnvelopePoint *e = new CEnvelopePoint;
