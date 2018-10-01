@@ -820,7 +820,6 @@ void CWaveform::fix_selection_bounds()
       selection_selected = 1;
      }
      
-     
  /*
  //выравнивание по размеру буфера, той или иной границы выделения
     
@@ -989,7 +988,7 @@ void CWaveform::undo_top()
       CFloatBuffer *tfb = fb->delete_range (el->start_frames, el->end_frames);
       delete fb;
       fb = tfb;
-      }
+     }
   
   if (el->type == UNDO_INSERT) 
      {
@@ -1123,12 +1122,12 @@ void CWaveEdit::dropEvent (QDropEvent *event)
      return;
   
   foreach (QUrl u, event->mimeData()->urls())
-         {
-          fName = u.toLocalFile();
-          info.setFile (fName);
-          if (info.isFile())
-             doc->holder->open_file (fName);
-         }
+          {
+           fName = u.toLocalFile();
+           info.setFile (fName);
+           if (info.isFile())
+              doc->holder->open_file (fName);
+          }
 
   event->acceptProposedAction();
 }
@@ -1180,14 +1179,13 @@ void CDocument::reload()
 
 bool CDocument::open_file (const QString &fileName, bool set_fname)
 {
-  qDebug() << "CDocument::open_file - start";
-
+//  qDebug() << "CDocument::open_file - start";
   CTio *tio = holder->tio_handler.get_for_fname (fileName);
 
   if (! tio)
      {
       holder->log->log (tr ("file type of %1 is not supported")
-                           .arg (fileName));
+                        .arg (fileName));
       return false;
      }
   
@@ -1228,17 +1226,13 @@ bool CDocument::open_file (const QString &fileName, bool set_fname)
 
 ///////////////////set up the scrollbar
 
-
   wave_edit->waveform->init_state = false;
   wave_edit->timeruler->init_state = false;
 
   wave_edit->waveform->magic_update();
 
-  int elapsed = tm.elapsed();
-
-  holder->log->log (tr ("elapsed: %1 ms").arg (elapsed));
-  
-  
+  holder->log->log (tr ("elapsed: %1 ms").arg (tm.elapsed()));
+    
   //qDebug() << "CDocument::open_file - end";
 
   return true;
@@ -1268,9 +1262,6 @@ bool CDocument::save_with_name (const QString &fileName)
   
   if (ext.isEmpty())
      fname = fname + "." + fext;
-  
-  //else
-    //  if (ext != fext)
   else
       fname = change_file_ext (fname, fext);
 
@@ -1280,7 +1271,6 @@ bool CDocument::save_with_name (const QString &fileName)
      return false;
  
   tio->float_input_buffer = wave_edit->waveform->fb;
-  
 
   QTime tm;
   tm.start();
@@ -1288,9 +1278,8 @@ bool CDocument::save_with_name (const QString &fileName)
   if (! tio->save (fname))
      {
       holder->log->log (tr ("cannot save %1 because of: %2")
-      //documents->log->log (tr ("cannot save %1 because of: %2")
-                           .arg (fname)
-                           .arg (tio->error_string));
+                            .arg (fname)
+                            .arg (tio->error_string));
       return false;
      }
 
@@ -1442,7 +1431,6 @@ CDocument* CDocumentHolder::create_new()
   apply_settings_single (doc);
 
   doc->update_title();
-  //doc->update_status();
 
   return doc;
 }
@@ -1457,17 +1445,16 @@ CDocument* CDocumentHolder::open_file (const QString &fileName, bool set_fname)
      return NULL;
 
   foreach (CDocument *d, list)  
-          if (d->file_name == fileName)
-             {
-              tab_widget->setCurrentIndex (tab_widget->indexOf (d->tab_page));
-              return d;
-             }
+           if (d->file_name == fileName)
+              {
+               tab_widget->setCurrentIndex (tab_widget->indexOf (d->tab_page));
+               return d;
+              }
 
 
   CDocument *doc = create_new();
 
   doc->open_file (fileName, set_fname);
- 
   doc->update_title();
 
   tab_widget->setCurrentIndex (tab_widget->indexOf (doc->tab_page));
@@ -1530,7 +1517,7 @@ void CDocumentHolder::add_to_recent (CDocument *d)
 
   recent_files.prepend (d->file_name);
   
-  if (recent_files.size() > 13)
+  if (recent_files.size() > 17)
      recent_files.removeLast();
 }
 
@@ -1639,7 +1626,6 @@ void CWaveform::set_selend_value (size_t section)
 }
 
 
-
 void CFxRackWindow::tm_level_meter_timeout()
 {
   if (! level_meter)
@@ -1649,12 +1635,10 @@ void CFxRackWindow::tm_level_meter_timeout()
 }
 
 
-
 CFxRackWindow::~CFxRackWindow()
 {
   delete fx_rack;
 }
-
 
 
 void CFxRackWindow::cb_l_changed (int value)
@@ -1671,7 +1655,7 @@ void CFxRackWindow::cb_r_changed (int value)
 
 void CFxRackWindow::dial_gain_valueChanged (int value)
 {
-  float f = 1.0f;
+/*  float f = 1.0f;
   if (value == 0)
      {
       dsp->gain = 1.0f;
@@ -1680,7 +1664,11 @@ void CFxRackWindow::dial_gain_valueChanged (int value)
 
    f = db2lin (value);
 
-   dsp->gain = f;
+   dsp->gain = f;*/
+  if (value == 0)
+      dsp->gain = 1.0f;
+  else 
+      dsp->gain = db2lin (value);
 }
 
 
@@ -1694,9 +1682,7 @@ CFxRackWindow::CFxRackWindow()
   h_mainbox->addLayout (v_box);
   
   level_meter = new CVLevelMeter (this);
-  
   bt_apply = new QPushButton (tr ("Apply"));
-
   fx_rack = new CFxRack;
 
   v_box->addWidget (fx_rack->inserts);
@@ -1757,13 +1743,7 @@ size_t CDSP::process (CDocument *d, size_t nframes)
 {
  // qDebug() << "CDSP::process -- start";
   
-  if (nframes == 0)
-     return 0;
-
-  if (transport_state == STATE_EXIT)
-     return 0;
-
-  if (! d)
+  if (nframes == 0 || !d || transport_state == STATE_EXIT)
      return 0;
    
   maxl = 0.0f;
@@ -1782,8 +1762,8 @@ size_t CDSP::process (CDocument *d, size_t nframes)
       if (tail < nframes)
          frames = tail;
 
-       d->wave_edit->waveform->fb->copy_to_pos (temp_float_buffer, d->wave_edit->waveform->fb->offset, frames, 0);
-       d->wave_edit->waveform->fb->offset += frames;
+      d->wave_edit->waveform->fb->copy_to_pos (temp_float_buffer, d->wave_edit->waveform->fb->offset, frames, 0);
+      d->wave_edit->waveform->fb->offset += frames;
      }
   else
       {
@@ -1806,7 +1786,6 @@ size_t CDSP::process (CDocument *d, size_t nframes)
     
 ////////////call fx chain
 
-
   if (! bypass_mixer)
   for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); i++)
       {
@@ -1825,26 +1804,23 @@ size_t CDSP::process (CDocument *d, size_t nframes)
        if (float_greater_than (temp_float_buffer->buffer[0][i], maxl))
            maxl = temp_float_buffer->buffer[0][i];
       
-      if (temp_float_buffer->channels == 2)
-          if (float_greater_than (temp_float_buffer->buffer[1][i], maxr))
-             maxr = temp_float_buffer->buffer[1][i];
+       if (temp_float_buffer->channels == 2)
+           if (float_greater_than (temp_float_buffer->buffer[1][i], maxr))
+              maxr = temp_float_buffer->buffer[1][i];
               
-      temp_float_buffer->buffer[0][i] *= gain;  
+       temp_float_buffer->buffer[0][i] *= gain;
       
-      if (temp_float_buffer->channels == 2)
-          temp_float_buffer->buffer[1][i] *= gain;  
-     }
+       if (temp_float_buffer->channels == 2)
+          temp_float_buffer->buffer[1][i] *= gain;
+      }
 
   if (wnd_fxrack->level_meter)         
      {
       wnd_fxrack->level_meter->pl = maxl;
       wnd_fxrack->level_meter->pr = maxr;
      }
-                
-
-  
+                 
   //qDebug() << "CDSP::process -- end";
- 
  
   return frames;
 }
@@ -1852,12 +1828,8 @@ size_t CDSP::process (CDocument *d, size_t nframes)
 
 size_t CDSP::process_rec (float **buffer, size_t channels, size_t nframes)
 {
-  if (nframes == 0)
+  if (nframes == 0 || transport_state == STATE_EXIT)
      return 0;
-
-  if (transport_state == STATE_EXIT)
-     return 0;
-
    
   maxl = 0.0f;
   maxr = 0.0f;
@@ -1868,18 +1840,16 @@ size_t CDSP::process_rec (float **buffer, size_t channels, size_t nframes)
           if (float_greater_than (buffer[0][i], maxl))
               maxl = buffer[0][i];
          }
-           
  
   if (channels == 2)
      for (size_t i = 0; i < nframes; i++)
-       {
-        if (float_less_than (maxl, buffer[0][i]))
-            maxl = buffer[0][i];
+         {
+          if (float_less_than (maxl, buffer[0][i]))
+              maxl = buffer[0][i];
         
-        if (float_less_than (maxr, buffer[1][i]))
-            maxr = buffer[1][i];
-       }
-
+          if (float_less_than (maxr, buffer[1][i]))
+              maxr = buffer[1][i];
+         }
 
   if (wnd_fxrack->level_meter)         
      {
@@ -1889,7 +1859,6 @@ size_t CDSP::process_rec (float **buffer, size_t channels, size_t nframes)
 
   return nframes;
 }
-
 
 
 void CWaveform::prepare_image()
@@ -1904,8 +1873,6 @@ void CWaveform::prepare_image()
 
   if (frames_per_section == 0)
      return;
-
-
 
   size_t sections = get_section_to() - get_section_from();
   int image_height = height();
@@ -1950,7 +1917,7 @@ void CWaveform::prepare_image()
                  
              section++;
 
-             continue;
+             //continue; //FIXME: зачем? оно и так continue в начало цикла while
             }
          }
 
@@ -1964,7 +1931,7 @@ void CWaveform::prepare_image()
     
   img.fill (cl_waveform_background.rgb()); 
   
-  //check if empty
+  //check if empty. 32 frames is predefined value that indicates the buffer is empty
   if (fb->length_frames == 32)
      {
       painter.drawLine (QPoint (0, 0), QPoint (width(), height()));
@@ -1982,7 +1949,7 @@ void CWaveform::prepare_image()
        int ymax = channel_height - (int)((minmaxes->values[ch]->max_values->samples[x] + 1) * 0.5f * channel_height);
        int ymin = channel_height - (int)((minmaxes->values[ch]->min_values->samples[x] + 1) * 0.5f * channel_height);
 
-  	   QPoint p1 (x, ymin + channel_height * ch);
+       QPoint p1 (x, ymin + channel_height * ch);
        QPoint p2 (x, ymax + channel_height * ch);
  
        painter.drawLine (p1, p2);
@@ -2007,7 +1974,6 @@ void CWaveform::prepare_image()
 
   QFont tfont ("Mono");
   tfont.setPixelSize (8);
-
   painter.setFont (tfont);
    
   //int ten = get_value (channel_height / 2, 10) / 2;  
@@ -2097,7 +2063,6 @@ void CWaveform::prepare_image()
  
            painter.drawRect (rectangle);
            //painter.drawText (QPoint (point_x + 1, point_y + 1), QString::number (point_y));
-          
            
            float v1 = conv (env_vol.points[i]->value, 50, 100);
   
@@ -2105,8 +2070,7 @@ void CWaveform::prepare_image()
   
            float v2 = conv_to_db (v1, -50, 50, -90.0f, 6.0f);
  
-           painter.drawText (QPoint (point_x + 1, point_y + 1), QString::number (v2));
-          
+           painter.drawText (QPoint (point_x + 1, point_y + 1), QString::number (v2) + "dB");
           
            old_point_x = point_x;
            old_point_y = point_y;
@@ -2173,11 +2137,10 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
   int y = event->y();
 
   if (y < 0)
-     y = 0;  
+     y = 0;
 
   if (y > height())
-     y = height();  
-
+     y = height();
 
   int section = get_section_from() + event->x();
 
@@ -2189,7 +2152,6 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
  
       recalc_view();
       prepare_image();
-      
       update();
 
       previous_mouse_pos_x = section;
@@ -2216,11 +2178,9 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
                env_vol.points.removeAt (idx);
               } 
           }
-      
   
       recalc_view();
       prepare_image();
-      
       update();
 
       previous_mouse_pos_x = section;
@@ -2276,7 +2236,7 @@ void CWaveform::mouseMoveEvent (QMouseEvent *event)
         {
          if (scrollbar->value() + 16 != scrollbar->maximum())
             scrollbar->setValue (scrollbar->value() + 16);
-     }
+        }
 
      if (event->pos().x() < 0)
         {
@@ -2303,7 +2263,7 @@ void CWaveform::mouseMoveEvent (QMouseEvent *event)
 
   size_t current_section = get_section_from() + x;
 
-    if (! mouse_pressed)
+  if (! mouse_pressed)
      {
       if (x_nearby (current_section, get_selection_start_sections(), 1) ||
          x_nearby (current_section, get_selection_end_sections(), 1))
@@ -2324,7 +2284,6 @@ void CWaveform::mouseMoveEvent (QMouseEvent *event)
  
   if (mouse_pressed && selection_selected == 0 && envelope_selected != -1)
      {
-
       CEnvelopePoint *ep = env_vol.get_selected();
 
       if (ep)
@@ -2333,17 +2292,15 @@ void CWaveform::mouseMoveEvent (QMouseEvent *event)
   
           recalc_view();
           prepare_image();
-      
           update();
 
-         return;
-        }
-  }
+          return;
+         }
+    }
  
    
   //условия возникновения создания выделения, если нет такового
-  if (! selected)
-  if (mouse_pressed)
+  if (! selected && mouse_pressed)
      {
      // qDebug() << "create selection";
       if (current_section < previous_mouse_pos_x)
