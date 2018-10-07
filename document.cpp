@@ -427,6 +427,42 @@ void CWaveform::recalc_view()
 }
 
 
+void CWaveform::zoom (int factor)
+{
+  if (! fb || frames_per_section == 0)
+     return;
+
+  int old_frame_from = get_section_from() * frames_per_section;
+
+  scale_factor = zoom_percent;
+
+  //вычислить на основе sections_total и (width()
+//бла бла бла
+
+/*
+  if (delta > 0)
+     scale_factor += 0.1f;
+  else    
+     scale_factor -= 0.1f;
+    
+  if (scale_factor < 1.0f)
+     scale_factor = 1.0f;
+*/
+  if ((width() * scale_factor) >= fb->length_frames - 1) //can be scale factor so large?
+      return;
+
+  recalc_view();
+  prepare_image();
+  
+  int new_section = old_frame_from / frames_per_section;   
+  scrollbar->setValue (new_section);
+
+  update();   
+  timeruler->update();
+  //qDebug() << "CWaveform::scale - end";
+}
+
+
 void CWaveform::scale (int delta)
 {
  //qDebug() << "CWaveform::scale - start";
@@ -457,6 +493,9 @@ void CWaveform::scale (int delta)
   timeruler->update();
   //qDebug() << "CWaveform::scale - end";
 }
+
+
+
 
 
 void CWaveform::wheelEvent (QWheelEvent *event)
@@ -2386,3 +2425,4 @@ size_t CWaveform::get_section_to()
 {
   return width() + scrollbar->value();
 }
+

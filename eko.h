@@ -102,6 +102,9 @@ public:
 
   bool b_preview;
 
+  int zoom_a;
+  int zoom_b;
+
   int idx_tab_edit;
   int idx_tab_tune;
   int idx_tab_fman;
@@ -402,6 +405,13 @@ prefs window callbacks
 
   void view_use_theme();
 
+  void cb_zoom_a();
+  void cb_zoom_b();
+  void save_zoom_a();
+  void save_zoom_b();
+  void zoom_to_factor();
+
+
 
 private:
 
@@ -432,6 +442,9 @@ main window widgets
 
   QMenu *menu_fn_sessions;
   
+
+  QMenu *menu_zoom;
+
   QMenu *menu_functions;
   
   QMenu *menu_fn_channels;

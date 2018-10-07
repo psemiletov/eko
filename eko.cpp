@@ -460,6 +460,9 @@ void CEKO::readSettings()
 
   b_monitor_input = settings->value ("b_monitor_input", 0).toBool();
 
+  zoom_a = settings->value ("zoom_a", "1").toInt(); 
+  zoom_b = settings->value ("zoom_b", "1").toInt(); 
+
   proxy_video_decoder = settings->value ("proxy_video_decoder", "0").toInt(); 
 
   fname_def_palette = settings->value ("fname_def_palette", ":/palettes/EKO").toString();
@@ -482,6 +485,9 @@ void CEKO::readSettings()
 
 void CEKO::writeSettings()
 {
+  settings->setValue ("zoom_a", zoom_a);
+  settings->setValue ("zoom_b", zoom_b);
+
   settings->setValue ("pos", pos());
   settings->setValue ("size", size());
   settings->setValue ("splitterSizes", mainSplitter->saveState());
@@ -1397,6 +1403,30 @@ void CEKO::createMenus()
   
   add_to_menu (menu_view, tr ("Toggle fullscreen"), SLOT(view_toggle_fs()));
   add_to_menu (menu_view, tr ("Stay on top"), SLOT(view_stay_on_top()));
+
+
+  menu_zoom = menuBar()->addMenu (tr ("Zoom"));
+  menu_zoom->setTearOffEnabled (true);
+
+  add_to_menu (menu_zoom, tr ("Zoom A"), SLOT(cb_zoom_a()));
+  add_to_menu (menu_zoom, tr ("Zoom B"), SLOT(cb_zoom_b()));
+  add_to_menu (menu_zoom, tr ("Save zoom A"), SLOT(save_zoom_a()));
+  add_to_menu (menu_zoom, tr ("Save zoom B"), SLOT(save_zoom_b()));
+
+  menu_zoom->addSeparator();
+
+  add_to_menu (menu_zoom, "1", SLOT(zoom_to_factor()));
+  add_to_menu (menu_zoom, "2", SLOT(zoom_to_factor()));
+  add_to_menu (menu_zoom, "4", SLOT(zoom_to_factor()));
+  add_to_menu (menu_zoom, "8", SLOT(zoom_to_factor()));
+  add_to_menu (menu_zoom, "16", SLOT(zoom_to_factor()));
+  add_to_menu (menu_zoom, "24", SLOT(zoom_to_factor()));
+  add_to_menu (menu_zoom, "32", SLOT(zoom_to_factor()));
+  add_to_menu (menu_zoom, "48", SLOT(zoom_to_factor()));
+  add_to_menu (menu_zoom, "64", SLOT(zoom_to_factor()));
+  add_to_menu (menu_zoom, "96", SLOT(zoom_to_factor()));
+  add_to_menu (menu_zoom, "128", SLOT(zoom_to_factor()));
+  add_to_menu (menu_zoom, "256", SLOT(zoom_to_factor()));
 
 
   helpMenu = menuBar()->addMenu (tr ("Help"));
@@ -5632,4 +5662,61 @@ void CEKO::apply_fx_clicked()
   d->wave_edit->waveform->magic_update();
  
   wnd_fxrack->fx_rack->bypass_all();
+}
+
+
+
+void CEKO::cb_zoom_a()
+{
+  CDocument *d = documents->current; 
+    
+  if (! d)
+     return;
+
+  d->wave_edit->waveform->zoom (zoom_a);
+}
+
+
+void CEKO::cb_zoom_b()
+{
+  CDocument *d = documents->current; 
+    
+  if (! d)
+     return;
+
+  d->wave_edit->waveform->zoom (zoom_b);
+}
+
+ 
+void CEKO::save_zoom_a()
+{
+  CDocument *d = documents->current; 
+    
+  if (! d)
+     return;
+
+  zoom_a = d->wave_edit->waveform->scale_factor;
+}
+
+
+void CEKO::save_zoom_b()
+{
+  CDocument *d = documents->current; 
+    
+  if (! d)
+     return;
+
+  zoom_b = d->wave_edit->waveform->scale_factor;
+}
+ 
+
+void CEKO::zoom_to_factor()
+{
+  CDocument *d = documents->current; 
+    
+  if (! d)
+     return;
+
+  QAction *a = qobject_cast<QAction *>(sender());
+  d->wave_edit->waveform->zoom (a->text().toInt());
 }

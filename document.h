@@ -258,6 +258,8 @@ public:
   void set_cursorpos_text();
 
   void scale (int delta);
+  void zoom (int factor);
+
 
   void recalc_view();
   void prepare_image();
