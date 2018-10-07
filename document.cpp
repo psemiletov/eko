@@ -434,7 +434,7 @@ void CWaveform::zoom (int factor)
 
   int old_frame_from = get_section_from() * frames_per_section;
 
-  scale_factor = zoom_percent;
+  scale_factor = factor;
 
   //вычислить на основе sections_total и (width()
 //бла бла бла
