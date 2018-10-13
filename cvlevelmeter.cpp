@@ -85,17 +85,18 @@ void CVLevelMeter::paintEvent (QPaintEvent *event)
   QPainter painter (this);   
    
   int h = height();
+  int w = width();
   
-  painter.fillRect (scale_width, 0, width(), height(), Qt::white);
+  painter.fillRect (scale_width, 0, w, h, Qt::white);
        
   int lenl = h - (int)(peak_l * 1.0f * h);
   int lenr = h - (int)(peak_r * 1.0f * h);
       
-  QPoint ltop (scale_width, height());
-  QPoint lbottom (scale_width + (width() - scale_width)  / 2, lenl);
+  QPoint ltop (scale_width, h);
+  QPoint lbottom (scale_width + (w - scale_width) / 2, lenl);
   
-  QPoint rtop (scale_width + (width() - scale_width) / 2, height());
-  QPoint rbottom (width(), lenr);
+  QPoint rtop (scale_width + (w - scale_width) / 2, h);
+  QPoint rbottom (w, lenr);
   
   QRect l (ltop, lbottom);
   QRect r (rtop, rbottom);
