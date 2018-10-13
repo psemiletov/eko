@@ -20,7 +20,7 @@ enum FxState {
               FXS_STOP,
               FXS_RUN,
               FXS_PAUSE
-              };
+             };
 
 
 class AFx: public QObject
@@ -54,7 +54,7 @@ public:
 
   AFx();
   
-  virtual ~AFx();
+  /*virtual*/ ~AFx();
 
   virtual size_t execute (float **input, float **output, size_t frames) = 0;
   
@@ -80,6 +80,5 @@ public slots:
   void slot_save_request();
  
 };
-
 
 #endif

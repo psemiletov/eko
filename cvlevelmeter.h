@@ -31,7 +31,7 @@ public:
 protected:
 
  void paintEvent (QPaintEvent *event);
- void resizeEvent(QResizeEvent *event);
+ void resizeEvent (QResizeEvent *event);
 };
 
 #endif

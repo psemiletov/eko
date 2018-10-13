@@ -436,18 +436,6 @@ void CWaveform::zoom (int factor)
 
   scale_factor = factor;
 
-  //вычислить на основе sections_total и (width()
-//бла бла бла
-
-/*
-  if (delta > 0)
-     scale_factor += 0.1f;
-  else    
-     scale_factor -= 0.1f;
-    
-  if (scale_factor < 1.0f)
-     scale_factor = 1.0f;
-*/
   if ((width() * scale_factor) >= fb->length_frames - 1) //can be scale factor so large?
       return;
 
@@ -459,7 +447,6 @@ void CWaveform::zoom (int factor)
 
   update();   
   timeruler->update();
-  //qDebug() << "CWaveform::scale - end";
 }
 
 
@@ -493,9 +480,6 @@ void CWaveform::scale (int delta)
   timeruler->update();
   //qDebug() << "CWaveform::scale - end";
 }
-
-
-
 
 
 void CWaveform::wheelEvent (QWheelEvent *event)
