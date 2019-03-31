@@ -66,20 +66,20 @@ class MyProxyStyle: public QProxyStyle
 {
 public:
      int styleHint (StyleHint hint, const QStyleOption *option = 0,
-                   const QWidget *widget = 0, QStyleHintReturn *returnData = 0) const 
+                   const QWidget *widget = 0, QStyleHintReturn *returnData = 0) const
                    {
-         
+
                     if (hint == QStyle::SH_ItemView_ActivateItemOnSingleClick)
                        return 0;
-         
+
                     if (! b_altmenu && hint == QStyle::SH_MenuBar_AltKeyNavigation)
                        return 0;
-                  
+
                     return QProxyStyle::styleHint (hint, option, widget, returnData);
                     }
-     
+
    MyProxyStyle (QStyle *style = 0);
-     
+
 };
 
 extern int resample_quality;
@@ -148,30 +148,30 @@ int simple_counter = 0;
 void pa_info()
 {
   PaHostApiIndex phai = Pa_GetHostApiCount();
-   	
+
   for (PaHostApiIndex i = 0; i < phai; i++)
-      {   
-       const PaHostApiInfo *phainfo = Pa_GetHostApiInfo (i); 	       
+      {
+       const PaHostApiInfo *phainfo = Pa_GetHostApiInfo (i);
        lpa_apis.append (phainfo->name);
-     }  
-  
-  
-  PaDeviceIndex devindex = Pa_GetDefaultOutputDevice(); 	
-   
-  devindex = Pa_GetDeviceCount(); 	
-  
+     }
+
+
+  PaDeviceIndex devindex = Pa_GetDefaultOutputDevice();
+
+  devindex = Pa_GetDeviceCount();
+
   for (PaDeviceIndex i = 0; i < devindex - 1; i++)
-      {   
-       
+      {
+
        PaDeviceInfo *di = Pa_GetDeviceInfo 	(i);
-       
+
        //qDebug() << i << " --- name: " << di->name;
        //qDebug() << i << " --- defaultSampleRate: " << di->defaultSampleRate;
        //qDebug() << i << " --- defaultLowOutputLatency: " << di->defaultLowOutputLatency;
        //qDebug() << i << " --- defaultHighOutputLatency: " << di->defaultHighOutputLatency;
-       
+
        lpa_devices.append (di->name);
-     }  
+     }
 }
 */
 
@@ -192,36 +192,38 @@ int pa_input_stream_callback (const void *input, void *output, unsigned long fra
   float **p_in = (float **) input;
   float **p_out = (float **) output;
 
+  size_t sz = frameCount * sizeof (float);
+
   if (b_monitor_input)
      {
-      memcpy (p_out[0], p_in[0],  frameCount * sizeof (float));
-      memcpy (p_out[1], p_in[1],  frameCount * sizeof (float));
-     } 
-  
+      memcpy (p_out[0], p_in[0], sz);
+      memcpy (p_out[1], p_in[1], sz);
+     }
+
  if (rec_channels == 2)
     {
      fb_record->settozero();
-     
-     memcpy (fb_record->buffer[0], p_in[0], frameCount * sizeof (float));
-     memcpy (fb_record->buffer[1], p_in[1], frameCount * sizeof (float));
-     
+
+     memcpy (fb_record->buffer[0], p_in[0], sz);
+     memcpy (fb_record->buffer[1], p_in[1], sz);
+
      fb_record->fill_interleaved();
-     
+
      sf_writef_float (file_temp_handle, (float *)fb_record->buffer_interleaved, frameCount);
-     return paContinue; 	
+     return paContinue;
     }
-  else  
+  else
   //если пишем моно, что делать с каналами?
-      {       
+      {
        if (mono_recording_mode == 0)
           sf_writef_float (file_temp_handle, p_in[0], frameCount);
-       else 
+       else
            sf_writef_float (file_temp_handle, p_in[1], frameCount);
-      }     
-   
+      }
+
   dsp->process_rec (p_in, 2, frameCount);
-  
-  return paContinue; 	
+
+  return paContinue;
 }
 
 
@@ -230,13 +232,13 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
   if (transport_state == STATE_EXIT)
      return paAbort;
 
-  CDocument *d = documents->current; 
-    
+  CDocument *d = documents->current;
+
   if (! d)
      {
       transport_state = STATE_STOP;
       return paAbort;
-     } 
+     }
 
   float** pchannels = (float **)output;
 
@@ -245,26 +247,26 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
      {
       if (! d->wave_edit->waveform->selected)
          {
-          if (d->wave_edit->waveform->fb->offset >= 
-              d->wave_edit->waveform->fb->length_frames - frameCount) 
+          if (d->wave_edit->waveform->fb->offset >=
+              d->wave_edit->waveform->fb->length_frames - frameCount)
               {
                d->wave_edit->waveform->fb->offset = 0;
-              }                                          
+              }
           }
       else //looped, but selected
            {
-            if (d->wave_edit->waveform->fb->offset >= d->wave_edit->waveform->frames_end()) 
+            if (d->wave_edit->waveform->fb->offset >= d->wave_edit->waveform->frames_end())
                 d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->frames_start();
            }
      }
    else //not looped at all*/
-   
+
    if (! d->wave_edit->waveform->play_looped)
-   if (d->wave_edit->waveform->fb->offset + frameCount >= 
+   if (d->wave_edit->waveform->fb->offset + frameCount >=
        d->wave_edit->waveform->fb->length_frames)
        {
         qDebug() << "FULL STOP";
-       
+
         d->wave_edit->waveform->timer.stop();
         wnd_fxrack->tm_level_meter.stop();
 
@@ -273,17 +275,17 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
 
         d->wave_edit->waveform->fb->offset = 0;
         d->wave_edit->waveform->scrollbar->setValue (0);
-        
+
         return paAbort;
        }
- 
- 
+
+
   size_t ret = dsp->process (d, frameCount);
   if (ret == 0/* && ! d->wave_edit->waveform->play_looped*/)
      {
       qDebug() << "return from process()";
       transport_state = STATE_STOP;
-      
+
       d->wave_edit->waveform->timer.stop();
       wnd_fxrack->tm_level_meter.stop();
 
@@ -294,52 +296,52 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
       d->wave_edit->waveform->scrollbar->setValue (0);
       return paAbort;
      }
-   
-   
-  if (play_l)  
-      memcpy (pchannels[0], dsp->temp_float_buffer->buffer[0], 
-              frameCount * sizeof (float));
-  else         
-      memset (pchannels[0], 0, frameCount * sizeof (float));
 
-  if (play_r)  
+  size_t sz = frameCount * sizeof (float);
+
+  if (play_l)
+      memcpy (pchannels[0], dsp->temp_float_buffer->buffer[0], sz);
+  else
+      memset (pchannels[0], 0, sz);
+
+  if (play_r)
      {
       if (dsp->temp_float_buffer->channels == 2)
-          memcpy (pchannels[1], dsp->temp_float_buffer->buffer[1], frameCount * sizeof (float));
-      }      
+          memcpy (pchannels[1], dsp->temp_float_buffer->buffer[1], sz);
+      }
   else
       if (dsp->temp_float_buffer->channels == 2)
-         memset (pchannels[1], 0, frameCount * sizeof (float));
-   
-  
-  return paContinue; 	
+         memset (pchannels[1], 0, sz);
+
+
+  return paContinue;
 }
 
 
 QStringList get_sound_devices()
 {
   QStringList l;
-  PaDeviceIndex devindex = Pa_GetDeviceCount() - 1; 	
-  
+  PaDeviceIndex devindex = Pa_GetDeviceCount() - 1;
+
   for (PaDeviceIndex i = 0; i < devindex; i++)
-      {   
+      {
        const PaDeviceInfo *di = Pa_GetDeviceInfo (i);
-       
+
       /* qDebug() << "str_from_locale (di->name): " << str_from_locale (di->name);
        qDebug() << "in: " << di->maxInputChannels;
        qDebug() << "out: " << di->maxOutputChannels;
        */
        #if defined(Q_OS_WIN) || defined(Q_OS_OS2)
-       
+
        l.append (str_from_locale (di->name));
-       
+
        #else
 
        l.append (di->name);
-       
+
        #endif
-     }  
-  
+     }
+
   return l;
 }
 
@@ -363,9 +365,9 @@ void CEKO::init_styles()
 #endif
 
   fname_stylesheet = settings->value ("fname_stylesheet", ":/themes/TEA").toString();
-   
+
   MyProxyStyle *ps = new MyProxyStyle (QStyleFactory::create (settings->value ("ui_style", default_style).toString()));
-  
+
   QApplication::setStyle (ps);
 
   update_stylesheet (fname_stylesheet);
@@ -387,15 +389,15 @@ void pa_done()
      {
       Pa_AbortStream (pa_stream);
       Pa_CloseStream (pa_stream);
-     } 
+     }
 
   if (pa_stream_in)
      {
       Pa_AbortStream (pa_stream_in);
       Pa_CloseStream (pa_stream_in);
-     } 
+     }
 
-  Pa_Terminate(); 	
+  Pa_Terminate();
 }
 
 
@@ -424,7 +426,7 @@ void CEKO::create_paths()
   fname_tempparamfile.append (QDir::tempPath()).append ("/ekoparam.tmp");
 
   dir_profiles.append (dir_config).append ("/profiles");
-  
+
   dr.setPath (dir_profiles);
   if (! dr.exists())
      dr.mkpath (dir_profiles);
@@ -440,13 +442,13 @@ void CEKO::create_paths()
   dr.setPath (dir_palettes);
   if (! dr.exists())
      dr.mkpath (dir_palettes);
-     
-     
+
+
   dir_themes.append (dir_config).append ("/themes");
   dr.setPath (dir_themes);
   if (! dr.exists())
      dr.mkpath (dir_themes);
-     
+
   g_fxpresets_path = dir_config.append ("/fxpresets");
   dr.setPath (g_fxpresets_path);
   if (! dr.exists())
@@ -456,19 +458,19 @@ void CEKO::create_paths()
 
 void CEKO::readSettings()
 {
-  b_altmenu = settings->value ("b_altmenu", "0").toBool(); 
+  b_altmenu = settings->value ("b_altmenu", "0").toBool();
 
   b_monitor_input = settings->value ("b_monitor_input", 0).toBool();
 
-  zoom_a = settings->value ("zoom_a", "1").toInt(); 
-  zoom_b = settings->value ("zoom_b", "1").toInt(); 
+  zoom_a = settings->value ("zoom_a", "1").toInt();
+  zoom_b = settings->value ("zoom_b", "1").toInt();
 
-  proxy_video_decoder = settings->value ("proxy_video_decoder", "0").toInt(); 
+  proxy_video_decoder = settings->value ("proxy_video_decoder", "0").toInt();
 
   fname_def_palette = settings->value ("fname_def_palette", ":/palettes/EKO").toString();
-  
-  resample_quality = settings->value ("resample_quality", "0").toInt(); 
-  
+
+  resample_quality = settings->value ("resample_quality", "0").toInt();
+
   ogg_q = settings->value ("ogg_q", 0.5d).toDouble();
 
   QPoint pos = settings->value ("pos", QPoint (1, 1)).toPoint();
@@ -478,7 +480,7 @@ void CEKO::readSettings()
   move (pos);
 
   buffer_size_frames = settings->value ("buffer_size_frames", 2048).toInt();
-  
+
   mono_recording_mode = settings->value ("mono_recording_mode", 0).toInt();
 }
 
@@ -502,7 +504,7 @@ void CEKO::writeSettings()
      {
       settings->setValue ("wnd_fxrack.pos", wnd_fxrack->pos());
       settings->setValue ("wnd_fxrack.size", wnd_fxrack->size());
-     }  
+     }
 
   delete settings;
 }
@@ -515,31 +517,31 @@ void CEKO::create_main_widget()
   main_widget->setLayout (v_box);
 
   main_tab_widget = new QTabWidget;
-  
+
   main_tab_widget->setTabPosition (QTabWidget::East);
- 
+
   main_tab_widget->setTabShape (QTabWidget::Triangular);
 
   tab_widget = new QTabWidget;
-  
+
 #if QT_VERSION >= 0x040500
   tab_widget->setMovable (true);
 #endif
-  
+
   QPushButton *bt_close = new QPushButton ("X", this);
   connect (bt_close, SIGNAL(clicked()), this, SLOT(close_current()));
   tab_widget->setCornerWidget (bt_close);
-  
+
   log_memo = new QPlainTextEdit;
   log = new CLogMemo (log_memo);
-  
+
   glog = log;
-  
+
   mainSplitter = new QSplitter (Qt::Vertical);
   v_box->addWidget (mainSplitter);
 
   cmb_fif = new QComboBox;
-  cmb_fif->setInsertPolicy (QComboBox::InsertAtTop); 
+  cmb_fif->setInsertPolicy (QComboBox::InsertAtTop);
 
   cmb_fif->setEditable (true);
   fif = cmb_fif->lineEdit();
@@ -568,7 +570,7 @@ void CEKO::create_main_widget()
   bt_find->setIcon (QIcon (":/icons/search_find.png"));
 
   QLabel *l_fif = new QLabel (tr ("FIF"));
- 
+
   lt_fte->addWidget (l_fif, 0, Qt::AlignRight);
   lt_fte->addWidget (cmb_fif, 1);
   lt_fte->addWidget (bt_find);
@@ -587,22 +589,22 @@ void CEKO::create_main_widget()
 CEKO::CEKO()
 {
   init_db();
-  
+
   srand (static_cast <unsigned> (time(0)));
 
   pa_init();
 
   play_r = true;
   play_l = true;
-  
+
   b_monitor_input = false;
-  
-  bypass_mixer = false;    
-  
+
+  bypass_mixer = false;
+
   temp_mp3_fname = QDir::tempPath() + "/eko-temp-from-mp3.wav";
-     
+
   file_temp_handle = 0;
-  
+
 
   meter_cps = C_METER_CPS;
   meter_msecs_delay = 1000 / meter_cps;
@@ -615,20 +617,20 @@ CEKO::CEKO()
 
   lv_menuitems = NULL;
   fm_entry_mode = FM_ENTRY_MODE_NONE;
-  
+
   idx_tab_edit = 0;
   idx_tab_tune = 0;
   idx_tab_fman = 0;
   idx_tab_learn = 0;
-  
+
   transport_state = STATE_STOP;
-  
+
   transport_control = new CTransportControl;
   connect(transport_control, SIGNAL(play_pause()), this, SLOT(slot_transport_play()));
   connect(transport_control, SIGNAL(stop()), this, SLOT(slot_transport_stop()));
-  
+
   create_paths();
-  
+
   QString sfilename = dir_config + "/eko.conf";
   settings = new QSettings (sfilename, QSettings::IniFormat);
 
@@ -637,7 +639,7 @@ CEKO::CEKO()
       QString ts = settings->value ("override_locale_val", "en").toString();
       if (ts.length() != 2)
          ts = "en";
-      
+
       qtTranslator.load (QString ("qt_%1").arg (ts),
                          QLibraryInfo::location (QLibraryInfo::TranslationsPath));
       qApp->installTranslator (&qtTranslator);
@@ -661,21 +663,21 @@ CEKO::CEKO()
   createStatusBar();
 
   init_styles();
-  
+
   update_sessions();
   update_palettes();
   update_themes();
   update_profiles();
 
   setMinimumSize (12, 12);
-  
+
   create_main_widget();
 
   idx_prev = 0;
   connect (main_tab_widget, SIGNAL(currentChanged(int)), this, SLOT(main_tab_page_changed(int)));
 
   readSettings();
-  
+
   documents = new CDocumentHolder;
   documents->parent_wnd = this;
   documents->tab_widget = tab_widget;
@@ -690,24 +692,24 @@ CEKO::CEKO()
 
   load_palette (fname_def_palette);
 
-  
+
   shortcuts = new CShortcuts (this);
   shortcuts->fname.append (dir_config).append ("/shortcuts");
   shortcuts->load_from_file (shortcuts->fname);
 
   sl_fif_history = qstring_load (fname_fif).split ("\n");
   cmb_fif->addItems (sl_fif_history);
-  cmb_fif->clearEditText(); 
+  cmb_fif->clearEditText();
 
   createFman();
   createOptions();
   createManual();
- 
+
 //  updateFonts();
 
   dir_last = settings->value ("dir_last", QDir::homePath()).toString();
-  b_preview = settings->value ("b_preview", false).toBool(); 
-  
+  b_preview = settings->value ("b_preview", false).toBool();
+
   l_status = new QLabel;
   pb_status = new QProgressBar;
   pb_status->setRange (0, 0);
@@ -724,7 +726,7 @@ CEKO::CEKO()
   text_file_browser = new QTextBrowser;
   text_file_browser->setWindowTitle (tr ("text browser"));
   text_file_browser->setReadOnly (true);
-  text_file_browser->setOpenExternalLinks (true); 
+  text_file_browser->setOpenExternalLinks (true);
 
   QString vn = settings->value ("VERSION_NUMBER", "").toString();
   if (vn.isEmpty() || vn != QString (VERSION_NUMBER))
@@ -736,40 +738,40 @@ CEKO::CEKO()
       fname_session.append ("/def-session-777");
       documents->load_from_session (fname_session);
      }
-  
+
   ui_update = false;
-  
+
   setAcceptDrops (true);
   qApp->setWindowIcon (QIcon (":/icons/eko.png"));
   log->log (tr ("<b>EKO %1 @ http://semiletov.org/eko</b><br>or <i>https://github.com/psemiletov/eko</i><br>by Peter Semiletov (tea@list.ru)<br>read the Manual under the <i>learn</i> tab!").arg (QString (VERSION_NUMBER)));
-  
+
   idx_tab_edit_activate();
-      
-  fb_record = new CFloatBuffer (65536, 2);     
-      
+
+  fb_record = new CFloatBuffer (65536, 2);
+
   dsp = new CDSP;
-      
+
   wnd_fxrack = new CFxRackWindow;
-  
+
   connect(wnd_fxrack->bt_apply, SIGNAL (clicked()),this, SLOT (apply_fx_clicked()));
-  
-   
+
+
   documents->transport_control = transport_control;
-  
+
   QPoint ps = settings->value ("wnd_fxrack.pos", QPoint (pos().x() + width() + 3, y())).toPoint();
-  
+
   if (settings->value ("wnd_fxrack_visible", true).toBool())
      {
       wnd_fxrack->move (ps);
       wnd_fxrack->show();
       wnd_fxrack->raise();
-     } 
-     
-  
+     }
+
+
   if (file_exists (settings->value ("temp_path", QDir::tempPath()).toString() + fname_tempfile))
      QFile::remove (settings->value ("temp_path", QDir::tempPath()).toString() + fname_tempfile);
-  
-  
+
+
   handle_args();
 }
 
@@ -778,11 +780,11 @@ void CEKO::leaving_tune()
 {
   ogg_q = spb_ogg_q->value();
   settings->setValue ("ogg_q", ogg_q);
-  
+
   resample_quality = spb_resample_quality->value();
   settings->setValue ("resample_quality", resample_quality);
-  
-  
+
+
   settings->setValue ("mp3_encode", ed_mp3_encode->text());
 }
 
@@ -794,10 +796,10 @@ void CEKO::closeEvent (QCloseEvent *event)
   pa_done();
 
   QString tfn = settings->value ("temp_path", QDir::tempPath()).toString() + fname_tempfile;
-     
+
   if (file_exists (tfn))
       QFile::remove (tfn );
-  
+
 
   if (main_tab_widget->currentIndex() == idx_tab_tune)
      leaving_tune();
@@ -812,48 +814,49 @@ void CEKO::closeEvent (QCloseEvent *event)
   writeSettings();
 
   qstring_save (fname_fif, sl_fif_history.join ("\n"));
-  
+
   delete shortcuts;
-  
+
   delete dsp;
   dsp = 0;
-  
+
   delete wnd_fxrack;
   wnd_fxrack = 0;
-  
+
   delete documents;
   documents = 0;
-  
+
   file_formats_done();
 
   event->accept();
+  deleteLater();
 }
 
 
 void CEKO::newFile()
 {
   transport_state = STATE_STOP;
-  
+
   if (pa_stream)
      {
-       Pa_CloseStream (pa_stream);	
+       Pa_CloseStream (pa_stream);
        pa_stream = 0;
      }
 
   if (pa_stream_in)
      {
-       Pa_AbortStream (pa_stream_in);	
+       Pa_AbortStream (pa_stream_in);
        pa_stream_in = 0;
      }
 
   CDocument *new_document = documents->create_new();
-  
+
   new_document->wave_edit->waveform->recalc_view();
   new_document->wave_edit->waveform->prepare_image();
   new_document->wave_edit->waveform->init_state = false;
   new_document->wave_edit->timeruler->init_state = false;
   new_document->wave_edit->waveform->update();
-  
+
   main_tab_widget->setCurrentIndex (idx_tab_edit);
 }
 
@@ -867,13 +870,13 @@ void CEKO::open()
 
   if (pa_stream)
      {
-      Pa_AbortStream (pa_stream);	
+      Pa_AbortStream (pa_stream);
       pa_stream = 0;
      }
 
   if (pa_stream_in)
      {
-       Pa_AbortStream (pa_stream_in);	
+       Pa_AbortStream (pa_stream_in);
        pa_stream_in = 0;
      }
 
@@ -914,7 +917,7 @@ void CEKO::open()
   QDir volDir("/mnt");
   QStringList volumes (volDir.entryList (volDir.filter() | QDir::NoDotAndDotDot));
 
-  foreach (QString v, volumes)  
+  foreach (QString v, volumes)
           sidebarUrls.append (QUrl::fromLocalFile ("/mnt/" + v));
 
   QDir volDir2 ("/media");
@@ -923,7 +926,7 @@ void CEKO::open()
   foreach (QString v, volumes2)
           sidebarUrls.append (QUrl::fromLocalFile ("/media/" + v));
 
-  
+
 #endif
 
   dialog.setSidebarUrls (sidebarUrls);
@@ -947,13 +950,13 @@ void CEKO::open()
   dialog.setNameFilter (tr ("All (*);;WAV files (*.wav);;Compressed files (*.ogg *.flac *.mp3)"));
 
   QStringList fileNames;
-  
+
   if (dialog.exec())
      {
       dialog.setSidebarUrls (sidebarUrls_old);
 
       fileNames = dialog.selectedFiles();
-      
+
       foreach (QString fn, fileNames)
               {
                CDocument *d = documents->open_file (fn);
@@ -999,7 +1002,7 @@ bool CEKO::save()
 bool CEKO::saveAs()
 {
   CDocument *d = documents->get_current();
-  
+
   if (! d)
      return false;
 
@@ -1013,8 +1016,8 @@ bool CEKO::saveAs()
       else
           fman->nav (dir_last);
 
-      ed_fman_fname->setFocus();   
-          
+      ed_fman_fname->setFocus();
+
       return true;
      }
 
@@ -1074,7 +1077,7 @@ bool CEKO::saveAs()
          }
 
       d->save_with_name (fileName);
-      
+
       update_dyn_menus();
 
       QFileInfo f (d->file_name);
@@ -1107,7 +1110,7 @@ void CEKO::createActions()
   connect (newAct, SIGNAL(triggered()), this, SLOT(newFile()));
 
   QIcon ic_file_open (":/icons/file-open.png");
-  ic_file_open.addFile (":/icons/file-open-active.png", QSize(), QIcon::Active); 
+  ic_file_open.addFile (":/icons/file-open-active.png", QSize(), QIcon::Active);
 
   openAct = new QAction (ic_file_open, tr ("Open file"), this);
   openAct->setStatusTip (tr ("Open an existing file"));
@@ -1115,8 +1118,8 @@ void CEKO::createActions()
 
 
   QIcon ic_file_save (":/icons/file-save.png");
-  ic_file_save.addFile (":/icons/file-save-active.png", QSize(), QIcon::Active); 
-  
+  ic_file_save.addFile (":/icons/file-save-active.png", QSize(), QIcon::Active);
+
   saveAct = new QAction (ic_file_save, tr ("Save"), this);
   saveAct->setShortcut (QKeySequence ("Ctrl+S"));
   saveAct->setStatusTip (tr ("Save the document to disk"));
@@ -1132,7 +1135,7 @@ void CEKO::createActions()
   connect (exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
   QIcon ic_edit_cut (":/icons/edit-cut.png");
-  ic_edit_cut.addFile (":/icons/edit-cut-active.png", QSize(), QIcon::Active); 
+  ic_edit_cut.addFile (":/icons/edit-cut-active.png", QSize(), QIcon::Active);
 
   cutAct = new QAction (ic_edit_cut, tr ("Cut"), this);
   cutAct->setShortcut (QKeySequence ("Ctrl+X"));
@@ -1140,8 +1143,8 @@ void CEKO::createActions()
   connect (cutAct, SIGNAL(triggered()), this, SLOT(ed_cut()));
 
   QIcon ic_edit_copy (":/icons/edit-copy.png");
-  ic_edit_copy.addFile (":/icons/edit-copy-active.png", QSize(), QIcon::Active); 
-  
+  ic_edit_copy.addFile (":/icons/edit-copy-active.png", QSize(), QIcon::Active);
+
   copyAct = new QAction (ic_edit_copy, tr("Copy"), this);
   copyAct->setShortcut (QKeySequence ("Ctrl+C"));
   copyAct->setStatusTip (tr ("Copy the current selection's contents to the clipboard"));
@@ -1149,7 +1152,7 @@ void CEKO::createActions()
 
 
   QIcon ic_edit_paste (":/icons/edit-paste.png");
-  ic_edit_paste.addFile (":/icons/edit-paste-active.png", QSize(), QIcon::Active); 
+  ic_edit_paste.addFile (":/icons/edit-paste-active.png", QSize(), QIcon::Active);
 
   pasteAct = new QAction (ic_edit_paste, tr("Paste"), this);
   pasteAct->setShortcut (QKeySequence ("Ctrl+V"));
@@ -1168,7 +1171,7 @@ void CEKO::createActions()
 
   aboutQtAct = new QAction (tr ("About Qt"), this);
   connect (aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-    
+
   transport_play = new QAction (QIcon (":/icons/play.png"), tr ("Play/Pause (Space)"), this);
   transport_play->setStatusTip (tr ("Play/Pause"));
   connect (transport_play, SIGNAL(triggered()), this, SLOT(slot_transport_play()));
@@ -1187,11 +1190,11 @@ void CEKO::createMenus()
   //fileMenu->addAction (act_test);
 
   fileMenu->addAction (newAct);
-  
+
   add_to_menu (fileMenu, tr ("Record"), SLOT(file_record()));
   add_to_menu (fileMenu, tr ("Open"), SLOT(open()), "Ctrl+O", ":/icons/file-open.png");
   add_to_menu (fileMenu, tr ("Last closed file"), SLOT(file_last_opened()));
-  
+
   fileMenu->addSeparator();
 
   add_to_menu (fileMenu, tr ("Change format"), SLOT(file_change_format()));
@@ -1221,7 +1224,7 @@ void CEKO::createMenus()
 
   menu_file_actions = fileMenu->addMenu (tr ("File actions"));
   add_to_menu (menu_file_actions, tr ("Reload"), SLOT(file_reload()));
-      
+
   menu_file_recent = fileMenu->addMenu (tr ("Recent files"));
   menu_file_sessions = fileMenu->addMenu (tr ("Sessions"));
 
@@ -1244,7 +1247,7 @@ void CEKO::createMenus()
 
   add_to_menu (editMenu, tr ("Delete (Del)"), SLOT(ed_delete()));
   add_to_menu (editMenu, tr ("Trim"), SLOT(ed_trim()));
-  
+
   editMenu->addSeparator();
 
   add_to_menu (editMenu, tr ("Copy current file name"), SLOT(edit_copy_current_fname()), "Ctrl+W");
@@ -1253,13 +1256,13 @@ void CEKO::createMenus()
 
   add_to_menu (editMenu, tr ("Select all"), SLOT(ed_select_all()), "Ctrl+A");
   add_to_menu (editMenu, tr ("Deselect"), SLOT(ed_deselect()));
-  
+
   editMenu->addSeparator();
 
 
   editMenu->addAction (undoAct);
   //editMenu->addAction (redoAct);
-  
+
   menu_search = menuBar()->addMenu (tr ("Search"));
   menu_search->setTearOffEnabled (true);
 
@@ -1277,15 +1280,15 @@ void CEKO::createMenus()
 
   add_to_menu (tm, tr ("Insert silence"), SLOT(fn_insert_silence()));
   add_to_menu (tm, tr ("Silence selection"), SLOT(fn_silence_selection()));
-  
+
 
   tm = menu_functions->addMenu (tr ("Generate"));
   tm->setTearOffEnabled (true);
-  
+
   add_to_menu (tm, tr ("Sine wave"), SLOT(generate_sine()));
   add_to_menu (tm, tr ("Noise"), SLOT(generate_noise()));
 
-  
+
   menu_fn_channels = menu_functions->addMenu (tr ("Channels"));
   menu_fn_channels->setTearOffEnabled (true);
 
@@ -1300,7 +1303,7 @@ void CEKO::createMenus()
   add_to_menu (menu_fn_channels, tr ("Copy channel"), SLOT(fn_copy_channel()));
   add_to_menu (menu_fn_channels, tr ("Mute channel"), SLOT(fn_mute_channel()));
 
-  
+
   tm = menu_functions->addMenu (tr ("Fade"));
   tm->setTearOffEnabled (true);
 
@@ -1314,9 +1317,9 @@ void CEKO::createMenus()
   add_to_menu (tm, tr ("Normalize"), SLOT(fn_norm()));
   add_to_menu (tm, tr ("Apply volume envelope"), SLOT(fn_apply_vol_envelope()));
   add_to_menu (tm, tr ("Remove volume envelope"), SLOT(fn_delete_vol_envelope()));
-  
-  
-  
+
+
+
 
   //tm = menu_functions->addMenu (tr ("Filter"));
   //tm->setTearOffEnabled (true);
@@ -1338,10 +1341,10 @@ void CEKO::createMenus()
 
   tm = menu_functions->addMenu (tr ("Other"));
   tm->setTearOffEnabled (true);
- 
+
   add_to_menu (tm, tr ("Reverse"), SLOT(fn_reverse()));
 
-  
+
   menu_nav = menuBar()->addMenu (tr ("Nav"));
   menu_nav->setTearOffEnabled (true);
 
@@ -1351,7 +1354,7 @@ void CEKO::createMenus()
   add_to_menu (menu_nav, tr ("Play looped on/off"), SLOT(nav_play_looped()));
 
   menu_nav->addSeparator();
-  
+
 
   //add_to_menu (menu_nav, tr ("Save position"), SLOT(nav_save_pos()));
   //add_to_menu (menu_nav, tr ("Go to saved position"), SLOT(nav_goto_pos()));
@@ -1375,14 +1378,14 @@ void CEKO::createMenus()
 
   add_to_menu (menu_fm_file_infos, tr ("Full info"), SLOT(fm_full_info()));
 
-  
+
   add_to_menu (menu_fm, tr ("Go to home dir"), SLOT(fman_home()));
   add_to_menu (menu_fm, tr ("Refresh current dir"), SLOT(fman_refresh()));
 
   add_to_menu (menu_fm, tr ("Select by regexp"), SLOT(fman_select_by_regexp()));
   add_to_menu (menu_fm, tr ("Deselect by regexp"), SLOT(fman_deselect_by_regexp()));
-  
-  
+
+
   menu_view = menuBar()->addMenu (tr ("View"));
   menu_view->setTearOffEnabled (true);
 
@@ -1400,7 +1403,7 @@ void CEKO::createMenus()
   add_to_menu (menu_view, tr ("Save profile"), SLOT(profile_save_as()));
 
   add_to_menu (menu_view, tr ("Show/hide FX Rack"), SLOT(view_show_mixer()), "Alt+M");
-  
+
   add_to_menu (menu_view, tr ("Toggle fullscreen"), SLOT(view_toggle_fs()));
   add_to_menu (menu_view, tr ("Stay on top"), SLOT(view_stay_on_top()));
 
@@ -1434,7 +1437,7 @@ void CEKO::createMenus()
 
 
   add_to_menu (helpMenu, tr ("System check"), SLOT(help_system_check()));
-  
+
   helpMenu->addAction(aboutAct);
   helpMenu->addAction(aboutQtAct);
   add_to_menu (helpMenu, tr ("NEWS"), SLOT(help_show_news()));
@@ -1459,19 +1462,19 @@ void CEKO::createToolBars()
   editToolBar->addAction (cutAct);
   editToolBar->addAction (copyAct);
   editToolBar->addAction (pasteAct);
-  
+
   transportToolBar = addToolBar (tr ("Transport"));
   transportToolBar->setObjectName ("transportToolBar");
-  
-  cb_play_looped = new QCheckBox (tr ("looped")); 
+
+  cb_play_looped = new QCheckBox (tr ("looped"));
   connect(cb_play_looped, SIGNAL(stateChanged (int )), this, SLOT(cb_play_looped_changed (int )));
   transportToolBar->addWidget (cb_play_looped);
-    
+
   transportToolBar->addAction (transport_play);
   transportToolBar->addAction (transport_stop);
-    
+
   QLabel *lt = new QLabel (tr ("Current time: "));
-  l_maintime = new QLabel; 
+  l_maintime = new QLabel;
 
   transportToolBar->addWidget (lt);
   transportToolBar->addWidget (l_maintime);
@@ -1499,16 +1502,16 @@ CEKO::~CEKO()
 void CEKO::pageChanged (int index)
 {
   transport_state = STATE_STOP;
-  
+
   if (pa_stream)
      {
-      Pa_CloseStream (pa_stream);	
+      Pa_CloseStream (pa_stream);
       pa_stream = 0;
      }
 
   if (pa_stream_in)
      {
-       Pa_CloseStream (pa_stream_in);	
+       Pa_CloseStream (pa_stream_in);
        pa_stream_in = 0;
      }
 
@@ -1516,16 +1519,16 @@ void CEKO::pageChanged (int index)
   if (index == -1)
      {
       documents->current = 0;
-      return;  
+      return;
      }
-  
+
   documents->current = documents->list[index];
-  
+
   if (documents->current)
      {
       documents->current->update_title();
       cb_play_looped->setChecked (documents->current->wave_edit->waveform->play_looped);
-     } 
+     }
 
   //qDebug() << "CEKO::pageChanged end" << index;
 }
@@ -1534,13 +1537,13 @@ void CEKO::pageChanged (int index)
 void CEKO::close_current()
 {
   transport_state = STATE_STOP;
-  
+
   if (pa_stream)
      {
-      Pa_CloseStream (pa_stream);	
+      Pa_CloseStream (pa_stream);
       pa_stream = 0;
      }
-     
+
   documents->close_current();
 }
 
@@ -1554,7 +1557,7 @@ void CEKO::ed_copy()
         d->wave_edit->waveform->copy_selected();
      }
   else
-      if (main_tab_widget->currentIndex() == idx_tab_learn)      
+      if (main_tab_widget->currentIndex() == idx_tab_learn)
           man->copy();
 }
 
@@ -1571,9 +1574,9 @@ void CEKO::ed_paste()
 {
   if (! sound_clipboard)
      return;
-  
+
   CDocument *d = documents->get_current();
-    
+
   if (d)
       d->wave_edit->waveform->paste();
 }
@@ -1632,16 +1635,16 @@ void CEKO::search_find()
 void CEKO::fman_find()
 {
   QString ft = fif_get_text();
-  if (ft.isEmpty()) 
-      return;  
-     
+  if (ft.isEmpty())
+      return;
+
   l_fman_find = fman->mymodel->findItems (ft, Qt::MatchStartsWith);
-  
+
   if (l_fman_find.size() < 1)
-     return; 
-  
+     return;
+
   fman_find_idx = 0;
-  
+
   fman->setCurrentIndex (fman->mymodel->indexFromItem (l_fman_find[fman_find_idx]));
 }
 
@@ -1649,15 +1652,15 @@ void CEKO::fman_find()
 void CEKO::fman_find_next()
 {
   QString ft = fif_get_text();
-  if (ft.isEmpty()) 
-      return;  
-   
+  if (ft.isEmpty())
+      return;
+
   if (l_fman_find.size() < 1)
-     return; 
-  
+     return;
+
   if (fman_find_idx < (l_fman_find.size() - 1))
      fman_find_idx++;
-  
+
   fman->setCurrentIndex (fman->mymodel->indexFromItem (l_fman_find[fman_find_idx]));
 }
 
@@ -1665,15 +1668,15 @@ void CEKO::fman_find_next()
 void CEKO::fman_find_prev()
 {
   QString ft = fif_get_text();
-  if (ft.isEmpty()) 
-      return;  
-   
+  if (ft.isEmpty())
+      return;
+
   if (l_fman_find.size() < 1)
-     return; 
-  
+     return;
+
   if (fman_find_idx != 0)
      fman_find_idx--;
-  
+
   fman->setCurrentIndex (fman->mymodel->indexFromItem (l_fman_find[fman_find_idx]));
 }
 
@@ -1684,7 +1687,7 @@ void CEKO::search_find_next()
       man_find_next();
   else
       if (main_tab_widget->currentIndex() == idx_tab_tune)
-          opt_shortcuts_find_next();  
+          opt_shortcuts_find_next();
   else
       if (main_tab_widget->currentIndex() == idx_tab_fman)
           fman_find_next();
@@ -1697,24 +1700,24 @@ void CEKO::search_find_prev()
           man_find_prev();
   else
       if (main_tab_widget->currentIndex() == idx_tab_tune)
-         opt_shortcuts_find_prev();  
+         opt_shortcuts_find_prev();
   else
       if (main_tab_widget->currentIndex() == idx_tab_fman)
-         fman_find_prev();  
+         fman_find_prev();
 }
 
 
 void CEKO::opt_shortcuts_find()
 {
   opt_shortcuts_string_to_find = fif_get_text();
-  
+
   int from = lv_menuitems->currentRow();
-  
+
   if (from == -1)
      from = 0;
-  
+
   int index = shortcuts->captions.indexOf (QRegExp (opt_shortcuts_string_to_find + ".*", Qt::CaseInsensitive), from);
-  if (index != -1) 
+  if (index != -1)
      lv_menuitems->setCurrentRow (index);
 }
 
@@ -1724,9 +1727,9 @@ void CEKO::opt_shortcuts_find_next()
   int from = lv_menuitems->currentRow();
   if (from == -1)
      from = 0;
-  
+
   int index = shortcuts->captions.indexOf (QRegExp (opt_shortcuts_string_to_find + ".*", Qt::CaseInsensitive), from + 1);
-  if (index != -1) 
+  if (index != -1)
     lv_menuitems->setCurrentRow (index);
 }
 
@@ -1736,10 +1739,10 @@ void CEKO::opt_shortcuts_find_prev()
   int from = lv_menuitems->currentRow();
   if (from == -1)
      from = 0;
-  
+
   int index = shortcuts->captions.lastIndexOf (QRegExp (opt_shortcuts_string_to_find + ".*", Qt::CaseInsensitive), from - 1);
-  if (index != -1) 
-     lv_menuitems->setCurrentRow (index); 
+  if (index != -1)
+     lv_menuitems->setCurrentRow (index);
 }
 
 
@@ -1842,13 +1845,13 @@ void CEKO::createOptions()
   tab_options = new QTabWidget;
 
   idx_tab_tune = main_tab_widget->addTab (tab_options, tr ("options"));
-  
+
   QWidget *page_interface = new QWidget (tab_options);
   QHBoxLayout *lt_h = new QHBoxLayout;
 
   QComboBox *cmb_styles = new QComboBox (page_interface);
   cmb_styles->addItems (QStyleFactory::keys());
- 
+
   connect (cmb_styles, SIGNAL(currentIndexChanged (const QString &)),
            this, SLOT(slot_style_currentIndexChanged (const QString &)));
 
@@ -1893,7 +1896,7 @@ void CEKO::createOptions()
   QLabel *l_uistyle = new QLabel (tr ("UI style"));
   cmb_styles->setCurrentIndex (cmb_styles->findText (settings->value ("ui_style", "Cleanlooks").toString()));
 
-    
+
   QCheckBox *cb_show_meterbar_in_db = new QCheckBox (tr ("Amplitude meter bar in dB"), tab_options);
   cb_show_meterbar_in_db->setCheckState (Qt::CheckState (settings->value ("meterbar_show_db", "1").toInt()));
   connect(cb_show_meterbar_in_db, SIGNAL(stateChanged (int )), this, SLOT(cb_show_meterbar_in_db_changed (int )));
@@ -1920,28 +1923,28 @@ void CEKO::createOptions()
 
   lt_h->addWidget (l_uistyle);
   lt_h->addWidget (cmb_styles);
- 
+
   cb_altmenu = new QCheckBox (tr ("Use Alt key to access main menu"), tab_options);
   if (b_altmenu)
     cb_altmenu->setCheckState (Qt::Checked);
   else
       cb_altmenu->setCheckState (Qt::Unchecked);
-  
+
   connect (cb_altmenu, SIGNAL(stateChanged (int)),
            this, SLOT(cb_altmenu_stateChanged (int)));
 
-   
+
   page_interface_layout->addLayout (lt_h);
-  page_interface_layout->addWidget (cb_show_meterbar_in_db); 
+  page_interface_layout->addWidget (cb_show_meterbar_in_db);
   page_interface_layout->addWidget (cb_use_trad_dialogs);
   page_interface_layout->addWidget (cb_altmenu);
-  
- 
+
+
   page_interface->setLayout (page_interface_layout);
   page_interface->show();
 
   //tab_options->addTab (page_interface, tr ("Interface"));
-  
+
   QScrollArea *scra_interface = new QScrollArea;
   scra_interface->setWidgetResizable (true);
   scra_interface->setWidget (page_interface);
@@ -1950,11 +1953,11 @@ void CEKO::createOptions()
 
 
   //////////
-  
+
   QWidget *page_common = new QWidget (tab_options);
   QVBoxLayout *page_common_layout = new QVBoxLayout;
   page_common_layout->setAlignment (Qt::AlignTop);
-  
+
   QHBoxLayout *hb_temp_path = new QHBoxLayout;
   QLabel *l_t = new QLabel (tr ("Temp directory"));
 
@@ -1971,8 +1974,8 @@ void CEKO::createOptions()
   hb_temp_path->addWidget (pb_choose_temp_path);
 
   page_common_layout->addLayout (hb_temp_path);
-  
-  
+
+
 
   QPushButton *bt_set_def_format = new QPushButton (tr ("Set default format for new files"));
   connect (bt_set_def_format, SIGNAL(clicked()), this, SLOT(bt_set_def_format_clicked()));
@@ -1981,10 +1984,10 @@ void CEKO::createOptions()
   QLabel *l_mp3_encode = new QLabel (tr ("MP3 encode command"));
   ed_mp3_encode = new QLineEdit;
   ed_mp3_encode->setText (settings->value ("mp3_encode", "lame -b 320 -q 0 \"@FILEIN\" \"@FILEOUT\"").toString());
-  
 
-  hb_mp3_encode->addWidget (l_mp3_encode);  
-  hb_mp3_encode->addWidget (ed_mp3_encode);  
+
+  hb_mp3_encode->addWidget (l_mp3_encode);
+  hb_mp3_encode->addWidget (ed_mp3_encode);
 
 
   QHBoxLayout *lt_ogg_q = new QHBoxLayout;
@@ -2002,51 +2005,51 @@ void CEKO::createOptions()
 /*
   QHBoxLayout *h_panner = new QHBoxLayout;
   QLabel *l_panner = new QLabel (tr ("Panner:"));
-    
+
   cmb_panner = new QComboBox;
-  
+
   QStringList panners;
   panners.append (tr ("linear, law: -6 dB"));
   panners.append (tr ("linear, law: 0 dB"));
   panners.append (tr ("square root, law: -3 dB"));
   panners.append (tr ("sin/cos, law: -3 dB"));
-  
+
   cmb_panner->addItems (panners);
-  
+
   h_panner->addWidget (l_panner);
   h_panner->addWidget (cmb_panner);
-  
+
   cmb_panner->setCurrentIndex (settings->value ("panner", 0).toInt());
-  
-  
+
+
   connect (cmb_panner, SIGNAL(currentIndexChanged (int)),
            this, SLOT(cmb_panner_currentIndexChanged (int)));
 */
 
- 
+
   QHBoxLayout *h_proxy_video_decoder = new QHBoxLayout;
   QLabel *l_proxy_video_decoder = new QLabel (tr ("MP3 and video decoder (restart EKO to apply):"));
-    
+
   QComboBox *cmb_proxy_video_decoder = new QComboBox;
-  
+
   QStringList sl_video_decoders;
   sl_video_decoders.append ("FFMPEG");
   sl_video_decoders.append ("MPlayer");
-  
+
   cmb_proxy_video_decoder->addItems (sl_video_decoders);
-  
+
   h_proxy_video_decoder->addWidget (l_proxy_video_decoder);
   h_proxy_video_decoder->addWidget (cmb_proxy_video_decoder);
-  
+
   cmb_proxy_video_decoder->setCurrentIndex (settings->value ("proxy_video_decoder", 0).toInt());
-  
-  
+
+
   connect (cmb_proxy_video_decoder, SIGNAL(currentIndexChanged (int)),
            this, SLOT(cmb_proxy_video_decoder_currentIndexChanged (int)));
 
 
   QHBoxLayout *lt_maxundos = new QHBoxLayout;
- 
+
   QLabel *l_maxundos = new QLabel (tr ("Max undo items per file"));
   QSpinBox *spb_max_undos = new QSpinBox;
   spb_max_undos->setValue (settings->value ("max_undos", 6).toInt());
@@ -2057,13 +2060,13 @@ void CEKO::createOptions()
   lt_maxundos->addWidget (spb_max_undos);
 
   QHBoxLayout *lt_resample_quality = new QHBoxLayout;
- 
+
   QLabel *l_resample_quality = new QLabel (tr ("Resample quiality (0 - best, 4 - bad but fast)"));
   spb_resample_quality = new QSpinBox;
   spb_resample_quality->setValue (settings->value ("resample_quality", 0).toInt());
   spb_resample_quality->setMinimum (0);
   spb_resample_quality->setMaximum (4);
-  
+
   //connect (spb_max_undos, SIGNAL(valueChanged (int )), this, SLOT(spb_max_undos_valueChanged (int )));
 
   lt_resample_quality->addWidget (l_resample_quality);
@@ -2073,7 +2076,7 @@ void CEKO::createOptions()
   QCheckBox *cb_session_restore = new QCheckBox (tr ("Restore the last session on start-up"), tab_options);
   cb_session_restore->setCheckState (Qt::CheckState (settings->value ("session_restore", "0").toInt()));
   connect(cb_session_restore, SIGNAL(stateChanged (int )), this, SLOT(cb_session_restore (int )));
-  
+
   QCheckBox *cb_override_locale = new QCheckBox (tr ("Override locale"), tab_options);
   cb_override_locale->setCheckState (Qt::CheckState (settings->value ("override_locale", 0).toInt()));
   connect(cb_override_locale, SIGNAL(stateChanged (int )), this, SLOT(cb_locale_override (int )));
@@ -2083,10 +2086,10 @@ void CEKO::createOptions()
   connect(ed_locale_override, SIGNAL(editingFinished()), this, SLOT(ed_locale_override_editingFinished()));
 
   QHBoxLayout *hb_locovr = new QHBoxLayout;
-  
+
   hb_locovr->addWidget (cb_override_locale);
   hb_locovr->addWidget (ed_locale_override);
-  
+
   page_common_layout->addWidget (bt_set_def_format);
 
   page_common_layout->addLayout (h_proxy_video_decoder);
@@ -2100,14 +2103,14 @@ void CEKO::createOptions()
   page_common_layout->addLayout (lt_ogg_q);
 
   page_common_layout->addLayout (lt_maxundos);
-  
+
   //page_common_layout->addLayout (h_panner);
-      
+
   page_common_layout->addWidget (cb_session_restore);
-    
+
   page_common_layout->addLayout (hb_locovr);
-      
-  
+
+
   page_common->setLayout (page_common_layout);
 
 //  page_common->show();
@@ -2120,7 +2123,7 @@ void CEKO::createOptions()
 
   tab_options->addTab (scra_common, tr ("Common"));
 
-  
+
 /////////////
 
   QWidget *page_soundev = new QWidget (tab_options);
@@ -2143,12 +2146,12 @@ void CEKO::createOptions()
 
   pa_device_id_out = settings->value ("sound_dev_id_out", Pa_GetDefaultOutputDevice()).toInt();
   pa_device_id_in = settings->value ("sound_dev_id_in", Pa_GetDefaultInputDevice()).toInt();
-  
+
   QLabel *l_soundev = new QLabel (tr ("Output"));
-  
+
   cmb_sound_dev_out = new QComboBox;
   cmb_sound_dev_out->addItems (get_sound_devices());
-  
+
   hb_soundev->addWidget (l_soundev);
   hb_soundev->addWidget (cmb_sound_dev_out);
 
@@ -2160,15 +2163,15 @@ void CEKO::createOptions()
 
   cmb_sound_dev_in = new QComboBox;
   cmb_sound_dev_in->addItems (get_sound_devices());
-  
+
   hb_soundev_in->addWidget (l_soundev_in);
   hb_soundev_in->addWidget (cmb_sound_dev_in);
 
-  
+
   cmb_sound_dev_in->setCurrentIndex (pa_device_id_in);
   cmb_sound_dev_out->setCurrentIndex (pa_device_id_out);
-  
-  
+
+
   connect (cmb_sound_dev_in, SIGNAL(currentIndexChanged (int)),
            this, SLOT(cmb_sound_dev_in_currentIndexChanged (int)));
 
@@ -2182,68 +2185,68 @@ void CEKO::createOptions()
   QLabel *l_mono_recording_mode = new QLabel (tr ("Mono recording mode"));
 
   QComboBox *cmb_mono_recording_mode = new QComboBox;
-  
+
   QStringList lmrm;
-  
+
  // lmrm.append (tr ("Mix both channels"));
   lmrm.append (tr ("Use left channel"));
   lmrm.append (tr ("Use right channel"));
-  
+
   cmb_mono_recording_mode->addItems (lmrm);
-  
+
   hb_mono_recording_mode->addWidget (l_mono_recording_mode);
   hb_mono_recording_mode->addWidget (cmb_mono_recording_mode);
 
   connect (cmb_mono_recording_mode, SIGNAL(currentIndexChanged (int)),
            this, SLOT(cmb_mono_recording_mode_currentIndexChanged (int)));
-  
+
   cmb_mono_recording_mode->setCurrentIndex (settings->value ("mono_recording_mode", 0).toInt());
 
 
   QHBoxLayout *hb_buffer_size_frames = new QHBoxLayout;
 
   QLabel *l_buffer_size_frames = new QLabel (tr ("Buffer size (in frames)"));
-  
+
   cmb_buffer_size_frames = new QComboBox;
-  
+
   QStringList lsizes;
-  
+
   lsizes.append ("128");
   lsizes.append ("256");
   lsizes.append ("512");
   lsizes.append ("1024");
   lsizes.append ("2048");
   lsizes.append ("4096");
-  
+
   cmb_buffer_size_frames->addItems (lsizes);
-  
-  
+
+
   hb_buffer_size_frames->addWidget (l_buffer_size_frames);
   hb_buffer_size_frames->addWidget (cmb_buffer_size_frames);
 
   int idx = lsizes.indexOf (settings->value ("buffer_size_frames", "2048").toString());
 
   cmb_buffer_size_frames->setCurrentIndex (idx);
- 
-  
+
+
   connect (cmb_buffer_size_frames, SIGNAL(currentIndexChanged (const QString &)),
            this, SLOT(cmb_buffer_size_frames_currentIndexChanged (const QString &)));
-  
-  
-  
+
+
+
   QCheckBox *cb_monitor_input = new QCheckBox (tr ("Monitor input"), tab_options);
   cb_monitor_input->setCheckState (Qt::CheckState (settings->value ("b_monitor_input", 0).toInt()));
   connect(cb_monitor_input, SIGNAL(stateChanged (int )), this, SLOT(cb_monitor_input_changed (int )));
 
 
-  
+
   page_soundev_layout->addLayout (hb_soundev_in);
   page_soundev_layout->addLayout (hb_soundev);
   page_soundev_layout->addLayout (hb_mono_recording_mode);
 
   page_soundev_layout->addLayout (hb_buffer_size_frames);
   page_soundev_layout->addWidget (cb_monitor_input);
-  
+
 
 //////////
 
@@ -2256,7 +2259,7 @@ void CEKO::createOptions()
 
   lv_menuitems = new QListWidget;
   opt_update_keyb();
-  
+
   lt_vkeys->addWidget (lv_menuitems);
 
   connect (lv_menuitems, SIGNAL(currentItemChanged (QListWidgetItem *, QListWidgetItem *)),
@@ -2288,7 +2291,7 @@ void CEKO::opt_update_keyb()
 {
    if (! lv_menuitems)
       return;
-   
+
    shortcuts->captions_iterate();
    lv_menuitems->clear();
    lv_menuitems->addItems (shortcuts->captions);
@@ -2299,10 +2302,14 @@ void CEKO::slot_style_currentIndexChanged (const QString &text)
 {
    if (text == "GTK+") //because it is buggy with some Qt versions. sorry!
      return;
-  
-  MyProxyStyle *ps = new MyProxyStyle (QStyleFactory::create (text));
-  
-  QApplication::setStyle (ps);
+
+  QStyle *style = QStyleFactory::create (text);
+  if (style == 0)
+     return;
+
+  //MyProxyStyle *ps = new MyProxyStyle (style);
+
+  //QApplication::setStyle (ps);
 
   settings->setValue ("ui_style", text);
 }
@@ -2397,7 +2404,7 @@ void CEKO::createManual()
 
   QString filename (":/manuals/");
   filename.append (loc).append (".html");
-  
+
   if (! file_exists (filename))
       filename = ":/manuals/en.html";
 
@@ -2434,7 +2441,7 @@ void CEKO::file_last_opened()
       documents->open_file (documents->recent_files[0]);
       documents->recent_files.removeAt (0);
       documents->update_recent_menu();
-      main_tab_widget->setCurrentIndex (idx_tab_edit); 
+      main_tab_widget->setCurrentIndex (idx_tab_edit);
      }
 }
 
@@ -2480,18 +2487,18 @@ void CEKO::dropEvent (QDropEvent *event)
 {
   QString fName;
   QFileInfo info;
-  
+
   if (! event->mimeData()->hasUrls())
      return;
-     
-  foreach (QUrl u, event->mimeData()->urls())     
+
+  foreach (QUrl u, event->mimeData()->urls())
           {
            fName = u.toLocalFile();
            info.setFile (fName);
            if (info.isFile())
                documents->open_file (fName);
            }
-              
+
   event->acceptProposedAction();
 }
 
@@ -2609,9 +2616,9 @@ void CAboutWindow::update_image()
   for (int x = 1; x < 400; x += 25)
       {
        QColor color;
-       
+
        int i = qrand() % 5;
-       
+
        switch (i)
               {
                case 0: color = 0xfff3f9ff;
@@ -2622,17 +2629,17 @@ void CAboutWindow::update_image()
 
                case 2: color = 0xffa5a5a6;
                        break;
-                       
+
                case 3: color = 0xffebffe9;
                        break;
-               
+
                case 4: color = 0xffbbf6ff;
                        break;
               }
-                  
+
        painter.fillRect (x, y, 25, 16, QBrush (color));
-       
-       if (i == 0) 
+
+       if (i == 0)
           {
            QFont f;
            f.setPixelSize (16);
@@ -2641,7 +2648,7 @@ void CAboutWindow::update_image()
            painter.drawText (x, y + 16, "0");
           }
 
-        if (i == 1) 
+        if (i == 1)
            {
             QFont f;
             f.setPixelSize (16);
@@ -2649,17 +2656,17 @@ void CAboutWindow::update_image()
             painter.setPen (Qt::gray);
             painter.drawText (x, y + 16, "1");
            }
-     } 
+     }
 
   QString txt = "EKO";
-  
+
   QFont f ("Monospace");
   f.setPixelSize (85);
   painter.setFont (f);
-  
+
   painter.setPen (Qt::black);
   painter.drawText (4, 90, txt);
-  
+
   painter.setPen (Qt::red);
   painter.drawText (2, 86, txt);
 
@@ -2667,17 +2674,17 @@ void CAboutWindow::update_image()
      mascot_right = false;
   if (mascot_x < 100)
      mascot_right = true;
-     
-  if (mascot_right)   
-      mascot_x += 10;  
+
+  if (mascot_right)
+      mascot_x += 10;
   else
-      mascot_x -= 10;  
-      
+      mascot_x -= 10;
+
   painter.drawImage (mascot_x, 1, mascot);
 
   logo->setPixmap (QPixmap::fromImage (img));
 }
-  
+
 
 CAboutWindow::CAboutWindow()
 {
@@ -2691,11 +2698,11 @@ CAboutWindow::CAboutWindow()
 
   logo = new QLabel;
   update_image();
-    
+
   QTimer *timer = new QTimer(this);
   connect(timer, SIGNAL(timeout()), this, SLOT(update_image()));
   timer->start (500);
-  
+
   QTabWidget *tw = new QTabWidget (this);
 
   QPlainTextEdit *page_code = new QPlainTextEdit();
@@ -2736,7 +2743,7 @@ void CEKO::cb_button_saves_as()
      return;
 
   QString filename (fman->dir.path());
-  
+
   filename.append ("/").append (ed_fman_fname->text());
 
   if (file_exists (filename))
@@ -2750,7 +2757,7 @@ void CEKO::cb_button_saves_as()
 
 
    d->save_with_name (filename);
-   
+
    QFileInfo f (d->file_name);
    dir_last = f.path();
    update_dyn_menus();
@@ -2786,7 +2793,7 @@ void CEKO::fman_del_bmk()
   int i = lv_places->currentRow();
 
   if (i == -1)
-     return; 
+     return;
 
   QString s = lv_places->item(i)->text();
   if (s.isNull() || s.isEmpty())
@@ -2815,7 +2822,7 @@ void CEKO::update_places_bookmarks()
 {
   lv_places->clear();
   QStringList sl_items;
-  
+
   if (! file_exists (fname_places_bookmarks))
      return;
 
@@ -2828,7 +2835,7 @@ void CEKO::update_places_bookmarks()
 void CEKO::fman_open()
 {
   main_tab_widget->setCurrentIndex (idx_tab_edit);
- 
+
   QString f = ed_fman_fname->text().trimmed();
   QStringList li = fman->get_sel_fnames();
 
@@ -2956,11 +2963,11 @@ void CEKO::file_use_palette()
 
   fname_def_palette = fname;
   load_palette (fname);
-  
+
   documents->def_palette = fname;
   documents->load_palette (fname);
   update_stylesheet (fname_stylesheet);
-  
+
   documents->apply_settings();
 }
 
@@ -2998,7 +3005,7 @@ void CEKO::createFman()
   ed_fman_fname = new QLineEdit;
   connect (ed_fman_fname, SIGNAL(returnPressed()), this, SLOT(fman_fname_entry_confirm()));
 
-  
+
   ed_fman_path = new QLineEdit;
   connect (ed_fman_path, SIGNAL(returnPressed()), this, SLOT(fman_naventry_confirm()));
 
@@ -3028,7 +3035,7 @@ void CEKO::createFman()
   QFileInfoList l_drives = QDir::drives();
   foreach (QFileInfo fi, l_drives)
            cb_fman_drives->addItem (fi.path());
-  
+
 #endif
 
   lah_topbar->addWidget (ed_fman_path);
@@ -3037,7 +3044,7 @@ void CEKO::createFman()
   lah_controls->addWidget (l_t);
   lah_controls->addWidget (ed_fman_fname);
 
-  
+
   QPushButton *bt_fman_open = new QPushButton (tr ("Open"), this);
   connect (bt_fman_open, SIGNAL(clicked()), this, SLOT(fman_open()));
 
@@ -3064,13 +3071,13 @@ void CEKO::createFman()
 #endif
 
   w_right = new QWidget (this);
-  
+
   w_right->setMinimumWidth (10);
 
-  
+
   QVBoxLayout *lw_right = new QVBoxLayout;
-  w_right->setLayout (lw_right);  
-  
+  w_right->setLayout (lw_right);
+
   lw_right->addLayout (lah_controls);
 
   QFrame *vline = new QFrame;
@@ -3099,7 +3106,7 @@ void CEKO::createFman()
   vbox->addWidget (lv_places);
 
   lw_right->addLayout (vbox);
-  
+
   fman->setSizePolicy (QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 
   spl_fman = new QSplitter (this);
@@ -3107,7 +3114,7 @@ void CEKO::createFman()
 
   spl_fman->addWidget (fman);
   spl_fman->addWidget (w_right);
-  
+
   spl_fman->restoreState (settings->value ("spl_fman").toByteArray());
 
   lav_main->addLayout (lah_topbar);
@@ -3116,7 +3123,7 @@ void CEKO::createFman()
   wd_fman->setLayout (lav_main);
 
   fman_home();
-  
+
   idx_tab_fman = main_tab_widget->addTab (wd_fman, tr ("files"));
 }
 
@@ -3126,7 +3133,7 @@ void CEKO::fman_file_activated (const QString &full_path)
   main_tab_widget->setCurrentIndex (idx_tab_edit);
 
   transport_state = STATE_STOP;
- 
+
   CDocument *d = documents->open_file (full_path);
   if (d)
       dir_last = get_file_path (d->file_name);
@@ -3159,18 +3166,18 @@ void CEKO::fman_rename()
  QString fname = fman->get_sel_fname();
   if (fname.isNull() || fname.isEmpty())
      return;
-  
+
   QFileInfo fi (fname);
   if (! fi.exists() && ! fi.isWritable())
      return;
-  
+
   bool ok;
   QString newname = QInputDialog::getText (this, tr ("Enter the name"),
                                                  tr ("Name:"), QLineEdit::Normal,
                                                  tr ("new"), &ok);
   if (! ok || newname.isEmpty())
      return;
-  
+
   QString newfpath (fi.path());
   newfpath.append ("/").append (newname);
   QFile::rename (fname, newfpath);
@@ -3194,14 +3201,14 @@ void CEKO::fman_delete()
   QFileInfo fi (fname);
   if (! fi.exists() && ! fi.isWritable())
      return;
- 
+
   if (QMessageBox::warning (this, "EKO",
                             tr ("Are you sure to delete\n"
                             "%1?").arg (fname),
                             QMessageBox::Yes | QMessageBox::Default,
                             QMessageBox::No | QMessageBox::Escape) == QMessageBox::No)
       return;
- 
+
   QFile::remove (fname);
   update_dyn_menus();
   fman->refresh();
@@ -3244,7 +3251,7 @@ void CEKO::fm_full_info()
   l.append (tr ("size: %1 kbytes").arg (QString::number (fi.size() / 1024)));
   l.append (tr ("created: %1").arg (fi.created().toString ("yyyy-MM-dd@hh:mm:ss")));
   l.append (tr ("modified: %1").arg (fi.lastModified().toString ("yyyy-MM-dd@hh:mm:ss")));
-  
+
   log->log (l.join ("<br>"));
 }
 
@@ -3279,7 +3286,7 @@ void CEKO::handle_args()
        else
             documents->open_file (l.at(i));
       }
-      
+
    transport_state = STATE_STOP;
 }
 
@@ -3297,13 +3304,13 @@ void CEKO::main_tab_page_changed (int index)
       fm_entry_mode = FM_ENTRY_MODE_NONE;
       idx_tab_fman_activate();
      }
-  else       
+  else
   if (index == idx_tab_edit)
      idx_tab_edit_activate();
-  else   
+  else
   if (index == idx_tab_tune)
      idx_tab_tune_activate();
-  else   
+  else
   if (index == idx_tab_learn)
      idx_tab_learn_activate();
 }
@@ -3333,8 +3340,8 @@ QString CEKO::fif_get_text()
 void CEKO::fman_fname_entry_confirm()
 {
   if (fm_entry_mode == FM_ENTRY_MODE_OPEN)
-     fman_open();     
-   
+     fman_open();
+
   if (fm_entry_mode == FM_ENTRY_MODE_SAVE)
      cb_button_saves_as();
 }
@@ -3350,8 +3357,8 @@ void CEKO::view_use_profile()
   mainSplitter->restoreState (s.value ("splitterSizes").toByteArray());
   resize (size);
   move (pos);
-  
-  documents->apply_settings();  
+
+  documents->apply_settings();
 }
 
 
@@ -3374,7 +3381,7 @@ void CEKO::profile_save_as()
   s.setValue ("splitterSizes", mainSplitter->saveState());
 
   s.sync();
-  
+
   update_profiles();
 }
 
@@ -3393,19 +3400,19 @@ void CEKO::update_profiles()
 void CEKO::fman_items_select_by_regexp (bool mode)
 {
   QString ft = fif_get_text();
-  if (ft.isEmpty()) 
-      return;  
-     
+  if (ft.isEmpty())
+      return;
+
   l_fman_find = fman->mymodel->findItems (ft, Qt::MatchRegExp);
-  
+
   if (l_fman_find.size() < 1)
-     return; 
-   
+     return;
+
   QItemSelectionModel *m = fman->selectionModel();
   for (int i = 0; i < l_fman_find.size(); i++)
-      if (mode) 
+      if (mode)
          m->select (fman->mymodel->indexFromItem (l_fman_find[i]), QItemSelectionModel::Select | QItemSelectionModel::Rows);
-      else   
+      else
           m->select (fman->mymodel->indexFromItem (l_fman_find[i]), QItemSelectionModel::Deselect | QItemSelectionModel::Rows);
 }
 
@@ -3421,7 +3428,7 @@ void CEKO::fman_deselect_by_regexp()
   fman_items_select_by_regexp (false);
 }
 
-  
+
 void CEKO::idx_tab_edit_activate()
 {
   fileMenu->menuAction()->setVisible (true);
@@ -3497,24 +3504,24 @@ void CEKO::slot_transport_play()
 
   if (pa_stream)
      {
-      Pa_CloseStream (pa_stream);	
+      Pa_CloseStream (pa_stream);
       pa_stream = 0;
      }
-  
-  CDocument *d = documents->get_current(); 
-  
+
+  CDocument *d = documents->get_current();
+
   if (! d)
      return;
-    
+
   if (transport_state != STATE_PLAY)
-     { 
+     {
       PaStreamParameters outputParameters;
 
       outputParameters.device = pa_device_id_out;
       outputParameters.channelCount = documents->current->wave_edit->waveform->fb->channels;
       outputParameters.sampleFormat = paFloat32;
       outputParameters.sampleFormat |= paNonInterleaved;
-      
+
       outputParameters.suggestedLatency = Pa_GetDeviceInfo (outputParameters.device)->defaultLowOutputLatency;;
       outputParameters.hostApiSpecificStreamInfo = NULL;
 
@@ -3526,7 +3533,7 @@ void CEKO::slot_transport_play()
       inputParameters.suggestedLatency = Pa_GetDeviceInfo (inputParameters.device)->defaultLowOutputLatency;;
       inputParameters.hostApiSpecificStreamInfo = NULL;
 
-  
+
       PaError err = Pa_OpenStream (&pa_stream,
                                    NULL, //&inputParameters,
                                    &outputParameters,
@@ -3534,48 +3541,48 @@ void CEKO::slot_transport_play()
 		                           buffer_size_frames,
 		                           paNoFlag,
 		                           pa_stream_callback,
-		                           NULL//&pe 
-	                              ); 	
-   
+		                           NULL//&pe
+	                              );
+
       qDebug() << Pa_GetErrorText (err);
-       
+
       if (err < 0)
          {
           log->log (Pa_GetErrorText (err));
-          
-          QMessageBox::warning (0, tr ("Error!"), 
+
+          QMessageBox::warning (0, tr ("Error!"),
                                tr ("Something wrong!\n Try to select another sound port[s] at Tune - Sound options page, or release the sound device from another application use."));
-          
+
           pa_stream = 0;
           return;
          }
-     
-      
+
+
       transport_play->setIcon (QIcon (":/icons/play.png"));
-   
+
       if (d->wave_edit->waveform->play_looped && d->wave_edit->waveform->selected)
           //set the buffer offset and cursor to the start of the selection
           d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->frames_start();
-    
-          
+
+
       wnd_fxrack->fx_rack->set_state_all (FXS_RUN);
       wnd_fxrack->fx_rack->reset_all_fx (d->wave_edit->waveform->fb->samplerate, d->wave_edit->waveform->fb->channels);
       d->wave_edit->waveform->timer.start();
       wnd_fxrack->level_meter->init_state = false;
       wnd_fxrack->tm_level_meter.start();
-     
-     
+
+
      ///////////////////////////////////////////
-     
-      
+
+
       if (dsp->temp_float_buffer)
           delete dsp->temp_float_buffer;
- 
+
      dsp->temp_float_buffer = new CFloatBuffer (buffer_size_frames, d->wave_edit->waveform->fb->channels);
      //dsp->temp_float_buffer->allocate_interleaved();
- 
+
  ////////////////////////////////////////////////////
-         
+
       transport_state = STATE_PLAY;
       err = Pa_StartStream (pa_stream);
       qDebug() << Pa_GetErrorText (err);
@@ -3585,13 +3592,13 @@ void CEKO::slot_transport_play()
            log->log (Pa_GetErrorText (err));
            pa_stream = 0;
           }
-     
+
        return;
       }
 
-     
+
   transport_state = STATE_PAUSE;
-  
+
   wnd_fxrack->fx_rack->set_state_all (FXS_PAUSE);
 
   if (d)
@@ -3607,30 +3614,30 @@ void CEKO::stop_recording()
 {
   if (pa_stream)
      {
-      Pa_AbortStream (pa_stream_in);	
-      Pa_CloseStream (pa_stream_in);	
+      Pa_AbortStream (pa_stream_in);
+      Pa_CloseStream (pa_stream_in);
       pa_stream_in = 0;
      }
 
    sf_close  (file_temp_handle);
-       
-   QString temppath = settings->value ("temp_path", QDir::tempPath()).toString() + fname_tempfile;    
-       
+
+   QString temppath = settings->value ("temp_path", QDir::tempPath()).toString() + fname_tempfile;
+
    if (! file_exists (temppath))
       {
         log->log (tr ("Cannot open the temporary file with the recorded sound."));
         return;
-       } 
-      
+       }
+
    CDocument *d = documents->open_file (temppath, false);
-      
+
    int sndfile_format = 0;
    sndfile_format = sndfile_format | SF_FORMAT_WAV | SF_FORMAT_FLOAT;
-   
+
    int format = settings->value ("def_sndfile_format", sndfile_format).toInt();
- 
+
    d->wave_edit->waveform->fb->sndfile_format = format;
- 
+
    if (file_exists (settings->value ("temp_path", QDir::tempPath()).toString() + fname_tempfile))
       QFile::remove (settings->value ("temp_path", QDir::tempPath()).toString() + fname_tempfile);
 
@@ -3643,23 +3650,23 @@ void CEKO::slot_transport_stop()
   wnd_fxrack->tm_level_meter.stop();
   wnd_fxrack->fx_rack->set_state_all (FXS_STOP);
   transport_play->setIcon (QIcon (":/icons/play.png"));
-  
+
   if (transport_state == STATE_RECORD)
      {
       stop_recording();
       return;
      }
-  
+
   transport_state = STATE_STOP;
-  
+
   if (pa_stream)
      {
-       Pa_CloseStream (pa_stream);	
+       Pa_CloseStream (pa_stream);
        pa_stream = 0;
      }
-  
-  CDocument *d = documents->get_current(); 
-  
+
+  CDocument *d = documents->get_current();
+
   if (d)
      {
       d->wave_edit->waveform->timer.stop();
@@ -3672,29 +3679,29 @@ void CEKO::slot_transport_stop()
 //пашет вроде
 void CEKO::ed_copy_to_new()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
      return;
-  
+
   if (! d->wave_edit->waveform->selected)
      return;
-  
+
   d->wave_edit->waveform->copy_selected();
-  
+
   if (! sound_clipboard)
      return;
-  
+
   CDocument *new_document = documents->create_new();
   main_tab_widget->setCurrentIndex (idx_tab_edit);
 
-  new_document->wave_edit->waveform->fb->copy_from (sound_clipboard); 
-  
+  new_document->wave_edit->waveform->fb->copy_from (sound_clipboard);
+
   new_document->wave_edit->waveform->recalc_view();
   new_document->wave_edit->waveform->prepare_image();
-  
+
   new_document->wave_edit->waveform->init_state = false;
   new_document->wave_edit->timeruler->init_state = false;
-  
+
   new_document->wave_edit->waveform->update();
 }
 
@@ -3731,25 +3738,25 @@ void CEKO::ed_copy_to_new_fmt()
 
 void CEKO::ed_delete()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
      return;
-  
-  d->wave_edit->waveform->delete_selected();   
+
+  d->wave_edit->waveform->delete_selected();
 }
 
 
 void CEKO::file_info()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
      return;
-  
+
   int f = d->wave_edit->waveform->fb->sndfile_format & SF_FORMAT_TYPEMASK;
   QString format = file_formats->hformatnames.value (f);
   int st = d->wave_edit->waveform->fb->sndfile_format & SF_FORMAT_SUBMASK;
   QString subtype = file_formats->hsubtype.value (st);;
- 
+
   log->log (tr ("samplerate: %1").arg (QString::number (d->wave_edit->waveform->fb->samplerate)));
   log->log (tr ("channels: %1").arg (QString::number (d->wave_edit->waveform->fb->channels)));
   log->log (subtype);
@@ -3762,35 +3769,35 @@ void CEKO::file_info()
 CChangeFormatWindow::CChangeFormatWindow (QWidget *parent, CWaveform *waveform, int fm): QDialog (parent)
 {
   setModal (true);
-  
+
   wf = waveform;
-  
+
   if (wf)
      fmt = wf->fb->sndfile_format;
   else
-      fmt = fm;   
+      fmt = fm;
 
   cmb_format = new QComboBox;
   cmb_subtype = new QComboBox;
   cmb_samplerate = new QComboBox;
   cmb_samplerate->setEditable (true);
-  
-  channels = new QSpinBox; 
+
+  channels = new QSpinBox;
 
   if (wf)
      channels->setValue (wf->fb->channels);
 
   cmb_format->addItems (file_formats->hformatnames.values());
-  
+
   int f = (fmt & SF_FORMAT_TYPEMASK);
   QString sf = file_formats->hformatnames.value (f);
   cmb_format->setCurrentIndex (cmb_format->findText (sf));
-  
+
   connect (cmb_format, SIGNAL(currentIndexChanged (const QString &)),
            this, SLOT(format_currentIndexChanged (const QString &)));
 
   format_currentIndexChanged (sf);
-  
+
   QStringList sl_samplerates;
   sl_samplerates.append ("8000");
   sl_samplerates.append ("11025");
@@ -3801,19 +3808,19 @@ CChangeFormatWindow::CChangeFormatWindow (QWidget *parent, CWaveform *waveform, 
   sl_samplerates.append ("96000");
   sl_samplerates.append ("176400");
   sl_samplerates.append ("192000");
-  
+
   cmb_samplerate->addItems (sl_samplerates);
-  
+
   int i = 0;
-  
+
   if (wf)
      i = cmb_samplerate->findText (QString::number (wf->fb->samplerate));
-      
+
   if (i == -1)
-     i = 0; 
+     i = 0;
 
   cmb_samplerate->setCurrentIndex (i);
-  
+
   QVBoxLayout *lt_v = new QVBoxLayout;
 
   QHBoxLayout *lt_h = new QHBoxLayout;
@@ -3821,22 +3828,22 @@ CChangeFormatWindow::CChangeFormatWindow (QWidget *parent, CWaveform *waveform, 
   lt_h->addWidget (l);
   lt_h->addWidget (cmb_format);
   lt_v->addLayout (lt_h);
-  
-  
+
+
   lt_h = new QHBoxLayout;
   l = new QLabel (tr ("Subtype"));
   lt_h->addWidget (l);
   lt_h->addWidget (cmb_subtype);
   lt_v->addLayout (lt_h);
-  
-  
+
+
   lt_h = new QHBoxLayout;
   l = new QLabel (tr ("Samplerate"));
   lt_h->addWidget (l);
   lt_h->addWidget (cmb_samplerate);
   lt_v->addLayout (lt_h);
-  
-  
+
+
   lt_h = new QHBoxLayout;
   l = new QLabel (tr ("Channels"));
   lt_h->addWidget (l);
@@ -3845,7 +3852,7 @@ CChangeFormatWindow::CChangeFormatWindow (QWidget *parent, CWaveform *waveform, 
 
 
   lt_h = new QHBoxLayout;
-  
+
   QPushButton *bt_apply = new QPushButton (tr ("OK"));
   QPushButton *bt_exit = new QPushButton (tr ("Exit"));
 
@@ -3865,56 +3872,56 @@ CChangeFormatWindow::CChangeFormatWindow (QWidget *parent, CWaveform *waveform, 
 void CChangeFormatWindow::format_currentIndexChanged (const QString &text)
 {
   cmb_subtype->clear();
-  
+
   int f = file_formats->hformatnames.key (text);
-  
+
   QStringList sl;
   QList <int> values = file_formats->hformat.values (f);
-  
+
   for (int i = 0; i < values.size(); ++i)
       {
-       sl.append (file_formats->hsubtype.value (values.at(i))); 
-      } 
-  
+       sl.append (file_formats->hsubtype.value (values.at(i)));
+      }
+
   cmb_subtype->addItems (sl);
-    
-  int st = (fmt & SF_FORMAT_SUBMASK); 
+
+  int st = (fmt & SF_FORMAT_SUBMASK);
   QString ssubtype = file_formats->hsubtype.value (st);
-  
+
   int i = cmb_subtype->findText (ssubtype);
   if (i == -1)
      i = 0;
-  
+
   cmb_subtype->setCurrentIndex (i);
 }
 
 
 void CEKO::file_change_format()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
      return;
 
   CChangeFormatWindow *w = new CChangeFormatWindow (0, d->wave_edit->waveform, 0);
-  
+
   int result = w->exec();
-  
+
   if (result != QDialog::Accepted)
      {
       delete w;
       return;
      }
-  
+
   d->wave_edit->waveform->undo_take_shot (UNDO_WHOLE);
-  
+
   int f = file_formats->hformatnames.key (w->cmb_format->currentText());
   int stype = file_formats->hsubtype.key (w->cmb_subtype->currentText());
-  
+
   d->wave_edit->waveform->fb->sndfile_format = 0;
-  d->wave_edit->waveform->fb->sndfile_format = f | stype; 
-  
+  d->wave_edit->waveform->fb->sndfile_format = f | stype;
+
   d->ronly = false;
-  
+
   if (w->cmb_samplerate->currentText().toInt() != w->wf->fb->samplerate)
      {
       CFloatBuffer *b = d->wave_edit->waveform->fb->resample (w->cmb_samplerate->currentText().toInt(), resample_quality);
@@ -3930,7 +3937,7 @@ void CEKO::file_change_format()
           CFloatBuffer *t = d->wave_edit->waveform->fb->convert_to_stereo (false);
           if (! t)
              return;
-     
+
           delete d->wave_edit->waveform->fb;
           d->wave_edit->waveform->fb = t;
           d->wave_edit->waveform->magic_update();
@@ -3941,38 +3948,38 @@ void CEKO::file_change_format()
              CFloatBuffer *t = d->wave_edit->waveform->fb->convert_to_mono();
              if (! t)
                 return;
-     
+
              delete d->wave_edit->waveform->fb;
              d->wave_edit->waveform->fb = t;
              d->wave_edit->waveform->magic_update();
             }
      }
-     
+
   delete w;
 }
-  
+
 //ПАШЕТ
 void CEKO::fn_stereo_to_mono()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
+     return;
 
   if (! d->wave_edit->waveform->fb)
-     return; 
+     return;
 
   if (d->wave_edit->waveform->fb->channels != 2)
      return;
 
   d->wave_edit->waveform->undo_take_shot (UNDO_WHOLE);
-  
+
   CFloatBuffer *t = d->wave_edit->waveform->fb->convert_to_mono();
   if (! t)
      return;
 
   delete d->wave_edit->waveform->fb;
   d->wave_edit->waveform->fb = t;
-  
+
   d->wave_edit->waveform->magic_update();
 }
 
@@ -4015,40 +4022,40 @@ void CEKO::fn_51_to_stereo_dlike()
 
 
 //ПАШЕТ
-void CEKO::fn_ch_mono_to_stereo (bool full) 
+void CEKO::fn_ch_mono_to_stereo (bool full)
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
-  
+     return;
+
   if (! d->wave_edit->waveform->fb)
-     return; 
+     return;
 
   if (d->wave_edit->waveform->fb->channels != 1)
      return;
 
   d->wave_edit->waveform->undo_take_shot (UNDO_WHOLE);
-  
+
   CFloatBuffer *t = d->wave_edit->waveform->fb->convert_to_stereo (full);
   if (! t)
      return;
-     
+
   delete d->wave_edit->waveform->fb;
   d->wave_edit->waveform->fb = t;
-  
+
   d->wave_edit->waveform->magic_update();
 }
 
 
 //ПАШЕТ
-void CEKO::fn_mono_to_stereo_half()  
+void CEKO::fn_mono_to_stereo_half()
 {
   fn_ch_mono_to_stereo (false);
 }
 
 
 //ПАШЕТ
-void CEKO::fn_mono_to_stereo_full()  
+void CEKO::fn_mono_to_stereo_full()
 {
   fn_ch_mono_to_stereo (true);
 }
@@ -4061,11 +4068,11 @@ void CEKO::cb_show_meterbar_in_db_changed (int value)
 }
 
 
-void CEKO::fn_stat_rms()  
+void CEKO::fn_stat_rms()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
+     return;
 
   double sqr_sum = 0.0d;
 
@@ -4074,18 +4081,18 @@ void CEKO::fn_stat_rms()
 
 //  QTime tm;
 //  tm.start();
-  
+
   for (size_t i = start; i < end; i++)
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
      {
-      sqr_sum += (d->wave_edit->waveform->fb->buffer[ch][i] * 
+      sqr_sum += (d->wave_edit->waveform->fb->buffer[ch][i] *
                   d->wave_edit->waveform->fb->buffer[ch][i]);
      }
-         
-//  qDebug() << "tm:" << tm.elapsed();       
-         
-  size_t range = (end - start) * d->wave_edit->waveform->fb->channels;       
-         
+
+//  qDebug() << "tm:" << tm.elapsed();
+
+  size_t range = (end - start) * d->wave_edit->waveform->fb->channels;
+
   double srms = sqrt (sqr_sum / range);
   float rms = 20.0f * log10 (srms / 1.0f);
 
@@ -4095,50 +4102,50 @@ void CEKO::fn_stat_rms()
 //ПАШЕТ!
 void CEKO::fn_fade_out()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
- 
+     return;
+
   d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
-  
+
   size_t start = d->wave_edit->waveform->frames_start();
   size_t end = d->wave_edit->waveform->frames_end();
 
   size_t frames_per_step = (end - start) / 100;
-  
-  
+
+
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
       {
        int vol = 0;
-  
+
        for (size_t i = start; i <= end; i++)
            {
            if (i % frames_per_step == 0)
               vol += 1.0f;
-      
-           d->wave_edit->waveform->fb->buffer[ch][i] -= 
+
+           d->wave_edit->waveform->fb->buffer[ch][i] -=
                                   get_fvalue (d->wave_edit->waveform->fb->buffer[ch][i], vol);
           }
       }
-    
+
   d->wave_edit->waveform->magic_update();
-}  
+}
 
 
 //ПАШЕТ, но проверить как звучит!
 void CEKO::fn_fade_in()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
- 
+     return;
+
   d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
- 
+
   size_t start = d->wave_edit->waveform->frames_start();
   size_t end = d->wave_edit->waveform->frames_end();
 
   size_t frames_per_step = (end - start) / 100;
-   
+
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
   {
    int vol = -100;
@@ -4148,26 +4155,26 @@ void CEKO::fn_fade_in()
       {
        if (i % frames_per_step == 0)
           vol += 1.0f;
-      
+
        d->wave_edit->waveform->fb->buffer[ch][i] += get_fvalue (d->wave_edit->waveform->fb->buffer[ch][i],
                                                                 vol);
-             
+
       }
-   }   
-   
+   }
+
   d->wave_edit->waveform->magic_update();
-}  
+}
 
 
 /*
 void CEKO::fn_fade_in()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
- 
+     return;
+
   d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
-  
+
   size_t frames_start = d->wave_edit->waveform->sample_start() / d->wave_edit->waveform->sound_buffer->channels;
   size_t frames_end = d->wave_edit->waveform->sample_end() / d->wave_edit->waveform->sound_buffer->channels;;
 
@@ -4177,28 +4184,28 @@ void CEKO::fn_fade_in()
 
   for (size_t x = frames_start; x < frames_end; x++)
       {
-       
+
        float y = lp.get_y_at_x (x);
        if (y == 0)
          continue;
-       
+
        float v3 = db2lin (y);
 
 
-       for (int ch = 0; ch < d->wave_edit->waveform->sound_buffer->channels; ch++) 
+       for (int ch = 0; ch < d->wave_edit->waveform->sound_buffer->channels; ch++)
             d->wave_edit->waveform->sound_buffer->buffer[sampleno++] *= v3;
        }
-  
-  
+
+
   d->wave_edit->waveform->magic_update();
-}  
+}
 */
 
 void CEKO::ed_deselect()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
+     return;
 
   d->wave_edit->waveform->deselect();
   d->wave_edit->waveform->update();
@@ -4207,9 +4214,9 @@ void CEKO::ed_deselect()
 
 void CEKO::ed_select_all()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
+     return;
 
   d->wave_edit->waveform->select_all();
 }
@@ -4217,26 +4224,26 @@ void CEKO::ed_select_all()
 
 void CEKO::ed_trim()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
- 
+     return;
+
   if (! d->wave_edit->waveform->selected)
      return;
- 
+
   d->wave_edit->waveform->undo_take_shot (UNDO_WHOLE);
 
  //copy selection to temp buffer
-     
-  CFloatBuffer *fb = d->wave_edit->waveform->fb->copy (d->wave_edit->waveform->frames_start(), 
+
+  CFloatBuffer *fb = d->wave_edit->waveform->fb->copy (d->wave_edit->waveform->frames_start(),
                                                        d->wave_edit->waveform->frames_end() - d->wave_edit->waveform->frames_start());
 
   //delete source buffer
- 
+
   delete d->wave_edit->waveform->fb;
 
  //replace it with temp buffer
-  
+
   d->wave_edit->waveform->fb = fb;
   d->wave_edit->waveform->select_all();
   d->wave_edit->waveform->magic_update();
@@ -4256,28 +4263,28 @@ void CEKO::bt_set_def_format_clicked()
 
   int i = 0;
   int sr = settings->value ("def_samplerate", 44100).toInt();
-  
+
   i = w->cmb_samplerate->findText (QString::number (sr));
-      
+
   if (i == -1)
-     i = 0; 
+     i = 0;
 
   w->cmb_samplerate->setCurrentIndex (i);
-  
+
   int result = w->exec();
-  
+
   if (result != QDialog::Accepted)
      {
       delete w;
       return;
      }
-    
+
   int f = file_formats->hformatnames.key (w->cmb_format->currentText());
   int stype = file_formats->hsubtype.key (w->cmb_subtype->currentText());
-  
+
   int ff = 0;
-  ff = f | stype; 
-      
+  ff = f | stype;
+
   settings->setValue ("def_sndfile_format", ff);
   settings->setValue ("def_samplerate", w->cmb_samplerate->currentText().toInt());
   settings->setValue ("def_channels", w->channels->value());
@@ -4297,135 +4304,135 @@ void CEKO::fn_norm()
 {
   CDocument *d = documents->get_current();
   if (! d)
-     return; 
-  
+     return;
+
   bool ok;
   double db = QInputDialog::getDouble(this, tr("Normalize to dB"),
                                        tr("dB:"), -3.0, -96.0, 0, 2, &ok);
   if (! ok)
-     return; 
-     
-     
+     return;
+
+
   /*
-   
+
    float offset = (float) input_double_value (tr ("fix DC offset"), tr ("Offset in samples:"),
                                              -1.0d, 1.0d, 0.0d, 0.01d);
- 
-    
-    
-   */   
-     
+
+
+
+   */
+
   float afactor = (float) pow (10.0, db / 20.0);
-   
- 
+
+
   d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
 
   size_t start = d->wave_edit->waveform->frames_start();
   size_t end = d->wave_edit->waveform->frames_end();
 
   float max_peak = 0.0f;
-  
+
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
   for (size_t i = start; i < end; i++)
       {
        if (float_less_than (max_peak, d->wave_edit->waveform->fb->buffer[ch][i]))
-          max_peak = d->wave_edit->waveform->fb->buffer[ch][i]; 
-      }      
+          max_peak = d->wave_edit->waveform->fb->buffer[ch][i];
+      }
 
   float scale = afactor / max_peak;
 
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
   for (size_t i = start; i < end; i++)
       d->wave_edit->waveform->fb->buffer[ch][i] *= scale;
-  
+
   d->wave_edit->waveform->magic_update();
-}  
+}
 
 
 void CEKO::fn_reverse()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
+     return;
 
   d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
-  
+
   size_t start = d->wave_edit->waveform->frames_start();
   size_t end = d->wave_edit->waveform->frames_end();
-  
+
   size_t len = end - start;
-   
-        
+
+
   CFloatBuffer *fb = new CFloatBuffer (len, d->wave_edit->waveform->fb->channels);
-    
+
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
      {
       size_t c = len;
- 
+
       for (size_t  i = start; i < end; i++)
           fb->buffer[ch][--c] = d->wave_edit->waveform->fb->buffer[ch][i];
-     }    
-      
-      
+     }
+
+
   d->wave_edit->waveform->fb->overwrite_at (fb, start);
-  
+
   delete fb;
-  
+
   d->wave_edit->waveform->magic_update();
-}  
+}
 
 
-void CEKO::fn_swap_channels()  
+void CEKO::fn_swap_channels()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
+     return;
 
   if (d->wave_edit->waveform->fb->channels != 2)
      return;
 
   d->wave_edit->waveform->undo_take_shot (UNDO_WHOLE);
-  
+
   float *t = d->wave_edit->waveform->fb->buffer[0];
   d->wave_edit->waveform->fb->buffer[0] = d->wave_edit->waveform->fb->buffer[1];
   d->wave_edit->waveform->fb->buffer[1] = t;
-  
+
   d->wave_edit->waveform->magic_update();
 }
 
 //изучить как оно работает если каналов больше двух
 void CEKO::fn_copy_channel()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
+     return;
 
   bool ok;
   int channel = QInputDialog::getInt (this, "?",
                                       tr("Which channel?"), 1, 1, 2147483647, 1, &ok);
-                                          
+
   if (! ok || channel < 0)
      return;
-         
+
   if (channel > d->wave_edit->waveform->fb->channels)
      return;
-          
-  
+
+
   delete sound_clipboard;
-  
+
   sound_clipboard = new CFloatBuffer (d->wave_edit->waveform->fb->length_frames, 1);
- // memcpy (sound_clipboard->buffer[0], 
-   //       d->wave_edit->waveform->fb->buffer[channel - 1], 
+ // memcpy (sound_clipboard->buffer[0],
+   //       d->wave_edit->waveform->fb->buffer[channel - 1],
      //     d->wave_edit->waveform->fb->length_frames * sizeof (float));
-     
-  
+
+
   d->wave_edit->waveform->fb->copy_channel_to_pos (sound_clipboard, channel - 1, 0,
                             0, d->wave_edit->waveform->fb->length_frames, 0);
-    
-     
+
+
   sound_clipboard->copy_params (d->wave_edit->waveform->fb);
   sound_clipboard->channels = 1;
-    
+
 }
 
 
@@ -4449,9 +4456,9 @@ void CEKO::fn_mute_channel()
 
   d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
 
-  memset (d->wave_edit->waveform->fb->buffer[channel - 1], 0, 
-          d->wave_edit->waveform->fb->length_frames * sizeof (float));  
-  
+  memset (d->wave_edit->waveform->fb->buffer[channel - 1], 0,
+          d->wave_edit->waveform->fb->length_frames * sizeof (float));
+
   d->wave_edit->waveform->magic_update();
 }
 
@@ -4464,9 +4471,9 @@ void CEKO::spb_max_undos_valueChanged (int i)
 
 void CEKO::cb_play_looped_changed (int value)
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
+     return;
 
   d->wave_edit->waveform->play_looped = value;
 }
@@ -4474,9 +4481,9 @@ void CEKO::cb_play_looped_changed (int value)
 
 void CEKO::nav_play_looped()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
+     return;
 
   d->wave_edit->waveform->play_looped = ! d->wave_edit->waveform->play_looped;
   cb_play_looped->setChecked (d->wave_edit->waveform->play_looped);
@@ -4489,15 +4496,15 @@ void CEKO::generate_sine()
 {
   QDialog w_sine_gen;
   w_sine_gen.setWindowTitle (tr ("Sine wave parameters"));
-  
+
   QVBoxLayout *v_box = new QVBoxLayout;
   w_sine_gen.setLayout (v_box);
   w_sine_gen.setModal (true);
- 
+
   QHBoxLayout *h_box = new QHBoxLayout;
 
-  QLabel lf (tr ("Frequency"));  
-  QSpinBox sb_f;  
+  QLabel lf (tr ("Frequency"));
+  QSpinBox sb_f;
   sb_f.setMaximum (9999999);
   sb_f.setValue (440);
 
@@ -4508,11 +4515,11 @@ void CEKO::generate_sine()
 
   h_box = new QHBoxLayout;
 
-  QLabel ld (tr ("Duration in seconds"));  
+  QLabel ld (tr ("Duration in seconds"));
   QSpinBox sp_duration;
   sp_duration.setMinimum (1);
   sp_duration.setValue (1);
-  
+
   h_box->addWidget (&ld);
   h_box->addWidget (&sp_duration);
 
@@ -4546,9 +4553,9 @@ void CEKO::generate_sine()
   h_box->addWidget (bt_apply);
   h_box->addWidget (bt_exit);
 
-  v_box->addLayout (h_box);    
+  v_box->addLayout (h_box);
   int result = w_sine_gen.exec();
-  
+
   if (result != QDialog::Accepted)
       return;
 
@@ -4559,93 +4566,93 @@ void CEKO::generate_sine()
   size_t len_seconds = sp_duration.value();
 
   float amplitude = db2lin((float) sp_amplitude.value()); //radius
-  
+
   size_t sample_rate =  settings->value ("def_samplerate", 44100).toInt();
   size_t frames_count = len_seconds * sample_rate;
 
-  //qDebug() << "frames_count = " << frames_count; 
-  //qDebug() << "samples_count = " << samples_count; 
+  //qDebug() << "frames_count = " << frames_count;
+  //qDebug() << "samples_count = " << samples_count;
 
   delete new_document->wave_edit->waveform->fb;
 
-  new_document->wave_edit->waveform->fb = new CFloatBuffer (frames_count, 
+  new_document->wave_edit->waveform->fb = new CFloatBuffer (frames_count,
                                           settings->value ("def_channels", 1).toInt());
-  
-  
+
+
   new_document->wave_edit->waveform->fb->samplerate = sample_rate;
-  
+
   float curphase = 0.0; // use M_PI/2 for cosine
   float incr = frequency * TWO_PI / new_document->wave_edit->waveform->fb->samplerate;
-       
-         
+
+
   for (size_t i = 0; i < frames_count; i++)
       {
        float s = (float) sin (curphase) * amplitude;
 
        curphase += incr;
-  
+
        if (curphase >= TWO_PI)
            curphase -= TWO_PI;
-   
+
        for (size_t ch = 0; ch < new_document->wave_edit->waveform->fb->channels; ch++)
            {
             new_document->wave_edit->waveform->fb->buffer[ch][i] = s;
            }
-     }          
-  
+     }
+
   new_document->wave_edit->waveform->recalc_view();
   new_document->wave_edit->waveform->prepare_image();
-  
+
   new_document->wave_edit->waveform->init_state = false;
   new_document->wave_edit->timeruler->init_state = false;
-  
+
   new_document->wave_edit->waveform->update();
 }
 
 //ПАШЕТ
 void CEKO::fn_silence_selection()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
-  
+     return;
+
   d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
-  
+
   size_t start = d->wave_edit->waveform->frames_start();
   size_t end = d->wave_edit->waveform->frames_end();
 
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
        memset (d->wave_edit->waveform->fb->buffer[ch] + start, 0, (end - start) * sizeof (float));
-    
+
   d->wave_edit->waveform->magic_update();
 }
 
 //ПАШЕТ
 void CEKO::fn_insert_silence()
 {
-  CDocument *d = documents->get_current(); 
+  CDocument *d = documents->get_current();
   if (! d)
-     return; 
+     return;
 
   bool ok;
   int mseconds = QInputDialog::getInt (this, tr ("?"),
                                              tr("How many milliseconds?"), 1000, 2, 2147483647, 1, &ok);
-                                          
+
   if (! ok || mseconds <= 0)
      return;
-  
+
   size_t frames_count = d->wave_edit->waveform->fb->samplerate * mseconds / 1000;
-    
+
   d->wave_edit->waveform->undo_take_shot (UNDO_INSERT, d->wave_edit->waveform->fb->offset + frames_count/* - 1*/);
-   
-  CFloatBuffer *tfb = new CFloatBuffer (frames_count, d->wave_edit->waveform->fb->channels); 
+
+  CFloatBuffer *tfb = new CFloatBuffer (frames_count, d->wave_edit->waveform->fb->channels);
   tfb->samplerate = d->wave_edit->waveform->fb->samplerate;
   //tfb->copy_params (d->wave_edit->waveform->fb);
-         
+
   d->wave_edit->waveform->fb->paste_at (tfb, d->wave_edit->waveform->fb->offset);
-                                                
-  delete tfb;                        
-                           
+
+  delete tfb;
+
   d->wave_edit->waveform->deselect();
   d->wave_edit->waveform->magic_update();
 }
@@ -4699,12 +4706,12 @@ void CEKO::file_import_raw()
   else
       dialog.setDirectory (dir_last);
 
-  
+
   if (! dialog.exec())
      {
       dialog.setSidebarUrls (sidebarUrls_old);
       return;
-     } 
+     }
 
   dialog.setSidebarUrls (sidebarUrls_old);
   settings->setValue ("dialog_size", dialog.size());
@@ -4721,27 +4728,27 @@ void CEKO::file_import_raw()
 
   int i = 0;
   int sr = settings->value ("def_samplerate", 44100).toInt();
-  
+
   i = w->cmb_samplerate->findText (QString::number (sr));
-      
+
   if (i == -1)
-     i = 0; 
+     i = 0;
 
   w->cmb_samplerate->setCurrentIndex (i);
-  
+
   int result = w->exec();
-  
+
   if (result != QDialog::Accepted)
      {
       delete w;
       return;
      }
-    
+
   int f = file_formats->hformatnames.key (w->cmb_format->currentText());
   int stype = file_formats->hsubtype.key (w->cmb_subtype->currentText());
-  
+
   int raw_file_format = f | stype;    //new sound format
-      
+
   int raw_srate = w->cmb_samplerate->currentText().toInt();
 
   SF_INFO sf;
@@ -4758,40 +4765,40 @@ void CEKO::file_import_raw()
      return;
 
   QString fname = fileNames[0];
-  
+
   SNDFILE *file = sf_open (fname.toLatin1(), SFM_READ, &sf);
   float *buffer = new float [sf.channels * sf.frames];
   sf_count_t zzz = sf_readf_float (file, buffer, sf.frames);
-  
+
   sf_close (file);
 
  // qDebug() << "zzz = " << zzz;
 
   if (zzz == 0)
      {
-      delete [] buffer;   
+      delete [] buffer;
       return;
      }
-  
+
   CFloatBuffer *tfb = new CFloatBuffer (buffer, sf.frames, sf.channels);
-    
+
   tfb->samplerate = sf.samplerate;
   tfb->sndfile_format = raw_file_format;
-  
+
   delete [] buffer;
 
   CDocument *new_document = documents->create_new();
   main_tab_widget->setCurrentIndex (idx_tab_edit);
 
   new_document->wave_edit->waveform->fb = tfb;
-      
+
   new_document->wave_edit->waveform->recalc_view();
-  
+
   new_document->wave_edit->waveform->prepare_image();
-  
+
   new_document->wave_edit->waveform->init_state = false;
   new_document->wave_edit->timeruler->init_state = false;
-  
+
   new_document->wave_edit->waveform->update();
 }
 
@@ -4819,12 +4826,12 @@ void CEKO::fn_detect_average_value()
   float accum = 0.0f;
   float t = 0.0f;
 
-  for (size_t i = start; i < end; i++) 
+  for (size_t i = start; i < end; i++)
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
       {
        t = fabs (d->wave_edit->waveform->fb->buffer[ch][i]);
        accum += t;
-     
+
        if (! float_equal (t, 0.0f))
           {
            maxpeak = std::max ((float)maxpeak, (float)t);
@@ -4841,19 +4848,19 @@ void CEKO::fn_detect_average_value()
 
   QString minp;
   minp.setNum (minpeak);
-  
+
   QString dr;
   dr.setNum ((float)minpeak / maxpeak);
 
   float average = (float) accum / (float)(end - start);
-  
+
   log->log (tr ("average level in samples = %1").arg (QString::number (average)));
   log->log (tr ("average level in dB = %1").arg (QString::number (float2db (average))));
   log->log (tr ("max level in samples = %1").arg (maxp));
   log->log (tr ("max level in dB = %1").arg (QString::number (float2db (maxpeak))));
   log->log (tr ("min level in samples = %1").arg (minp));
   log->log (tr ("min level in dB = %1").arg (QString::number (float2db (minpeak))));
-  
+
  // log->log (tr ("Dynamic range = %1").arg (dr));
 }
 
@@ -4866,10 +4873,10 @@ void CEKO::fn_dc_offset_detect()
 
   size_t start = d->wave_edit->waveform->frames_start();
   size_t end = d->wave_edit->waveform->frames_end();
-  
+
   float accum = 0.0f;
 
-  for (size_t i = start; i < end; i++) 
+  for (size_t i = start; i < end; i++)
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
        {
         accum += d->wave_edit->waveform->fb->buffer[ch][i];
@@ -4894,8 +4901,8 @@ void CEKO::fn_dc_offset_fix_manually()
 
   size_t start = d->wave_edit->waveform->frames_start();
   size_t end = d->wave_edit->waveform->frames_end();
-  
-  for (size_t i = start; i < end; i++) 
+
+  for (size_t i = start; i < end; i++)
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
         {
          d->wave_edit->waveform->fb->buffer[ch][i] -= offset;
@@ -4918,7 +4925,7 @@ void CEKO::fn_dc_offset_fix_auto()
 
   float accum = 0.0f;
 
-  for (size_t i = start; i < end; i++) 
+  for (size_t i = start; i < end; i++)
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
       {
        accum += (d->wave_edit->waveform->fb->buffer[ch][i]);
@@ -4926,7 +4933,7 @@ void CEKO::fn_dc_offset_fix_auto()
 
   float average = (float) accum / (float)(end - start);
 
-  for (size_t i = start; i < end; i++) 
+  for (size_t i = start; i < end; i++)
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
       {
        d->wave_edit->waveform->fb->buffer[ch][i] -= average;
@@ -5019,17 +5026,17 @@ void CEKO::generate_noise()
 
   CFloatBuffer *tfb = new CFloatBuffer (frames_count, settings->value ("def_channels", 1).toInt());
   tfb->samplerate = new_document->wave_edit->waveform->fb->samplerate;
- 
-  for (size_t ch = 0; ch < tfb->channels; ch++)  
+
+  for (size_t ch = 0; ch < tfb->channels; ch++)
      {
       float *buf;
-      
+
       if (ntype == 0)
          buf = noise_generate_white (frames_count, amplitude);
       else
       if (ntype == 1)
          buf = noise_generate_pink2 (frames_count, amplitude);
-      
+
       memcpy (tfb->buffer[ch], buf, frames_count * sizeof (float));
       delete [] buf;
      }
@@ -5060,17 +5067,17 @@ void CEKO::cmb_icon_sizes_currentIndexChanged (const QString &text)
 void CEKO::file_record()
 {
   transport_state = STATE_RECORD;
-  
+
   if (pa_stream)
      {
-       Pa_CloseStream (pa_stream);	
+       Pa_CloseStream (pa_stream);
        pa_stream = 0;
      }
 
   if (pa_stream_in)
      {
-      Pa_AbortStream (pa_stream_in);	
-      Pa_CloseStream (pa_stream_in);	
+      Pa_AbortStream (pa_stream_in);
+      Pa_CloseStream (pa_stream_in);
       pa_stream_in = 0;
      }
 
@@ -5078,7 +5085,7 @@ void CEKO::file_record()
   fb_record->length_frames = buffer_size_frames;
   fb_record->allocate_interleaved();
   fb_record->settozero();
-  
+
   int sndfile_format = 0;
   sndfile_format = sndfile_format | SF_FORMAT_WAV | SF_FORMAT_FLOAT;
 
@@ -5092,16 +5099,16 @@ void CEKO::file_record()
   sf.samplerate = samplerate;
   sf.channels = channels;
   sf.format = sndfile_format;
- 
+
   if (! sf_format_check (&sf))
      {
       qDebug() << "! sf_format_check (&sf)";
       transport_state = STATE_STOP;
-      return;  
-     }    
-  
+      return;
+     }
+
   QString tf = settings->value ("temp_path", QDir::tempPath()).toString() + fname_tempfile;
-  
+
   file_temp_handle = sf_open (tf.toUtf8().data(), SFM_WRITE, &sf);
 
   PaStreamParameters outputParameters;
@@ -5121,7 +5128,7 @@ void CEKO::file_record()
       inputParameters.suggestedLatency = Pa_GetDeviceInfo (inputParameters.device)->defaultLowOutputLatency;;
       inputParameters.hostApiSpecificStreamInfo = NULL;
 
-  
+
       PaError err =  Pa_OpenStream 	(&pa_stream_in,
 		                         &inputParameters,
 		                         //NULL,
@@ -5130,11 +5137,11 @@ void CEKO::file_record()
 		                         buffer_size_frames,
 		                          paClipOff | paDitherOff,//paNoFlag,
 		                         pa_input_stream_callback,
-		                         NULL//&pe 
-	                           ); 	
-   
+		                         NULL//&pe
+	                           );
+
        qDebug() << Pa_GetErrorText (err);
-       
+
        if (err < 0)
           {
            log->log (Pa_GetErrorText (err));
@@ -5142,7 +5149,7 @@ void CEKO::file_record()
            transport_state = STATE_STOP;
            return;
           }
-     
+
 
        err = Pa_StartStream (pa_stream_in);
        qDebug() << Pa_GetErrorText (err);
@@ -5154,11 +5161,11 @@ void CEKO::file_record()
            transport_state = STATE_STOP;
            return;
           }
-      
+
        wnd_fxrack->level_meter->init_state = false;
        wnd_fxrack->tm_level_meter.start();
-  
-  log->log (tr("<b>Press Stop to stop recording!</b>"));      
+
+  log->log (tr("<b>Press Stop to stop recording!</b>"));
    //    transport_play->setIcon (QIcon (":/icons/play.png"));
 
 }
@@ -5176,25 +5183,25 @@ void CEKO::update_stylesheet (const QString &f)
 
   QFontInfo fi = QFontInfo (qApp->font());
 
-  QString fontsize = "font-size:" + settings->value ("app_font_size", fi.pointSize()).toString() + "pt;";  
-  QString fontfamily = "font-family:" + settings->value ("app_font_name", qApp->font().family()).toString() + ";";  
-  QString edfontsize = "font-size:" + settings->value ("editor_font_size", "16").toString() + "pt;";  
-  QString edfontfamily = "font-family:" + settings->value ("editor_font_name", "Serif").toString() + ";";  
- 
-  QString stylesheet; 
-  
+  QString fontsize = "font-size:" + settings->value ("app_font_size", fi.pointSize()).toString() + "pt;";
+  QString fontfamily = "font-family:" + settings->value ("app_font_name", qApp->font().family()).toString() + ";";
+  QString edfontsize = "font-size:" + settings->value ("editor_font_size", "16").toString() + "pt;";
+  QString edfontfamily = "font-family:" + settings->value ("editor_font_name", "Serif").toString() + ";";
+
+  QString stylesheet;
+
   stylesheet = "QWidget, QWidget * {" + fontfamily + fontsize + "}\n";
-  
+
   stylesheet += "CLogMemo, QTextEdit, QPlainTextEdit, QPlainTextEdit * {" + edfontfamily + fontsize + "}\n";
-  
- 
+
+
 //Update themed
 
   QString cssfile = qstring_load (f);
 
-  QString css_path = get_file_path (f) + "/"; 
+  QString css_path = get_file_path (f) + "/";
 
-  cssfile = cssfile.replace ("./", css_path); 
+  cssfile = cssfile.replace ("./", css_path);
 
   cssfile += stylesheet;
 
@@ -5207,7 +5214,7 @@ void CEKO::view_use_theme()
 {
   QAction *a = qobject_cast<QAction *>(sender());
   QString css_fname = a->data().toString() + "/" + "stylesheet.css";
-  
+
   if (! file_exists (css_fname))
      {
       log->log (tr ("There is no plugin file"));
@@ -5225,13 +5232,13 @@ bool has_css_file (const QString &path)
 {
   QDir d (path);
   QStringList l = d.entryList();
-  
+
   for (int i = 0; i < l.size(); i++)
      {
       if (l[i].endsWith(".css"))
           return true;
      }
- 
+
   return false;
 }
 
@@ -5247,12 +5254,12 @@ void create_menu_from_themes (QObject *handler,
   QFileInfoList lst_fi = d.entryInfoList (QDir::NoDotAndDotDot | QDir::Dirs,
                                           QDir::IgnoreCase | QDir::LocaleAware | QDir::Name);
 
-  
+
   foreach (QFileInfo fi, lst_fi)
          {
           if (fi.isDir())
              {
-              if (has_css_file (fi.absoluteFilePath()))   
+              if (has_css_file (fi.absoluteFilePath()))
                  {
                   QAction *act = new QAction (fi.fileName(), menu->parentWidget());
                   act->setData (fi.filePath());
@@ -5279,8 +5286,8 @@ void CEKO::update_themes()
                             ":/themes",
                             SLOT (view_use_theme())
                             );
- 
-  
+
+
   create_menu_from_themes (this,
                             menu_view_themes,
                             dir_themes,
@@ -5293,16 +5300,16 @@ void CEKO::cb_altmenu_stateChanged (int state)
 {
   if (state == Qt::Unchecked)
       b_altmenu = false;
-  else 
+  else
        b_altmenu = true;
-  
+
   settings->setValue ("b_altmenu", b_altmenu);
 }
 
 
-MyProxyStyle::MyProxyStyle (QStyle * style): QProxyStyle (style)
+MyProxyStyle::MyProxyStyle (QStyle *style): QProxyStyle (style)
 {
-     
+
 }
 
 
@@ -5379,41 +5386,41 @@ void CEKO::file_export_mp3()
 #endif
 
       QString fname_input = settings->value ("temp_path", QDir::tempPath()).toString() + fname_tempfile;
-  
+
       QString fname_output = fileName;
       if (! fileName.endsWith (".mp3", Qt::CaseInsensitive))
          fname_output = change_file_ext (fname_output, "mp3");
-  
+
       command = command.replace ("@FILEIN", fname_input);
       command = command.replace ("@FILEOUT", fname_output);
-      
+
       qDebug() << "fname_input = " << fname_input;
       qDebug() << "fname_output = " << fname_output;
 
       qDebug() << command;
-      
+
       CTioPlainAudio tio_wav;
 
    //   tio_wav.format = SF_FORMAT_WAV;
 //      tio_wav.format = tio_wav.format | SF_FORMAT_PCM_16;
-      
+
 //      tio_wav.samplerate = d->wave_edit->waveform->sound_buffer->samplerate;
-      
+
       tio_wav.float_input_buffer = d->wave_edit->waveform->fb;
-      
-    
+
+
       tio_wav.save_16bit_pcm (fname_input);
-      
+
 
       int exit_code = QProcess::execute (command);
        qDebug() << exit_code;
-  
+
       if (exit_code < 0)
          {
           qDebug() << "cannot encode to MP3";
           return;
-          
-         } 
+
+         }
      }
 
   settings->setValue ("dialog_size", dialog.size());
@@ -5424,31 +5431,31 @@ void CEKO::file_export_mp3()
 void CEKO::cmb_buffer_size_frames_currentIndexChanged (const QString &text)
 {
   settings->setValue ("buffer_size_frames", text);
-  buffer_size_frames = text.toInt();  
+  buffer_size_frames = text.toInt();
 }
-  
+
 //ПАШЕТ!
-void CEKO::fn_delete_vol_envelope()  
+void CEKO::fn_delete_vol_envelope()
 {
   CDocument *d = documents->get_current();
   if (! d)
-     return; 
-     
-  d->wave_edit->waveform->env_vol.clear();     
+     return;
+
+  d->wave_edit->waveform->env_vol.clear();
   d->wave_edit->waveform->magic_update();
 }
 
 
 //ПАШЕТ!
-void CEKO::fn_apply_vol_envelope()  
+void CEKO::fn_apply_vol_envelope()
 {
   CDocument *d = documents->get_current();
   if (! d)
-     return; 
- 
+     return;
+
   if (d->wave_edit->waveform->env_vol.points.size() == 0)
      return;
-  
+
   d->wave_edit->waveform->undo_take_shot (UNDO_WHOLE);
 
  // QTime tm;
@@ -5458,44 +5465,44 @@ void CEKO::fn_apply_vol_envelope()
       {
        size_t x1 = d->wave_edit->waveform->env_vol.points[i]->position_frames;
        float y1 = d->wave_edit->waveform->env_vol.points[i]->value;
-       
+
        size_t x2 = d->wave_edit->waveform->env_vol.points[i + 1]->position_frames;
        float y2 = d->wave_edit->waveform->env_vol.points[i + 1]->value;
 
        CFloatInterpolator *lip = new CFloatInterpolatorSimple (x1, y1, x2, y2);
-    
+
        for (size_t x = x1; x < x2; x++)
            {
             float y = lip->get_y_at_x (x);
-            
+
             if (y == 0)
                continue;
-       
+
             float v1 = conv (y, 50, 100);
             float v2 = conv_to_db (v1, -50, 50, -90.0f, 6.0f);
             float v3 = db2lin (v2);
 
-            for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++) 
+            for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
                 d->wave_edit->waveform->fb->buffer[ch][x] *= v3;
            }
 
-       delete lip;   
+       delete lip;
       }
-  
 
-  
+
+
 //  qDebug() << "tm:" << tm.elapsed();
-  
+
   d->wave_edit->waveform->magic_update();
-}  
+}
 
 
 #if defined(Q_OS_WIN) || defined(Q_OS_OS2)
-    
+
 bool is_app_installed (const QString &binname)
 {
   QString path = QCoreApplication::applicationDirPath() + "/" + binname;
-  
+
   return file_exists (path);
 }
 
@@ -5504,7 +5511,7 @@ bool is_app_installed (const QString &binname)
 bool is_app_installed (const QString &binname)
 {
   int status = QProcess::execute ("which " + binname);
-  
+
   return ! status;
 }
 
@@ -5512,18 +5519,18 @@ bool is_app_installed (const QString &binname)
 #endif
 
 
-void CEKO::help_system_check()  
+void CEKO::help_system_check()
 {
 
 #if defined(Q_OS_WIN) || defined(Q_OS_OS2)
-  
+
   if (! is_app_installed ("ffmpeg.exe"))
      {
       log->log (tr ("FFMPEG is not installed"));
      }
   else
       log->log (tr ("FFMPEG is installed, video files and MP3 import: enabled"));
-   
+
 
   if (! is_app_installed ("mplayer.exe"))
      {
@@ -5531,7 +5538,7 @@ void CEKO::help_system_check()
      }
   else
       log->log (tr ("Mplayer is installed, video files and MP3 import: enabled"));
-  
+
 #else
 
 
@@ -5541,7 +5548,7 @@ void CEKO::help_system_check()
      }
   else
       log->log (tr ("FFMPEG is installed, video files and MP3 import: enabled"));
-   
+
 
   if (! is_app_installed ("mplayer"))
      {
@@ -5549,7 +5556,7 @@ void CEKO::help_system_check()
      }
   else
       log->log (tr ("Mplayer is installed, video files and MP3 import: enabled"));
-  
+
 #endif
 
   CDocument *d = documents->get_current();
@@ -5557,24 +5564,24 @@ void CEKO::help_system_check()
      {
       if (pa_stream)
          {
-          const PaStreamInfo *psi = Pa_GetStreamInfo (pa_stream); 	
+          const PaStreamInfo *psi = Pa_GetStreamInfo (pa_stream);
           if (psi)
               {
                log->log (tr ("Input latency: %1 ms").arg (psi->inputLatency));
                log->log (tr ("Output latency: %1 ms").arg (psi->outputLatency));
-              } 
+              }
          }
      }
-     
-     
+
+
   if (pa_stream_in)
      {
-      const PaStreamInfo *psi = Pa_GetStreamInfo (pa_stream_in); 	
+      const PaStreamInfo *psi = Pa_GetStreamInfo (pa_stream_in);
       if (psi)
          {
           log->log (tr ("Input latency: %1 ms").arg (psi->inputLatency));
           log->log (tr ("Output latency: %1 ms").arg (psi->outputLatency));
-         } 
+         }
      }
 }
 
@@ -5586,11 +5593,11 @@ void CEKO::help_system_check()
 void CEKO::test()
 {
   CFloatBuffer *fb = new CFloatBuffer (12, 2);
-  
+
   fb->to_interleaved();
-  
+
   delete fb;
- 
+
 }
 
 
@@ -5602,33 +5609,33 @@ void CEKO::apply_fx_clicked()
      return;
 
 //  dsp->process_whole_document (d);
-  
+
     if (! d)
      return;
 
 //here we work with short buffer to process it and output to it
-  
+
   d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
 
   wnd_fxrack->fx_rack->set_state_all (FXS_RUN);
   wnd_fxrack->fx_rack->reset_all_fx (d->wave_edit->waveform->fb->samplerate, d->wave_edit->waveform->fb->channels);
-      
+
   size_t frames_start = d->wave_edit->waveform->frames_start();
   size_t frames_end = d->wave_edit->waveform->frames_end();
-  
+
   d->wave_edit->waveform->fb->pbuffer_reset();
 
   ////////////call fx chain
 
   size_t portion_size = buffer_size_frames;
 
-  d->wave_edit->waveform->fb->pbuffer_inc (frames_start); 
+  d->wave_edit->waveform->fb->pbuffer_inc (frames_start);
 
   while (d->wave_edit->waveform->fb->offset < frames_end)
         {
          size_t diff = frames_end - d->wave_edit->waveform->fb->offset;
-         
-         if (diff < buffer_size_frames)     
+
+         if (diff < buffer_size_frames)
             portion_size = diff;
 
          for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); i++)
@@ -5636,18 +5643,18 @@ void CEKO::apply_fx_clicked()
               if (! wnd_fxrack->fx_rack->effects[i]->bypass)
                  {
                   wnd_fxrack->fx_rack->effects[i]->realtime = false;
-                 
+
                   wnd_fxrack->fx_rack->effects[i]->channels = d->wave_edit->waveform->fb->channels;
                   wnd_fxrack->fx_rack->effects[i]->samplerate = d->wave_edit->waveform->fb->samplerate;
-                  
+
                   wnd_fxrack->fx_rack->effects[i]->execute (d->wave_edit->waveform->fb->pbuffer,
-                                                            d->wave_edit->waveform->fb->pbuffer, 
+                                                            d->wave_edit->waveform->fb->pbuffer,
                                                             portion_size);
-                     
+
                  }
              }
 
-         d->wave_edit->waveform->fb->pbuffer_inc (portion_size);  
+         d->wave_edit->waveform->fb->pbuffer_inc (portion_size);
         }
 
 
@@ -5660,7 +5667,7 @@ void CEKO::apply_fx_clicked()
 
   d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->frames_start();
   d->wave_edit->waveform->magic_update();
- 
+
   wnd_fxrack->fx_rack->bypass_all();
 }
 
@@ -5668,8 +5675,8 @@ void CEKO::apply_fx_clicked()
 
 void CEKO::cb_zoom_a()
 {
-  CDocument *d = documents->current; 
-    
+  CDocument *d = documents->current;
+
   if (! d)
      return;
 
@@ -5679,19 +5686,19 @@ void CEKO::cb_zoom_a()
 
 void CEKO::cb_zoom_b()
 {
-  CDocument *d = documents->current; 
-    
+  CDocument *d = documents->current;
+
   if (! d)
      return;
 
   d->wave_edit->waveform->zoom (zoom_b);
 }
 
- 
+
 void CEKO::save_zoom_a()
 {
-  CDocument *d = documents->current; 
-    
+  CDocument *d = documents->current;
+
   if (! d)
      return;
 
@@ -5701,19 +5708,19 @@ void CEKO::save_zoom_a()
 
 void CEKO::save_zoom_b()
 {
-  CDocument *d = documents->current; 
-    
+  CDocument *d = documents->current;
+
   if (! d)
      return;
 
   zoom_b = d->wave_edit->waveform->scale_factor;
 }
- 
+
 
 void CEKO::zoom_to_factor()
 {
-  CDocument *d = documents->current; 
-    
+  CDocument *d = documents->current;
+
   if (! d)
      return;
 
