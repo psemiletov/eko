@@ -54,7 +54,15 @@ void CFMan::dir_up()
 
 void CFMan::nav (const QString &path)
 {
-  dir.setPath (path);
+  /*dir.setPath (path);
+  if (! dir.exists())
+      return;
+*/
+  if (file_exists (path))
+     dir.setPath (path);
+  else
+      dir.setPath (QDir::homePath());
+
   if (! dir.exists())
       return;
 
