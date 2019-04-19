@@ -9,6 +9,7 @@ Peter Semiletov
 #include <QObject>
 #include <QHash>
 #include <QFileInfo>
+#include <QDir>
 #include <QStringList>
 #include <QAction>
 #include <QTime>
@@ -38,6 +39,9 @@ public:
   CFTypeChecker (const QString &fnames, const QString &exts);
   bool check (const QString &fname);
 };
+
+
+bool is_dir (const QString &path);
 
 
 bool qstring_save (const QString &fileName, const QString &data, const char *enc = "UTF-8");
@@ -137,7 +141,7 @@ inline float conv (float v, float middle, float max)
 {
   if (v == middle)
      return 0;
- 
+
   if (v > middle)
      return (max - middle - v);
   else
@@ -149,19 +153,19 @@ inline float conv_to_db (float v, float v_min, float v_max, float range_negative
 {
   if (v == 0)
      return 0;
-  
+
   if (v > 0)
     {
      float x = v_max / range_positive;
      float y = v_max / v;
-     
+
      return v / (y * x);
     }
   else
       {
        float x = v_min / range_negative;
        float y = v_min / v;
-   
+
        return v / (y * x);
       }
 }
@@ -169,7 +173,7 @@ inline float conv_to_db (float v, float v_min, float v_max, float range_negative
 
 inline float scale_val (float val, float from_min, float from_max, float to_min, float to_max)
 {
-  return (val - from_min) * (to_max - to_min) / 
+  return (val - from_min) * (to_max - to_min) /
           (from_max - from_min) + to_min;
 }
 
@@ -179,9 +183,9 @@ inline QString frames_to_time_str (size_t frames, size_t samplerate)
   size_t msecs = (float) frames / samplerate * 1000;
 
   QTime a (0, 0);
-  a = a.addMSecs ((int) msecs);       
-         
- return a.toString ("hh:mm:ss.zzz");  
+  a = a.addMSecs ((int) msecs);
+
+ return a.toString ("hh:mm:ss.zzz");
 }
 
 

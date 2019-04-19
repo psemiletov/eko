@@ -791,7 +791,10 @@ void CEKO::leaving_tune()
 
 void CEKO::closeEvent (QCloseEvent *event)
 {
-  transport_state = STATE_EXIT;
+qDebug() << "---- 1";
+
+
+ transport_state = STATE_EXIT;
 
   pa_done();
 
@@ -829,7 +832,10 @@ void CEKO::closeEvent (QCloseEvent *event)
   file_formats_done();
 
   event->accept();
-  deleteLater();
+//  deleteLater();
+
+qDebug() << "---- 2";
+
 }
 
 
@@ -888,12 +894,18 @@ void CEKO::open()
       if (d)
          {
           if (file_exists (d->file_name))
-              fman->nav (get_file_path (d->file_name));
+             fman->nav (get_file_path (d->file_name));
           else
-              fman->nav (dir_last);
+              if (file_exists (dir_last))
+                  fman->nav (dir_last);
+              else
+                  fman->nav (QDir::homePath());
          }
       else
-          fman->nav (dir_last);
+          if (file_exists (dir_last))
+             fman->nav (dir_last);
+          else
+              fman->nav (QDir::homePath());
 
       main_tab_widget->setCurrentIndex (idx_tab_fman);
       fm_entry_mode = FM_ENTRY_MODE_OPEN;
@@ -3059,7 +3071,7 @@ void CEKO::createFman()
 
   connect (fman, SIGNAL(file_activated (const QString &)), this, SLOT(fman_file_activated (const QString &)));
   connect (fman, SIGNAL(dir_changed  (const QString &)), this, SLOT(fman_dir_changed  (const QString &)));
-  connect (fman, SIGNAL(current_file_changed  (const QString &, const QString &)), this, SLOT(fman_current_file_changed  (const QString &, const QString &)));
+  connect (fman, SIGNAL(current_file_changed  (const QString &, const QString &)), this, SLOT(fman_current_file_changed (const QString &, const QString &)));
 
   connect (act_fman_refresh, SIGNAL(triggered()), fman, SLOT(refresh()));
 
@@ -3157,7 +3169,12 @@ void CEKO::fman_dir_changed (const QString &full_path)
 
 void CEKO::fman_current_file_changed (const QString &full_path, const QString &just_name)
 {
-  ed_fman_fname->setText (just_name);
+  qDebug() << full_path << " : " << is_dir (full_path);
+
+  if (! is_dir (full_path))
+      ed_fman_fname->setText (just_name);
+  else
+      ed_fman_fname->setText ("");
 }
 
 
@@ -3783,6 +3800,7 @@ CChangeFormatWindow::CChangeFormatWindow (QWidget *parent, CWaveform *waveform, 
   cmb_samplerate->setEditable (true);
 
   channels = new QSpinBox;
+  channels->setMinimum (1);
 
   if (wf)
      channels->setValue (wf->fb->channels);
@@ -4505,6 +4523,7 @@ void CEKO::generate_sine()
 
   QLabel lf (tr ("Frequency"));
   QSpinBox sb_f;
+  sb_f.setMinimum (1);
   sb_f.setMaximum (9999999);
   sb_f.setValue (440);
 

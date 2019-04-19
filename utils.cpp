@@ -59,7 +59,7 @@ QString string_between (const QString &source,
      return result;
 
   pos1 += sep1.size();
-  
+
   result = source.mid (pos1, pos2 - pos1);
   return result;
 }
@@ -69,7 +69,7 @@ QString str_from_locale (const char *s)
 {
   QTextCodec *cd = QTextCodec::codecForLocale();
   QByteArray encodedString = s;
-  
+
   return cd->toUnicode(encodedString);
 }
 
@@ -248,11 +248,11 @@ QString change_file_ext (const QString &s, const QString &ext)
   int i = s.lastIndexOf (".");
   if (i == -1)
      return (s + "." + ext);
-  
-  
+
+
   QString r (s);
   r.truncate (++i);
-  
+
   r.append (ext);
   return r;
 }
@@ -329,17 +329,17 @@ bool CFTypeChecker::check (const QString &fname)
 size_t round_to (size_t value, size_t to, bool inc)
 {
    int i = value;
-   
+
    if (inc)
       {
        if (i % to != 0)
           i = (i / to) * to + to;
-      }    
+      }
    else
-       if (i % to != 0) 
+       if (i % to != 0)
           i = (i / to) * to;
-    
-  return i;          
+
+  return i;
 }
 
 
@@ -348,3 +348,11 @@ void qstring_list_print (const QStringList &l)
   foreach (QString s, l)
           qDebug() << s;
 }
+
+/*
+bool is_dir (const QString &path)
+{
+  QDir d (path);
+  return d.exists();
+}
+*/

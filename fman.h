@@ -1,9 +1,21 @@
  /**************************************************************************
- *   2007-2016 by Peter Semiletov                                          *
- *   tea@list.ru                                                           *
-
-public domain
- 
+ *   2007-2018 by Peter Semiletov                                          *
+ *   peter.semiletov@gmail.com                                             *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 3 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  **************************************************************************/
 
 
@@ -26,17 +38,15 @@ class CFMan: public QTreeView
 
 public:
 
- 
+  QDir dir;
+  
   int sort_mode;
   Qt::SortOrder sort_order;
   
   QStandardItemModel *mymodel;
   QList <QFileInfo> list;
-  
-  QDir dir;
     
   CFMan (QWidget *parent = 0);
-  //~CFMan();
 
   void add_entry (const QFileInfo &fi);
   void append_dot_entry (const QString &fname);
@@ -56,9 +66,7 @@ public slots:
   void refresh();
   void dir_up();
   void cb_fman_currentChanged (const QModelIndex &current, const QModelIndex &previous);
-
-  void header_view_sortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
-
+  void header_view_sortIndicatorChanged (int logicalIndex, Qt::SortOrder order);
   
 signals:
 
@@ -70,9 +78,7 @@ protected:
 
   void mouseMoveEvent (QMouseEvent *event);
   void keyPressEvent (QKeyEvent *event);
-
-  void drawRow (QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+  void drawRow (QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
-
 
 #endif
