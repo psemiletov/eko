@@ -588,6 +588,8 @@ void CEKO::create_main_widget()
 
 CEKO::CEKO()
 {
+ // QApplication::setFont(QFont ("Mono", 12), "CTimeRuler");
+
   init_db();
 
   srand (static_cast <unsigned> (time(0)));
@@ -4095,17 +4097,12 @@ void CEKO::fn_stat_rms()
   size_t start = d->wave_edit->waveform->frames_start();
   size_t end = d->wave_edit->waveform->frames_end();
 
-//  QTime tm;
-//  tm.start();
-
   for (size_t i = start; i < end; i++)
   for (size_t ch = 0; ch < d->wave_edit->waveform->fb->channels; ch++)
      {
       sqr_sum += (d->wave_edit->waveform->fb->buffer[ch][i] *
                   d->wave_edit->waveform->fb->buffer[ch][i]);
      }
-
-//  qDebug() << "tm:" << tm.elapsed();
 
   size_t range = (end - start) * d->wave_edit->waveform->fb->channels;
 

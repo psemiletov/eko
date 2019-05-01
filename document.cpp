@@ -1,5 +1,5 @@
 /***************************************************************************
- *   2010-2018 by Peter Semiletov                                          *
+ *   2010-2019 by Peter Semiletov                                          *
  *   tea@list.ru                                                           *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -171,6 +171,7 @@ CTimeRuler::CTimeRuler (QWidget *parent): QWidget (parent)
 
   resize (width(), 24);
   init_state = true;
+  //setFont (QFont ("Mono", 6)); //does not work in paintEvent :(
 }
 
 
@@ -182,25 +183,22 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
       return; 
      }
 
-  if (! waveform && ! waveform->fb)
+  if (! waveform)
      {
-//      qDebug() << "! waveform && ! waveform->fb";
       event->accept();
       return;
      }
      
-  if (waveform->frames_per_section == 0)   
+  if (waveform->frames_per_section == 0 || ! waveform->fb)   
      {
-//      qDebug() << "waveform->frames_per_section == 0";
       event->accept();
       return;
      }
-  
-  QImage img (width(), height(), QImage::Format_RGB32);
 
-  QPainter painter (&img);
-
+  QPainter painter (this);
   painter.setFont (QFont ("Mono", 6));
+
+ // painter.setFont (font());
 
   painter.setBrush (background_color);
   painter.drawRect (0, 0, width(), height());
@@ -224,7 +222,6 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
 
   bool measure_in_seconds = true;
   
-//  if (seconds > 60)
   if (seconds > 15)
      measure_in_seconds = false;  
         
@@ -268,8 +265,8 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
               }
        }        
 
-  QPainter painter2 (this);
-  painter2.drawImage (0, 0, img);
+ // QPainter painter2 (this);
+ // painter2.drawImage (0, 0, img);
 
   event->accept();
 }
