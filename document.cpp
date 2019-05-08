@@ -241,7 +241,7 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
 
                painter.drawLine (p1, p2);
                painter.drawText (x + 2, 20, t.toString ("ss:zzz") + "s");
-             }
+              }
           }
        else
            if (x % 60 == 0)

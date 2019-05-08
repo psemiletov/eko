@@ -41,22 +41,20 @@ CTioPlainAudio::~CTioPlainAudio()
 
 CFloatBuffer* CTioPlainAudio::load (const QString &fname)
 {
-  qDebug() << "CTioPlainAudio::load - 1";
   SF_INFO sf;
   sf.format = 0;
   
   SNDFILE *file = sf_open (fname.toUtf8().data(), SFM_READ, &sf);
     
+  if (! file)
+     return NULL;
+
+  if (sf.channels == 0 || sf.frames == 0)
+     return NULL;
+
   float *filebuf = new float [sf.channels * sf.frames];
   sf_count_t zzz = sf_readf_float (file, filebuf, sf.frames);
-    
   sf_close (file);
-  
-  if (! filebuf)
-    {
-     qDebug() << "! output_data";
-     return NULL; 
-    }  
   
   //samplerate = sf.samplerate;
 //  format = sf.format;
@@ -68,20 +66,11 @@ CFloatBuffer* CTioPlainAudio::load (const QString &fname)
   else   
       fb = new CFloatBuffer (filebuf, sf.frames, sf.channels);  
     
-  if (sf.channels != 1)
+  if (sf.channels != 1) //because we did the copy in the constructor
      delete [] filebuf;
   
   fb->samplerate = sf.samplerate;
   fb->sndfile_format = sf.format;
-
-//  qDebug() << "frames = " << sf.frames;
-  //qDebug() << "total_samples = " << total_samples;
-  //qDebug() << "bytes = " << total_samples * sizeof (float);
-  //qDebug() << "MAX_INT = " << numeric_limits<int>::max();
-
-
-  //qDebug() << "CTioPlainAudio::load - 2";
-  
 
   return fb;
 }

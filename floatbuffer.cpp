@@ -80,12 +80,12 @@ CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len, size_t channe
    size_t c = 0;   
       
    for (size_t i = 0; i < length_frames; i++)
-      {
-       for (size_t ch = 0; ch < channels; ch++) 
-           {
-            buffer[ch][i] = interleaved_buffer[c++];
-           }     
-      }
+       {
+        for (size_t ch = 0; ch < channels; ch++) 
+            {
+             buffer[ch][i] = interleaved_buffer[c++];
+            }     
+       }
 }
   
 
