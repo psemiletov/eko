@@ -35,8 +35,8 @@ public:
   int sndfile_format;
   
   CFloatBuffer (size_t len, size_t channels_count);
-  CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count);
-  CFloatBuffer (float *interleaved_buffer, size_t len);
+  CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count = 1);
+//  CFloatBuffer (float *interleaved_buffer, size_t len);
     
   ~CFloatBuffer();  
   

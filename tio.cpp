@@ -24,6 +24,13 @@ QString temp_mp3_fname;
 float* load_whole_sample (const char *fname, SF_INFO &sf)
 {
   SNDFILE *file = sf_open (fname, SFM_READ, &sf);
+
+  if (! file)
+     return NULL;
+
+  if (sf.channels == 0 || sf.frames == 0)
+     return NULL;
+
   float *buffer = new float [sf.channels * sf.frames];
   sf_count_t zzz = sf_readf_float (file, buffer, sf.frames);
   sf_close (file);
@@ -55,9 +62,6 @@ CFloatBuffer* CTioPlainAudio::load (const QString &fname)
   float *filebuf = new float [sf.channels * sf.frames];
   sf_count_t zzz = sf_readf_float (file, filebuf, sf.frames);
   sf_close (file);
-  
-  //samplerate = sf.samplerate;
-//  format = sf.format;
     
   CFloatBuffer *fb = 0;
   
@@ -65,10 +69,11 @@ CFloatBuffer* CTioPlainAudio::load (const QString &fname)
      fb = new CFloatBuffer (filebuf, sf.frames);
   else   
       fb = new CFloatBuffer (filebuf, sf.frames, sf.channels);  
-    
+  
+/*  
   if (sf.channels != 1) //because we did the copy in the constructor
      delete [] filebuf;
-  
+  */
   fb->samplerate = sf.samplerate;
   fb->sndfile_format = sf.format;
 
@@ -85,17 +90,10 @@ bool CTioPlainAudio::save (const QString &fname)
      } 
 
   SF_INFO sf;
-
-/*
-  sf.samplerate = samplerate;
-  sf.channels = float_input_buffer->channels;
-  sf.format = format;
-  */
   
   sf.samplerate = float_input_buffer->samplerate;
   sf.channels = float_input_buffer->channels;
   sf.format = float_input_buffer->sndfile_format;
-  
   
   if (! sf_format_check (&sf))
      {
@@ -150,7 +148,7 @@ CTioHandler::CTioHandler()
 CTioHandler::~CTioHandler()
 {
   while (! list.isEmpty())
-       delete list.takeFirst();
+        delete list.takeFirst();
 }
 
 
@@ -186,10 +184,6 @@ CTioPlainAudio::CTioPlainAudio()
 {
   id = "CTioPlainAudio";
   ronly = false;
-  
-  //samplerate = 0;
-  //format = 0;
-  
   extensions += file_formats->hextensions.values();
 }
 
@@ -198,8 +192,6 @@ CTioPlainAudio::CTioPlainAudio (bool rnly)
 {
   ronly = rnly;
   float_input_buffer = 0;
-  //samplerate = 0;
-  //format = 0;
 }
 
 
@@ -351,10 +343,7 @@ CFileFormats::CFileFormats()
   hformat.insert (SF_FORMAT_FLAC, SF_FORMAT_PCM_S8);
   hformat.insert (SF_FORMAT_FLAC, SF_FORMAT_PCM_16);
   hformat.insert (SF_FORMAT_FLAC, SF_FORMAT_PCM_24);
-
-
   hformat.insert (SF_FORMAT_OGG, SF_FORMAT_VORBIS);
-
 
   hformatnames.insert (SF_FORMAT_WAV, "Microsoft WAV format (little endian)");
   hformatnames.insert (SF_FORMAT_AIFF, "Apple/SGI AIFF format (big endian)");
@@ -489,7 +478,7 @@ bool CTioPlainAudio::save_16bit_pcm (const QString &fname)
           buf[i] = f * 32767;
        else
           buf[i] = f * 32768;
-       }
+      }
    
   SNDFILE *file = sf_open (fname.toUtf8(), SFM_WRITE, &sf);
   
