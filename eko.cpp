@@ -1425,6 +1425,10 @@ void CEKO::createMenus()
   menu_zoom = menuBar()->addMenu (tr ("Zoom"));
   menu_zoom->setTearOffEnabled (true);
 
+  menu_zoom->addSeparator();
+
+ // add_to_menu (menu_zoom, tr ("Zoom to selection"), SLOT(cb_zoom_to_selection()));
+
   add_to_menu (menu_zoom, tr ("Zoom A"), SLOT(cb_zoom_a()));
   add_to_menu (menu_zoom, tr ("Zoom B"), SLOT(cb_zoom_b()));
   add_to_menu (menu_zoom, tr ("Save zoom A"), SLOT(save_zoom_a()));
@@ -5740,4 +5744,30 @@ void CEKO::zoom_to_factor()
 
   QAction *a = qobject_cast<QAction *>(sender());
   d->wave_edit->waveform->zoom (a->text().toInt());
+}
+
+
+void CEKO::cb_zoom_to_selection()
+{
+  CDocument *d = documents->current;
+
+  if (! d)
+     return;
+
+  size_t frames_selected = d->wave_edit->waveform->frames_end() - d->wave_edit->waveform->frames_start();
+  size_t frames_per_section = frames_selected / d->wave_edit->waveform->width(); 
+
+  d->wave_edit->waveform->frames_per_section = frames_per_section;
+
+  qDebug() << "frames_selected: " << frames_selected;
+  qDebug() << "frames_per_section: " << frames_per_section;
+ 
+  d->wave_edit->waveform->scalef (1, d->wave_edit->waveform->frames_start());
+
+//  float factor = (float) frames_selected / 
+
+//   d->wave_edit->scalef (factor, d->wave_edit->waveform->frames_start());
+
+//  QAction *a = qobject_cast<QAction *>(sender());
+ // d->wave_edit->waveform->zoom (a->text().toInt());
 }

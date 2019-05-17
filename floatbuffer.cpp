@@ -94,7 +94,7 @@ CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len, size_t channe
             }     
        }
 
-   delete [] interleaved_buffer;
+   delete [] interleaved_buffer; //we don't need it anymore
 }
   
 

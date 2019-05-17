@@ -65,10 +65,11 @@ CFloatBuffer* CTioPlainAudio::load (const QString &fname)
     
   CFloatBuffer *fb = 0;
   
-  if (sf.channels == 1)
-     fb = new CFloatBuffer (filebuf, sf.frames);
-  else   
-      fb = new CFloatBuffer (filebuf, sf.frames, sf.channels);  
+//  if (sf.channels == 1)
+  //   fb = new CFloatBuffer (filebuf, sf.frames);
+//  else   
+  
+  fb = new CFloatBuffer (filebuf, sf.frames, sf.channels);  
   
 /*  
   if (sf.channels != 1) //because we did the copy in the constructor
@@ -109,8 +110,6 @@ bool CTioPlainAudio::save (const QString &fname)
 
   double quality = ogg_q;
   sf_command (hfile, SFC_SET_VBR_ENCODING_QUALITY, &quality, sizeof (quality)) ;
-
-  //qDebug() << "ogg_q = " << ogg_q;
 
   if (float_input_buffer->channels == 1)
      {
@@ -462,9 +461,7 @@ bool CTioPlainAudio::save_16bit_pcm (const QString &fname)
   float *flbuf;
     
   if (float_input_buffer->channels == 1) 
-     {
       flbuf = float_input_buffer->buffer[0];
-     }
   else  
       flbuf = float_input_buffer->to_interleaved();
   
@@ -488,7 +485,7 @@ bool CTioPlainAudio::save_16bit_pcm (const QString &fname)
 
   delete [] buf;
   
-  if (float_input_buffer->channels != 1) 
+  if (float_input_buffer->channels > 1) 
      delete [] flbuf;
 
   return true;
@@ -519,7 +516,6 @@ CTioProxy::CTioProxy()
 
 #if defined(Q_OS_WIN) || defined(Q_OS_OS2)
 
-
   QString ffmpeg_path = QCoreApplication::applicationDirPath() + "/" + "ffmpeg.exe";
   sl_proxy_video_decoders.append (ffmpeg_path + " -y -nostats -i \"@FILEIN\" -acodec pcm_s16le -ac 2 \"@FILEOUT\"");
 
@@ -547,8 +543,6 @@ CTioProxy::CTioProxy()
 
 CTioProxy::~CTioProxy()
 {
-
-
 }
 
 
@@ -561,49 +555,47 @@ CFloatBuffer* CTioProxy::load (const QString &fname)
   QList <QString> keys = proxies.keys();
  
   for (int i = 0; i < keys.size(); i++)
-     {
-      QString key = keys[i];
+      {
+       QString key = keys[i];
       
-      if (key.indexOf (",") != -1)
-         {
-          QStringList l = key.split (",");
-          if (l.indexOf (ext) != -1)
-             command = proxies[key]; 
-         }
-      else
+       if (key.indexOf (",") != -1)
           {
+           QStringList l = key.split (",");
+           if (l.indexOf (ext) != -1)
+              command = proxies[key]; 
+          }
+       else
            if (key == ext)
               command = proxies[key];
-          }   
-     }
+      }
 
-  if (command.isEmpty() || command.isNull())
-    return 0;
+   if (command.isEmpty() || command.isNull())
+      return 0;
   
-  command = command.replace ("@FILEIN", fname);
-  command = command.replace ("@FILEOUT", temp_mp3_fname);
+   command = command.replace ("@FILEIN", fname);
+   command = command.replace ("@FILEOUT", temp_mp3_fname);
     
-  QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+   QApplication::setOverrideCursor (QCursor(Qt::WaitCursor));
   
-  QTime tm;
-  tm.start();
+//   QTime tm;
+//   tm.start();
   
-  int exit_code = QProcess::execute (command);
+   int exit_code = QProcess::execute (command);
   
-  qDebug() << "elapsed: " << tm.elapsed();
+  // qDebug() << "elapsed: " << tm.elapsed();
   
-  QApplication::restoreOverrideCursor();
+   QApplication::restoreOverrideCursor();
   
-  if (exit_code < 0)
-     return 0;
+   if (exit_code < 0)
+       return 0;
 
-  if (file_exists (temp_mp3_fname))
-     {
-      CTioPlainAudio *pa = new CTioPlainAudio (true);
-      CFloatBuffer *fb = pa->load (temp_mp3_fname);
-      delete pa;
-      return fb;
-     }
+   if (file_exists (temp_mp3_fname))
+      {
+       CTioPlainAudio *pa = new CTioPlainAudio (true);
+       CFloatBuffer *fb = pa->load (temp_mp3_fname);
+       delete pa;
+       return fb;
+      }
      
   return 0;   
 }

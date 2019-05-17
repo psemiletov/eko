@@ -257,6 +257,8 @@ public:
   void set_statusbar_text();
   void set_cursorpos_text();
 
+  void scalef (float factor, size_t start_frm);
+
   void scale (int delta);
   void zoom (int factor);
 

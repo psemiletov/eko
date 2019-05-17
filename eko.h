@@ -410,6 +410,7 @@ prefs window callbacks
   void save_zoom_a();
   void save_zoom_b();
   void zoom_to_factor();
+  void cb_zoom_to_selection();
 
 
 

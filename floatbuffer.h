@@ -19,7 +19,6 @@ public:
   
   float **pbuffer;
 
-
   float *buffer_interleaved; //for mapping from buffer
 
   size_t samplerate;
@@ -63,7 +62,6 @@ public:
   
   void copy_to_pos_with_rate (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to, float rate); //frames
   
-  
   void overwrite_at (CFloatBuffer *other, size_t pos_frames);
 
 
@@ -79,8 +77,6 @@ public:
   void copy_from_w_resample (CFloatBuffer *other, int resampler = 0);
 
   void paste_at (CFloatBuffer *other, size_t pos_frames);
-
-
 };
 
 #endif // FLOATBUFFER_H

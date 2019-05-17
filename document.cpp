@@ -2407,3 +2407,46 @@ size_t CWaveform::get_section_to()
   return width() + scrollbar->value();
 }
 
+
+void CWaveform::scalef (float factor, size_t start_frm)
+{
+ //qDebug() << "CWaveform::scale - start";
+
+  if (! fb || frames_per_section == 0)
+     return;
+
+  int old_frame_from = start_frm;
+
+  scale_factor = factor;
+    
+  if (scale_factor < 1.0f)
+     scale_factor = 1.0f;
+
+//  if ((width() * scale_factor) >= fb->length_frames - 1) 
+  //    return;
+
+//  recalc_view();
+/*   
+  sections_total = width() * scale_factor;
+  
+  if (sections_total == 0)
+     return;
+
+  frames_per_section = ceil (fb->length_frames / sections_total);
+  
+  if (frames_per_section < FRAMES_PER_SECT_MAX)
+     frames_per_section = FRAMES_PER_SECT_MAX;
+  
+  scrollbar->setMinimum (0);
+  scrollbar->setMaximum (sections_total - width());
+*/
+
+  prepare_image();
+  
+  int new_section = old_frame_from / frames_per_section;   
+  scrollbar->setValue (new_section);
+
+  update();   
+  timeruler->update();
+  //qDebug() << "CWaveform::scale - end";
+}
