@@ -1,6 +1,6 @@
 project('eko', ['cpp','c'],
          default_options : ['cpp_std=c++11'],
-         version : '5.3.5',
+         version : '6.0.0',
          license : 'GPLv3')
 
 add_global_arguments('-DVERSION_NUMBER="5.3.5"', language : 'cpp')
@@ -15,13 +15,11 @@ endif
 
 compiler = meson.get_compiler('cpp')
 
-
-
 sndfile_dep = compiler.find_library('sndfile', required : true)
 samplerate_dep = compiler.find_library('samplerate', required : true)
 portaudio_dep = compiler.find_library('portaudio', required : true)
 
-qt5_dep = dependency('qt5', modules : ['Core', 'Gui', 'Widgets', 'Network', 'Qml', 'Quick']) 
+qt5_dep = dependency('qt5', modules : ['Core', 'Gui', 'Widgets']) 
 qt5 = import('qt5') 
 
 

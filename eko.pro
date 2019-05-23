@@ -1,6 +1,6 @@
-VERSION = 5.3.5
+VERSION = 6.0.0
 os2: {
-DEFINES += 'VERSION_NUMBER=\'"5.3.5"\''
+DEFINES += 'VERSION_NUMBER=\'"6.0.0"\''
 } else: {
   DEFINES += 'VERSION_NUMBER=\\\"$${VERSION}\\\"'
 }
@@ -44,7 +44,6 @@ SOURCES += eko.cpp \
     noisegen.cpp \
     db.cpp \
     fxpresets.cpp
-#    tinyplayer.cpp
 
 HEADERS += eko.h \
     document.h \
@@ -67,7 +66,6 @@ HEADERS += eko.h \
     noisegen.h \
     db.h \
     fxpresets.h
-#    tinyplayer.h
 
 
 
@@ -90,19 +88,11 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 
 QMAKE_CXXFLAGS += -std=c++11
 
-#QMAKE_CXXFLAGS += -fpermissive
 
 unix: {
-
-      PKGCONFIG += sndfile \
+       PKGCONFIG += sndfile \
                    samplerate \
                    portaudio-2.0
-
-
-#    QMAKE_CXXFLAGS+=-fopenmp
-#    LIBS+=-lgomp
-
-
        }
 
 
@@ -143,17 +133,9 @@ icon64.path = $$PREFIX/share/icons/hicolor/64x64/apps/
 icon64.files += icons/eko.png
 }
 
-  
-       
-#BINDIR = $$PREFIX/bin
-#DATADIR = $$PREFIX
-
-#TARGET = eko
-#target.path = $$BINDIR
 
 INSTALLS += target desktop icon64
 
-#INSTALLS += target
 
 RESOURCES += eko.qrc
 TRANSLATIONS += translations/eko_ru.ts \
@@ -204,6 +186,4 @@ win32: {
                      message ("libsamplerate FOUND")
                      LIBS += -llibsamplerate-0
                     }
-
-
        }
