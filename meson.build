@@ -3,7 +3,7 @@ project('eko', ['cpp','c'],
          version : '6.0.0',
          license : 'GPLv3')
 
-add_global_arguments('-DVERSION_NUMBER="5.3.5"', language : 'cpp')
+add_global_arguments('-DVERSION_NUMBER="6.0.0"', language : 'cpp')
 add_global_arguments('-DUSE_QML_STUFF=1', language : 'cpp')
 
 #harcoded for now
