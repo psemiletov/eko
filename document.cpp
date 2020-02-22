@@ -2251,12 +2251,12 @@ void CWaveform::mouseMoveEvent (QMouseEvent *event)
      }
 
   if (mouse_pressed)
-    {
-     if (event->pos().x() > width())
-        {
-         if (scrollbar->value() + 16 != scrollbar->maximum())
-            scrollbar->setValue (scrollbar->value() + 16);
-        }
+     {
+      if (event->pos().x() > width())
+         {
+          if (scrollbar->value() + 16 != scrollbar->maximum())
+             scrollbar->setValue (scrollbar->value() + 16);
+         }
 
      if (event->pos().x() < 0)
         {

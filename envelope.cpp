@@ -135,19 +135,22 @@ void CEnvelope::point_move (CEnvelopePoint *p, int x, int y, int height)
      return;
 
   int idx = points.indexOf (p);
-  
+
   if ((idx != points.size() - 1) && (idx != 0))
      {
       p->position_frames = x;
       p->value = get_percent (height, (float)y);
      }
+  else
+      p->value = get_percent (height, (float)y);
+
           
-  if (idx == 1)
-      points[0]->value = p->value;
+  //if (idx == 1)
+    //  points[0]->value = p->value;
 
 
   if (idx == points.size() - 2)
-      points[points.size()-1]->value = p->value;
+      points[points.size() - 1]->value = p->value;
 
   qStableSort (points.begin(), points.end(), comp_ep);
 }
