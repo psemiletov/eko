@@ -52,7 +52,7 @@ public:
 
 public slots:
 
-  void format_currentIndexChanged (const QString &text);
+  void format_currentIndexChanged (int index);
 };
 
 
@@ -215,7 +215,7 @@ main window callbacks
   void slot_transport_play();
   void slot_transport_stop();
 
-  void cmb_icon_sizes_currentIndexChanged (const QString &text);
+  void cmb_icon_sizes_currentIndexChanged (int index);
 
   void cmb_sound_dev_out_currentIndexChanged (int index);
   void cmb_sound_dev_in_currentIndexChanged (int index);
@@ -390,13 +390,13 @@ prefs window callbacks
   void pb_remove_hotkey_clicked();
   
   void slot_lv_menuitems_currentItemChanged (QListWidgetItem *current, QListWidgetItem *previous);
-  void slot_app_fontname_changed (const QString &text);
+  void slot_app_fontname_changed (int index);
   
   void slot_app_font_size_changed (int i);
-  void slot_style_currentIndexChanged (const QString &text);
+  void slot_style_currentIndexChanged (int index);
   void slot_sl_icons_size_sliderMoved (int value);
 
-  void cmb_buffer_size_frames_currentIndexChanged (const QString &text);
+  void cmb_buffer_size_frames_currentIndexChanged (int index);
         
 
   void spb_ogg_q_valueChanged (double d);

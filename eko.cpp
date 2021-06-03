@@ -1914,8 +1914,8 @@ void CEKO::createOptions()
   QComboBox *cmb_styles = new QComboBox (page_interface);
   cmb_styles->addItems (QStyleFactory::keys());
 
-  connect (cmb_styles, SIGNAL(currentIndexChanged (const QString &)),
-           this, SLOT(slot_style_currentIndexChanged (const QString &)));
+  connect (cmb_styles, SIGNAL(currentIndexChanged (int)),
+           this, SLOT(slot_style_currentIndexChanged (int)));
 
   QLabel *l_app_font = new QLabel (tr ("Interface font"));
 
@@ -1928,8 +1928,8 @@ void CEKO::createOptions()
   spb_app_font_size->setValue (settings->value ("app_font_size", fi.pointSize()).toInt());
   connect (spb_app_font_size, SIGNAL(valueChanged (int)), this, SLOT(slot_app_font_size_changed (int )));
 
-  connect (cmb_app_font_name, SIGNAL(currentIndexChanged ( const QString & )),
-           this, SLOT(slot_app_fontname_changed(const QString & )));
+  connect (cmb_app_font_name, SIGNAL(currentIndexChanged (int)),
+           this, SLOT(slot_app_fontname_changed(int)));
 
 
   QHBoxLayout *hb_icon_size = new QHBoxLayout;
@@ -1946,8 +1946,8 @@ void CEKO::createOptions()
   QComboBox *cmb_icon_size = new QComboBox;
   cmb_icon_size->addItems (sl_icon_sizes);
 
-  connect (cmb_icon_size, SIGNAL(currentIndexChanged (const QString &)),
-           this, SLOT(cmb_icon_sizes_currentIndexChanged (const QString &)));
+  connect (cmb_icon_size, SIGNAL(currentIndexChanged (int)),
+           this, SLOT(cmb_icon_sizes_currentIndexChanged (int)));
 
   cmb_icon_size->setCurrentIndex (sl_icon_sizes.indexOf (settings->value ("icon_size", "32").toString()));
 
@@ -2291,8 +2291,8 @@ void CEKO::createOptions()
   cmb_buffer_size_frames->setCurrentIndex (idx);
 
 
-  connect (cmb_buffer_size_frames, SIGNAL(currentIndexChanged (const QString &)),
-           this, SLOT(cmb_buffer_size_frames_currentIndexChanged (const QString &)));
+  connect (cmb_buffer_size_frames, SIGNAL(currentIndexChanged (int)),
+           this, SLOT(cmb_buffer_size_frames_currentIndexChanged (int)));
 
 
 
@@ -2360,8 +2360,11 @@ void CEKO::opt_update_keyb()
 }
 
 
-void CEKO::slot_style_currentIndexChanged (const QString &text)
+void CEKO::slot_style_currentIndexChanged (int index)
 {
+  QComboBox *cmb = qobject_cast<QComboBox*>(sender());
+  QString text = cmb->currentText();
+
    if (text == "GTK+") //because it is buggy with some Qt versions. sorry!
      return;
 
@@ -2402,8 +2405,11 @@ void CEKO::cb_monitor_input_changed (int state)
 }
 
 
-void CEKO::slot_app_fontname_changed (const QString &text)
+void CEKO::slot_app_fontname_changed (int index)
 {
+  QComboBox *cmb = qobject_cast<QComboBox*>(sender());
+  QString text = cmb->currentText();
+
   settings->setValue ("app_font_name", text);
   update_stylesheet (fname_stylesheet);
 }
@@ -3127,8 +3133,8 @@ void CEKO::createFman()
 
 #if defined(Q_OS_WIN) || defined(Q_OS_OS2)
 
-  connect (cb_fman_drives, SIGNAL(currentIndexChanged ( const QString & )),
-          this, SLOT(fman_drives_changed(const QString & )));
+  connect (cb_fman_drives, SIGNAL(currentIndexChanged (int)),
+          this, SLOT(fman_drives_changed(int)));
 
 #endif
 
@@ -3169,7 +3175,7 @@ void CEKO::createFman()
 
   lw_right->addLayout (vbox);
 
-  fman->setSizePolicy (QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+  //fman->setSizePolicy (QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 
   spl_fman = new QSplitter (this);
   spl_fman->setChildrenCollapsible (true);
@@ -3864,10 +3870,11 @@ CChangeFormatWindow::CChangeFormatWindow (QWidget *parent, CWaveform *waveform, 
   QString sf = file_formats->hformatnames.value (f);
   cmb_format->setCurrentIndex (cmb_format->findText (sf));
 
-  connect (cmb_format, SIGNAL(currentIndexChanged (const QString &)),
-           this, SLOT(format_currentIndexChanged (const QString &)));
+  connect (cmb_format, SIGNAL(currentIndexChanged (int)),
+           this, SLOT(format_currentIndexChanged (int)));
 
-  format_currentIndexChanged (sf);
+  int idx = cmb_format->findText (sf);
+  format_currentIndexChanged (idx);
 
   QStringList sl_samplerates;
   sl_samplerates.append ("8000");
@@ -3940,9 +3947,12 @@ CChangeFormatWindow::CChangeFormatWindow (QWidget *parent, CWaveform *waveform, 
 }
 
 
-void CChangeFormatWindow::format_currentIndexChanged (const QString &text)
+void CChangeFormatWindow::format_currentIndexChanged (int index)
 {
   cmb_subtype->clear();
+
+  QComboBox *cmb = qobject_cast<QComboBox*>(sender());
+  QString text = cmb->currentText();
 
   int f = file_formats->hformatnames.key (text);
 
@@ -5121,8 +5131,11 @@ void CEKO::generate_noise()
 }
 
 
-void CEKO::cmb_icon_sizes_currentIndexChanged (const QString &text)
+void CEKO::cmb_icon_sizes_currentIndexChanged (int)
 {
+  QComboBox *cmb = qobject_cast<QComboBox*>(sender());
+  QString text = cmb->currentText();
+
   settings->setValue ("icon_size", text);
 
   setIconSize (QSize (text.toInt(), text.toInt()));
@@ -5494,8 +5507,11 @@ void CEKO::file_export_mp3()
 }
 
 
-void CEKO::cmb_buffer_size_frames_currentIndexChanged (const QString &text)
+void CEKO::cmb_buffer_size_frames_currentIndexChanged (int index)
 {
+  QComboBox *cmb = qobject_cast<QComboBox*>(sender());
+  QString text = cmb->currentText();
+
   settings->setValue ("buffer_size_frames", text);
   buffer_size_frames = text.toInt();
 }
