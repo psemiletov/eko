@@ -51,10 +51,10 @@ QString string_between (const QString &source, const QString &sep1, const QStrin
 QString str_from_locale (const char *s);
 
 
-float get_value_with_default (const QStringRef &val, float def);
-size_t get_value_with_default (const QStringRef &val, size_t def);
-int get_value_with_default (const QStringRef &val, int def);
-QString get_value_with_default (const QStringRef &val, const QString &def);
+float get_value_with_default (const QString &val, float def);
+size_t get_value_with_default (const QString &val, size_t def);
+int get_value_with_default (const QString &val, int def);
+QString get_value_with_default (const QString &val, const QString &def);
 
 QString hash_keyval_to_string (const QHash<QString, QString> &h);
 QString hash_get_val (QHash<QString, QString> &h, const QString &key, const QString &def_val);

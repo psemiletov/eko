@@ -37,6 +37,13 @@ started at 25 July 2010
 #include <QProcess>
 
 
+#if QT_VERSION < 0x060000
+#include <QRegExp>
+#else
+#include <QRegularExpression>
+#endif
+
+
 #include "eko.h"
 #include "utils.h"
 #include "gui_utils.h"
@@ -471,7 +478,7 @@ void CEKO::readSettings()
 
   resample_quality = settings->value ("resample_quality", "0").toInt();
 
-  ogg_q = settings->value ("ogg_q", 0.5d).toDouble();
+  ogg_q = settings->value ("ogg_q", 0.5).toDouble();
 
   QPoint pos = settings->value ("pos", QPoint (1, 1)).toPoint();
   QSize size = settings->value ("size", QSize (800, 600)).toSize();
@@ -657,6 +664,19 @@ CEKO::CEKO()
 
        myappTranslator.load (":/translations/eko_" + QLocale::system().name());
        qApp->installTranslator (&myappTranslator);
+
+/*
+#if QT_VERSION >= 0x060000
+  if (transl_app.load (QString ("qt_%1").arg (lng), QLibraryInfo::path (QLibraryInfo::TranslationsPath)))
+     qApp->installTranslator (&transl_app);
+#else
+  if (transl_system.load (QString ("qt_%1").arg (lng), QLibraryInfo::location (QLibraryInfo::TranslationsPath)))
+     qApp->installTranslator (&transl_system);
+#endif
+
+*/
+
+
       }
 
   createActions();
@@ -1068,7 +1088,7 @@ bool CEKO::saveAs()
 
   dialog.setFileMode (QFileDialog::AnyFile);
   dialog.setAcceptMode (QFileDialog::AcceptSave);
-  dialog.setConfirmOverwrite (false);
+  //dialog.setConfirmOverwrite (false);
   dialog.setDirectory (dir_last);
 
   if (dialog.exec())
@@ -1734,7 +1754,15 @@ void CEKO::opt_shortcuts_find()
   if (from == -1)
      from = 0;
 
+
+#if QT_VERSION < 0x060000
   int index = shortcuts->captions.indexOf (QRegExp (opt_shortcuts_string_to_find + ".*", Qt::CaseInsensitive), from);
+#else
+  int index = shortcuts->captions.indexOf (QRegularExpression (opt_shortcuts_string_to_find + ".*", QRegularExpression::CaseInsensitiveOption), from);
+#endif
+
+
+
   if (index != -1)
      lv_menuitems->setCurrentRow (index);
 }
@@ -1746,7 +1774,17 @@ void CEKO::opt_shortcuts_find_next()
   if (from == -1)
      from = 0;
 
+#if QT_VERSION < 0x060000
+
   int index = shortcuts->captions.indexOf (QRegExp (opt_shortcuts_string_to_find + ".*", Qt::CaseInsensitive), from + 1);
+
+#else
+
+  int index = shortcuts->captions.indexOf (QRegularExpression (opt_shortcuts_string_to_find + ".*", QRegularExpression::CaseInsensitiveOption), from + 1);
+
+#endif
+
+
   if (index != -1)
     lv_menuitems->setCurrentRow (index);
 }
@@ -1758,7 +1796,13 @@ void CEKO::opt_shortcuts_find_prev()
   if (from == -1)
      from = 0;
 
+#if QT_VERSION < 0x060000
   int index = shortcuts->captions.lastIndexOf (QRegExp (opt_shortcuts_string_to_find + ".*", Qt::CaseInsensitive), from - 1);
+#else
+  int index = shortcuts->captions.lastIndexOf (QRegularExpression (opt_shortcuts_string_to_find + ".*", QRegularExpression::CaseInsensitiveOption), from - 1);
+
+#endif
+
   if (index != -1)
      lv_menuitems->setCurrentRow (index);
 }
@@ -2635,7 +2679,7 @@ void CAboutWindow::update_image()
       {
        QColor color;
 
-       int i = qrand() % 5;
+       int i = rand() % 5;
 
        switch (i)
               {
@@ -3270,7 +3314,7 @@ void CEKO::fm_full_info()
 
   l.append (tr ("file name: %1").arg (fi.absoluteFilePath()));
   l.append (tr ("size: %1 kbytes").arg (QString::number (fi.size() / 1024)));
-  l.append (tr ("created: %1").arg (fi.created().toString ("yyyy-MM-dd@hh:mm:ss")));
+//  l.append (tr ("created: %1").arg (fi.created().toString ("yyyy-MM-dd@hh:mm:ss")));
   l.append (tr ("modified: %1").arg (fi.lastModified().toString ("yyyy-MM-dd@hh:mm:ss")));
 
   log->log (l.join ("<br>"));
@@ -3424,7 +3468,12 @@ void CEKO::fman_items_select_by_regexp (bool mode)
   if (ft.isEmpty())
       return;
 
+
+#if QT_VERSION >= 0x050F00
+  l_fman_find = fman->mymodel->findItems (ft, Qt::MatchRegularExpression);
+#else
   l_fman_find = fman->mymodel->findItems (ft, Qt::MatchRegExp);
+#endif
 
   if (l_fman_find.size() < 1)
      return;
@@ -4096,7 +4145,7 @@ void CEKO::fn_stat_rms()
   if (! d)
      return;
 
-  double sqr_sum = 0.0d;
+  double sqr_sum = 0.0;
 
   size_t start = d->wave_edit->waveform->frames_start();
   size_t end = d->wave_edit->waveform->frames_end();
@@ -4548,12 +4597,11 @@ void CEKO::generate_sine()
   QLabel la (tr ("Amplitude in dB"));
   QDoubleSpinBox sp_amplitude;
 
-  sp_amplitude.setMinimum (-128.0d);
-  sp_amplitude.setSingleStep (0.1d);
+  sp_amplitude.setMinimum (-128.0);
+  sp_amplitude.setSingleStep (0.1);
 
-  sp_amplitude.setMaximum (0.0d);
-  sp_amplitude.setValue (-3.0d);
-
+  sp_amplitude.setMaximum (0.0);
+  sp_amplitude.setValue (-3.0);
 
   h_box->addWidget (&la);
   h_box->addWidget (&sp_amplitude);
@@ -4913,7 +4961,7 @@ void CEKO::fn_dc_offset_fix_manually()
      return;
 
   float offset = (float) input_double_value (tr ("fix DC offset"), tr ("Offset in samples:"),
-                                             -1.0d, 1.0d, 0.0d, 0.01d);
+                                             -1.0, 1.0, 0.0, 0.01);
 
   d->wave_edit->waveform->undo_take_shot (UNDO_MODIFY);
 
@@ -5001,11 +5049,11 @@ void CEKO::generate_noise()
   QLabel la (tr ("Amplitude in dB"));
   QDoubleSpinBox sp_amplitude;
 
-  sp_amplitude.setMinimum (-128.0d);
-  sp_amplitude.setSingleStep (0.1d);
+  sp_amplitude.setMinimum (-128.0);
+  sp_amplitude.setSingleStep (0.1);
 
-  sp_amplitude.setMaximum (0.0d);
-  sp_amplitude.setValue (-3.0d);
+  sp_amplitude.setMaximum (0.0);
+  sp_amplitude.setValue (-3.0);
 
 
   h_box->addWidget (&la);
@@ -5370,7 +5418,7 @@ void CEKO::file_export_mp3()
 
   dialog.setFileMode (QFileDialog::AnyFile);
   dialog.setAcceptMode (QFileDialog::AcceptSave);
-  dialog.setConfirmOverwrite (false);
+//  dialog.setConfirmOverwrite (false);
   dialog.setDirectory (dir_last);
 
   if (dialog.exec())

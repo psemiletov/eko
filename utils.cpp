@@ -25,7 +25,7 @@ QString qstring_load (const QString &fileName, const char *enc)
      return QString();
 
   QTextStream in(&file);
-  in.setCodec (enc);
+  //in.setCodec (enc);
 
   return in.readAll();
 }
@@ -38,7 +38,7 @@ bool qstring_save (const QString &fileName, const QString &data, const char *enc
       return false;
 
   QTextStream out (&file);
-  out.setCodec (enc);
+  //out.setCodec (enc);
   out << data;
 
   return true;
@@ -74,41 +74,37 @@ QString str_from_locale (const char *s)
 }
 
 
-QString get_value_with_default (const QStringRef &val, const QString &def)
+QString get_value_with_default (const QString &val, const QString &def)
 {
-  QString s = val.toString();
-  if (! s.isEmpty())
-    return s;
+  if (! val.isEmpty())
+    return val;
   else
       return def;
 }
 
 
-int get_value_with_default (const QStringRef &val, int def)
+int get_value_with_default (const QString &val, int def)
 {
-  QString s = val.toString();
-  if (! s.isEmpty())
-    return s.toInt();
+  if (! val.isEmpty())
+    return val.toInt();
   else
       return def;
 }
 
 
-size_t get_value_with_default (const QStringRef &val, size_t def)
+size_t get_value_with_default (const QString &val, size_t def)
 {
-  QString s = val.toString();
-  if (! s.isEmpty())
-    return (size_t) s.toInt();
+  if (! val.isEmpty())
+    return (size_t) val.toInt();
   else
       return def;
 }
 
 
-float get_value_with_default (const QStringRef &val, float def)
+float get_value_with_default (const QString &val, float def)
 {
-  QString s = val.toString();
-  if (! s.isEmpty())
-    return s.toFloat();
+  if (! val.isEmpty())
+    return val.toFloat();
   else
       return def;
 }

@@ -28,6 +28,7 @@
 #include <QPushButton>
 #include <QToolButton>
 #include <QDial>
+#include <QElapsedTimer>
 
 #include <math.h>
 #include <samplerate.h>
@@ -479,10 +480,16 @@ void CWaveform::scale (int delta)
 }
 
 
-void CWaveform::wheelEvent (QWheelEvent *event)
+void CWaveform::wheelEvent (QWheelEvent *e)
 {
-  scale (event->delta());
-  event->accept();
+#if QT_VERSION < 0x050000
+      const int delta = e->delta();
+#else
+      const int delta = e->angleDelta().y();
+#endif
+
+  scale (delta);
+  e->accept();
 }  
 
 
@@ -1209,7 +1216,8 @@ bool CDocument::open_file (const QString &fileName, bool set_fname)
       return false;
      }
   
-  QTime tm;
+//  QTime tm;
+  QElapsedTimer tm;
   tm.start();
   
   CFloatBuffer *ff = tio->load (fileName);
@@ -1292,7 +1300,7 @@ bool CDocument::save_with_name (const QString &fileName)
  
   tio->float_input_buffer = wave_edit->waveform->fb;
 
-  QTime tm;
+  QElapsedTimer tm;
   tm.start();
   
   if (! tio->save (fname))
@@ -2154,7 +2162,14 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
   setFocus (Qt::OtherFocusReason);
   mouse_pressed = true;
  
+#if QT_VERSION < 0x060000
+
   int y = event->y();
+#else
+
+  int y = event->position().y();
+
+#endif
 
   if (y < 0)
      y = 0;
@@ -2162,7 +2177,17 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
   if (y > height())
      y = height();
 
+#if QT_VERSION < 0x060000
+
   int section = get_section_from() + event->x();
+
+#else
+
+  int section = get_section_from() + event->position().x();
+
+#endif
+
+
 
   if (event->button() == Qt::RightButton)
      {
@@ -2265,14 +2290,30 @@ void CWaveform::mouseMoveEvent (QMouseEvent *event)
         }
     }
   
+#if QT_VERSION < 0x060000
+
   int x = event->x();
+
+#else
+
+  int x = event->position().x();
+
+#endif
+
   if (x < 0)
      x = 0;
 
   if (x > width())
      x = width();
  
+#if QT_VERSION < 0x060000
+
   int y = event->y();
+#else
+
+  int y = event->position().y();
+
+#endif
 
   if (y < 0)
      y = 0;  

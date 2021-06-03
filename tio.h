@@ -18,7 +18,7 @@ public:
   QMultiHash <int, int> hformat;
   QHash <int, QString> hsubtype;
   QHash <int, QString> hformatnames;
-  QHash <int, QString> hextensions;
+  QMultiHash <int, QString> hextensions;
 
   CFileFormats();
 };

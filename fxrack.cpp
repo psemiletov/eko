@@ -114,7 +114,7 @@ void CFxRack::bt_up_clicked()
 
   model->insertRow (new_row, l[0]);
 
-  effects.swap (row, new_row);
+  effects.swapItemsAt(row, new_row);
 }
 
 
@@ -136,7 +136,7 @@ void CFxRack::bt_down_clicked()
 
   model->insertRow (new_row, l[0]);
 
-  effects.swap (row, new_row);
+  effects.swapItemsAt(row, new_row);
 }
 
 

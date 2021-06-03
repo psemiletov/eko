@@ -369,8 +369,8 @@ CFileFormats::CFileFormats()
     
 
   hextensions.insert (SF_FORMAT_WAV, "wav");
-  hextensions.insertMulti (SF_FORMAT_AIFF, "aiff");
-  hextensions.insertMulti (SF_FORMAT_AIFF, "aif");
+  hextensions.insert (SF_FORMAT_AIFF, "aiff");
+  hextensions.insert (SF_FORMAT_AIFF, "aif");
   hextensions.insert (SF_FORMAT_AU, "au");
   hextensions.insert (SF_FORMAT_RAW, "raw");
   hextensions.insert (SF_FORMAT_PAF, "paf");

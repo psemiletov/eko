@@ -1,6 +1,8 @@
 #include <QRect>
 #include <QDebug>
 
+#include <algorithm>
+
 #include "utils.h"
 #include "envelope.h"
 
@@ -99,7 +101,7 @@ void CEnvelope::insert_wise (int x, int y, int height, size_t maximum)
       points.append (e);
       points.append (point_end);
 
-      qStableSort (points.begin(), points.end(), comp_ep);
+      std::stable_sort  (points.begin(), points.end(), comp_ep);
  
       return;
      }
@@ -117,7 +119,7 @@ void CEnvelope::insert_wise (int x, int y, int height, size_t maximum)
        
   points << e;
  
-  qStableSort (points.begin(), points.end(), comp_ep);
+  std::stable_sort (points.begin(), points.end(), comp_ep);
 
   int idx = points.indexOf (e);
      
@@ -152,5 +154,5 @@ void CEnvelope::point_move (CEnvelopePoint *p, int x, int y, int height)
   if (idx == points.size() - 2)
       points[points.size() - 1]->value = p->value;
 
-  qStableSort (points.begin(), points.end(), comp_ep);
+  std::stable_sort (points.begin(), points.end(), comp_ep);
 }
