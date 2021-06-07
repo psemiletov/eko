@@ -24,10 +24,6 @@ make
 make install
 
 
-===LICENSE NOTES===
-
-EKO code, images, docs, etc. are the Public domain
-
 ===SITE===
 
 http://semiletov.org/eko - main site, stable version, win32 builds
