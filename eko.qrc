@@ -32,9 +32,8 @@
 
     <file>icons/eko.png</file>
 
-    <file>translations/eko_ru.qm</file>
-    <file>translations/eko_cs.qm</file>
-
+    <file>translations/ru.qm</file>
+    <file>translations/cs.qm</file>
 
     <file>manuals/en.html</file>
     <file>manuals/ru.html</file>

@@ -643,6 +643,24 @@ CEKO::CEKO()
   QString sfilename = dir_config + "/eko.conf";
   settings = new QSettings (sfilename, QSettings::IniFormat);
 
+  QString lng = settings->value ("lng", QLocale::system().name()).toString().left(2).toLower();
+
+  if (! file_exists (":/translations/" + lng + ".qm"))
+     lng = "en";
+
+#if QT_VERSION >= 0x060000
+  if (transl_app.load (QString ("qt_%1").arg (lng), QLibraryInfo::path (QLibraryInfo::TranslationsPath)))
+     qApp->installTranslator (&transl_app);
+#else
+  if (transl_system.load (QString ("qt_%1").arg (lng), QLibraryInfo::location (QLibraryInfo::TranslationsPath)))
+     qApp->installTranslator (&transl_system);
+#endif
+
+  if (transl_app.load (":/translations/" + lng))
+      qApp->installTranslator (&transl_app);
+
+
+  /*
   if (settings->value ("override_locale", 0).toBool())
      {
       QString ts = settings->value ("override_locale_val", "en").toString();
@@ -664,7 +682,7 @@ CEKO::CEKO()
 
        myappTranslator.load (":/translations/eko_" + QLocale::system().name());
        qApp->installTranslator (&myappTranslator);
-
+*/
 /*
 #if QT_VERSION >= 0x060000
   if (transl_app.load (QString ("qt_%1").arg (lng), QLibraryInfo::path (QLibraryInfo::TranslationsPath)))
@@ -677,7 +695,6 @@ CEKO::CEKO()
 */
 
 
-      }
 
   createActions();
   createMenus();
@@ -805,6 +822,7 @@ void CEKO::leaving_tune()
 
   resample_quality = spb_resample_quality->value();
   settings->setValue ("resample_quality", resample_quality);
+  settings->setValue ("lng", cmb_lng->currentText());
 
 
   settings->setValue ("mp3_encode", ed_mp3_encode->text());
@@ -1911,6 +1929,8 @@ void CEKO::createOptions()
   QWidget *page_interface = new QWidget (tab_options);
   QHBoxLayout *lt_h = new QHBoxLayout;
 
+
+
   QComboBox *cmb_styles = new QComboBox (page_interface);
   cmb_styles->addItems (QStyleFactory::keys());
 
@@ -1970,6 +1990,27 @@ void CEKO::createOptions()
 
   QVBoxLayout *page_interface_layout = new QVBoxLayout;
   page_interface_layout->setAlignment (Qt::AlignTop);
+
+
+  QStringList sl_lngs = read_dir_entries (":/translations");
+
+  for (QList <QString>::iterator i = sl_lngs.begin(); i != sl_lngs.end(); ++i)
+      {
+       (*i) = i->left(2);
+      }
+
+  sl_lngs.append ("en");
+
+  QString lng = settings->value ("lng", QLocale::system().name()).toString().left(2).toLower();
+
+  if (! file_exists (":/translations/" + lng + ".qm"))
+     lng = "en";
+
+  cmb_lng = new_combobox (page_interface_layout,
+                          tr ("UI language (EKO restart needed)"),
+                          sl_lngs,
+                          settings->value ("lng", lng).toString());
+
 
   lt_h = new QHBoxLayout;
 

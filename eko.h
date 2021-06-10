@@ -128,8 +128,8 @@ public:
   QHash <QString, QString> programs;
   QHash <QString, QString> places_bookmarks;
 
-  QTranslator myappTranslator;
-  QTranslator qtTranslator;
+  QTranslator transl_app;
+  QTranslator transl_system;
 
   QDir dir_lv;
 
@@ -171,6 +171,9 @@ public:
 
   QComboBox *cmb_sound_dev_out;
   QComboBox *cmb_sound_dev_in;
+
+  QComboBox *cmb_lng;
+
 
   QMenu *menu_view_themes;
 
@@ -376,6 +379,7 @@ prefs window callbacks
   
   void bt_set_def_format_clicked();
   void pb_choose_temp_path_clicked();
+
 
   void cb_locale_override (int state);
   void ed_locale_override_editingFinished();
