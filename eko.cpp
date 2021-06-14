@@ -1,5 +1,5 @@
 /***************************************************************************
- *   2010-2018 by Peter Semiletov                                          *
+ *   2010-2021 by Peter Semiletov                                          *
  *   tea@list.ru                                                           *
 
 started at 25 July 2010
@@ -3990,10 +3990,15 @@ CChangeFormatWindow::CChangeFormatWindow (QWidget *parent, CWaveform *waveform, 
 
 void CChangeFormatWindow::format_currentIndexChanged (int index)
 {
+  if (! sender())
+     return;
+
   cmb_subtype->clear();
 
   QComboBox *cmb = qobject_cast<QComboBox*>(sender());
   QString text = cmb->currentText();
+  if (text.isEmpty())
+     return;
 
   int f = file_formats->hformatnames.key (text);
 

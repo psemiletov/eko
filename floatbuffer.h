@@ -3,7 +3,7 @@
 
 //VER 9
 
-using namespace std;
+//using namespace std;
 
 #include <cstring>
 

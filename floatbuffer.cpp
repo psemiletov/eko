@@ -8,6 +8,7 @@
 
 #include "floatbuffer.h"
 
+using namespace std;
 
 CFloatBuffer::CFloatBuffer (size_t len, size_t channels_count)
 {
