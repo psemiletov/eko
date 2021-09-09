@@ -1,9 +1,7 @@
 #ifndef FLOATBUFFER_H
 #define FLOATBUFFER_H
 
-//VER 9
-
-//using namespace std;
+//VER 10
 
 #include <cstring>
 
@@ -35,7 +33,6 @@ public:
   
   CFloatBuffer (size_t len, size_t channels_count);
   CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count = 1);
-//  CFloatBuffer (float *interleaved_buffer, size_t len);
     
   ~CFloatBuffer();  
   
@@ -55,7 +52,7 @@ public:
   CFloatBuffer* clone();
   
   CFloatBuffer* copy (size_t offset_from, size_t size); //frames
- // void copy_to (CFloatBuffer *other, size_t offset_from, size_t size); //frames
+
   void copy_to_pos (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to); //frames
   void copy_channel_to_pos (CFloatBuffer *other, size_t ch_from, size_t ch_to,
                             size_t offset_from, size_t size, size_t offset_to); //frames

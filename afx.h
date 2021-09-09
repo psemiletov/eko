@@ -54,7 +54,7 @@ public:
 
   AFx();
   
-  /*virtual*/ ~AFx();
+  ~AFx();
 
   virtual size_t execute (float **input, float **output, size_t frames) = 0;
   

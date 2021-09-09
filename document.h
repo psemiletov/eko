@@ -1,5 +1,5 @@
 /***************************************************************************
- *   2010-2018 by Peter Semiletov                            *
+ *   2010-2021 by Peter Semiletov                            *
  *   tea@list.ru                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *

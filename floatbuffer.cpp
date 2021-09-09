@@ -1,4 +1,4 @@
-//VER 9
+//VER 10
 
 #include <iostream>
 #include <math.h>
@@ -35,24 +35,6 @@ CFloatBuffer::CFloatBuffer (size_t len, size_t channels_count)
       } 
 }
 
-/*
-CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len)
-{
-  head = 1;
-  tail = 0;
-  ringbuffer_length = len;
-
-  pbuffer = 0;
-  
-  channels = 1;
-  length_frames = len;
-  buffer_interleaved = 0;
-  samplerate = 0;
-  sndfile_format = 0;
-  sndfile_format = sndfile_format | SF_FORMAT_WAV | SF_FORMAT_FLOAT;  
-  buffer[0] = interleaved_buffer;
-}
- */
  
 CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count)
 {
