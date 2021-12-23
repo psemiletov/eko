@@ -936,16 +936,10 @@ void CEKO::open()
           if (file_exists (d->file_name))
              fman->nav (get_file_path (d->file_name));
           else
-          //    if (file_exists (dir_last))
-                  fman->nav (dir_last);
-            //  else
-              //    fman->nav (QDir::homePath());
+             fman->nav (dir_last);
          }
       else
-          //if (file_exists (dir_last))
-             fman->nav (dir_last);
-          //else
-            //  fman->nav (QDir::homePath());
+          fman->nav (dir_last);
 
       main_tab_widget->setCurrentIndex (idx_tab_fman);
       fm_entry_mode = FM_ENTRY_MODE_OPEN;
@@ -1121,8 +1115,8 @@ bool CEKO::saveAs()
                                           tr ("%1 already exists\n"
                                           "Do you want to overwrite?")
                                            .arg (fileName),
-                                          QMessageBox::Yes | QMessageBox::Default,
-                                          QMessageBox::Cancel | QMessageBox::Escape);
+                                          QMessageBox::Yes,
+                                          QMessageBox::Cancel);
 
           if (ret == QMessageBox::Cancel)
              return false;
