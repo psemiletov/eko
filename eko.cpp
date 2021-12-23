@@ -574,7 +574,7 @@ void CEKO::create_main_widget()
   connect (bt_next, SIGNAL(clicked()), this, SLOT(search_find_next()));
   connect (bt_prev, SIGNAL(clicked()), this, SLOT(search_find_prev()));
 
-  bt_find->setIcon (QIcon (":/icons/search_find.png"));
+  bt_find->setIcon (style()->standardIcon(QStyle::SP_ArrowForward));
 
   QLabel *l_fif = new QLabel (tr ("FIF"));
 
@@ -2860,8 +2860,8 @@ void CEKO::cb_button_saves_as()
                                tr ("%1 already exists\n"
                                "Do you want to overwrite?")
                                .arg (filename),
-                               QMessageBox::Yes | QMessageBox::Default,
-                               QMessageBox::Cancel | QMessageBox::Escape) == QMessageBox::Cancel)
+                               QMessageBox::Yes,
+                               QMessageBox::Cancel) == QMessageBox::Cancel)
          return;
 
 
@@ -3121,14 +3121,15 @@ void CEKO::createFman()
   tb_fman_dir = new QToolBar;
   tb_fman_dir->setObjectName ("tb_fman_dir");
 
-  QAction *act_fman_go = new QAction (QIcon( ":/icons/go.png"), tr ("Go"), this);
+  QAction *act_fman_go = new QAction (style()->standardIcon(QStyle::SP_ArrowForward), tr ("Go"), this);
   connect (act_fman_go, SIGNAL(triggered()), this, SLOT(fman_naventry_confirm()));
 
-  QAction *act_fman_home = new QAction (QIcon (":/icons/home.png"), tr ("Home"), this);
+  QAction *act_fman_home = new QAction (style()->standardIcon(QStyle::SP_DirHomeIcon), tr ("Home"), this);connect (act_fman_home, SIGNAL(triggered()), this, SLOT(fman_home()));
   connect (act_fman_home, SIGNAL(triggered()), this, SLOT(fman_home()));
 
-  QAction *act_fman_refresh = new QAction (QIcon (":/icons/refresh.png"), tr ("Refresh"), this);
-  QAction *act_fman_ops = new QAction (QIcon (":/icons/create-dir.png"), tr ("Operations"), this);
+  QAction *act_fman_refresh = new QAction (style()->standardIcon(QStyle::SP_BrowserReload), tr ("Refresh"), this);
+  QAction *act_fman_ops = new QAction (style()->standardIcon(QStyle::SP_DriveHDIcon), tr ("Actions"), this);
+
   act_fman_ops->setMenu (menu_fm_file_ops);
 
   tb_fman_dir->addAction (act_fman_go);
