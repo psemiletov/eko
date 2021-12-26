@@ -15,7 +15,8 @@ bool comp_ep (CEnvelopePoint *e1, CEnvelopePoint *e2)
 
 CEnvelopePoint* CEnvelope::find (int frame, int y, int height, int frames_per_section)
 {
-  foreach (CEnvelopePoint *t, points)
+  //foreach (CEnvelopePoint *t, points)
+  for (auto *t: points)
           {
            int t_y = get_fvalue (height, t->value);
            int t_x = t->position_frames;
@@ -58,7 +59,8 @@ void CEnvelope::clear()
 
 void CEnvelope::select_point (CEnvelopePoint *e)
 {
-  foreach (CEnvelopePoint *t, points)
+//  foreach (CEnvelopePoint *t, points)
+  for (auto *t: points)
           {
            t->selected = false;
           }

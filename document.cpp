@@ -385,7 +385,8 @@ CWaveform::~CWaveform()
 
 void CWaveform::flush_undos()
 {
-  foreach (CUndoElement *el, undos)
+  //foreach (CUndoElement *el, undos)
+  for (auto el: undos)
            delete el;
 }
 
@@ -1148,7 +1149,8 @@ void CWaveEdit::dropEvent (QDropEvent *event)
   if (! event->mimeData()->hasUrls())
      return;
   
-  foreach (QUrl u, event->mimeData()->urls())
+  for (const auto &u: event->mimeData()->urls())
+  //foreach (QUrl u, event->mimeData()->urls())
           {
            fName = u.toLocalFile();
            info.setFile (fName);
@@ -1224,9 +1226,7 @@ bool CDocument::open_file (const QString &fileName, bool set_fname)
   
   if (! ff)
      {
-      holder->log->log (tr ("cannot open %1 because of: %2")
-                           .arg (fileName)
-                           .arg (tio->error_string));
+      holder->log->log (tr ("cannot open %1 because of: %2").arg (fileName, tio->error_string));
       return false;
      }
   
@@ -1305,9 +1305,7 @@ bool CDocument::save_with_name (const QString &fileName)
   
   if (! tio->save (fname))
      {
-      holder->log->log (tr ("cannot save %1 because of: %2")
-                            .arg (fname)
-                            .arg (tio->error_string));
+      holder->log->log (tr ("cannot save %1 because of: %2").arg (fname, tio->error_string));
       return false;
      }
 
@@ -1412,9 +1410,7 @@ bool CDocument::save_with_name_plain (const QString &fileName)
   
   if (! tio->save (fileName))
      {
-      holder->log->log (tr ("cannot save %1 because of: %2")
-                           .arg (fileName)
-                           .arg (tio->error_string));
+      holder->log->log (tr ("cannot save %1 because of: %2").arg (fileName, tio->error_string));
       return false;
      }
 
@@ -1472,7 +1468,8 @@ CDocument* CDocumentHolder::open_file (const QString &fileName, bool set_fname)
   if (! tio_handler.is_ext_supported (fileName))
      return NULL;
 
-  foreach (CDocument *d, list)  
+ // foreach (CDocument *d, list)
+  for (auto *d: list)
            if (d->file_name == fileName)
               {
                tab_widget->setCurrentIndex (tab_widget->indexOf (d->tab_page));
@@ -1533,7 +1530,8 @@ void CDocumentHolder::apply_settings_single (CDocument *d)
 
 void CDocumentHolder::apply_settings()
 {
-  foreach (CDocument *d, list)
+//  foreach (CDocument *d, list)
+  for (auto *d: list)
           apply_settings_single (d);
 }
 
@@ -1578,7 +1576,8 @@ void CDocumentHolder::save_to_session (const QString &fileName)
   fname_current_session = fileName;
   QString l;
 
-  foreach (CDocument *d, list)
+  //foreach (CDocument *d, list)
+  for (auto *d: list)
           {
            l += d->file_name;
            l += "\n";
@@ -1598,8 +1597,9 @@ void CDocumentHolder::load_from_session (const QString &fileName)
   if (c < 0)
      return;
 
-  foreach (QString t, l)  
-          open_file (t);
+  //foreach (QString t, l)
+  for (const auto &t: l)
+      open_file (t);
 
   fname_current_session = fileName;
 }
@@ -1609,7 +1609,8 @@ void CDocumentHolder::load_palette (const QString &fileName)
 {
   def_palette = fileName;
   
-  foreach (CDocument *d, list)
+  //foreach (CDocument *d, list)
+  for (auto *d: list)
           d->wave_edit->waveform->load_color (fileName);
 }
 
@@ -1724,8 +1725,8 @@ CFxRackWindow::CFxRackWindow()
   cb_l.setChecked (true);
   cb_r.setChecked (true);
   
-  connect(&cb_l, SIGNAL(stateChanged (int )), this, SLOT(cb_l_changed (int )));
-  connect(&cb_r, SIGNAL(stateChanged (int )), this, SLOT(cb_r_changed (int )));
+  connect(&cb_l, SIGNAL(stateChanged(int)), this, SLOT(cb_l_changed(int)));
+  connect(&cb_r, SIGNAL(stateChanged(int)), this, SLOT(cb_r_changed(int)));
 
   
   QHBoxLayout *h_lr = new QHBoxLayout;

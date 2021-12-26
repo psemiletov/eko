@@ -381,8 +381,8 @@ prefs window callbacks
   void pb_choose_temp_path_clicked();
 
 
-  void cb_locale_override (int state);
-  void ed_locale_override_editingFinished();
+ // void cb_locale_override (int state);
+  //void ed_locale_override_editingFinished();
   void cb_session_restore (int state);
 
   void cb_use_trad_dialogs_changed (int state);
@@ -502,7 +502,7 @@ prefs window widgets
 *************************/
 
 
-  QLineEdit *ed_locale_override;
+ // QLineEdit *ed_locale_override;
 
   CShortcutEntry *ent_shtcut;
   QListWidget *lv_menuitems;

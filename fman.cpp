@@ -129,11 +129,12 @@ QDir::LocaleAware 0x40  Sort items appropriately using the current locale settin
 
 #endif
 
-  foreach (QFileInfo fi, lst)
+  //foreach (QFileInfo fi, lst)
+  for (auto fi: lst)
            add_entry (fi);
 
   setModel (mymodel);
-  connect (selectionModel(), SIGNAL(currentChanged (const QModelIndex &, const QModelIndex &)), this, SLOT(cb_fman_currentChanged (const QModelIndex &, const QModelIndex &)));
+  connect (selectionModel(), SIGNAL(currentChanged (QModelIndex, QModelIndex)), this, SLOT(cb_fman_currentChanged (QModelIndex, QModelIndex)));
   emit dir_changed (path);
 }
 
@@ -340,7 +341,8 @@ QStringList CFMan::get_sel_fnames()
   QModelIndexList il = selectionModel()->QItemSelectionModel::selectedRows (0);
   QStringList li;
 
-  foreach (QModelIndex index, il)
+  //foreach (QModelIndex index, il)
+  for (auto index: il)
           {
            QString item_string = index.data().toString();
            if (item_string != "..")
@@ -406,7 +408,8 @@ void CFMan::mouseMoveEvent (QMouseEvent *event)
 
   QList <QUrl> list;
 
-  foreach (QString fn, l)
+  //foreach (QString fn, l)
+  for (const auto &fn: l)
            list.append (QUrl::fromLocalFile (fn));
 
   mimeData->setUrls (list);

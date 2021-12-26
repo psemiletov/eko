@@ -19,16 +19,6 @@ void create_menu_from_list (QObject *handler,
 {
   menu->setTearOffEnabled (true);
 
- /* foreach (QString s, list)
-          {
-           if (! s.startsWith("#"))
-              {
-               QAction *act = new QAction (s, menu->parentWidget());
-               handler->connect (act, SIGNAL(triggered()), handler, method);
-               menu->addAction (act);
-              }
-          }*/
-
   for (const auto &s:  list)
       {
        if (! s.startsWith("#"))
@@ -53,7 +43,9 @@ void create_menu_from_dir (QObject *handler,
                                           QDir::DirsFirst | QDir::IgnoreCase |
                                           QDir::LocaleAware | QDir::Name);
 
-  foreach (QFileInfo fi, lst_fi)
+  for (const auto &fi: lst_fi)
+
+  //foreach (QFileInfo fi, lst_fi)
          {
           if (fi.isDir())
              {

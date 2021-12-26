@@ -534,7 +534,7 @@ CTioProxy::CTioProxy()
   proxies[exts_videos] = sl_proxy_video_decoders[proxy_video_decoder];
   
   QStringList lexts_videos = exts_videos.split (",");
-  foreach (QString ext, lexts_videos)
+  for (auto ext: lexts_videos)
           {
            extensions += ext;
           }

@@ -114,8 +114,8 @@ QString hash_keyval_to_string (const QHash <QString, QString> &h)
 {
   QStringList l;
 
-  foreach (QString s, h.keys())
-          l.prepend (s.append ("=").append (h.value (s)));
+  for (auto s: h.keys())
+       l.prepend (s.append ("=").append (h.value (s)));
 
   return l.join ("\n").trimmed();
 }
@@ -125,8 +125,8 @@ QString map_keyval_to_string (const QMap <QString, QString> &h, const QString &s
 {
   QStringList l;
 
-  foreach (QString s, h.keys())
-          l.prepend (s.append (sep).append (h.value (s)));
+  for (auto s: h.keys())
+       l.prepend (s.append (sep).append (h.value (s)));
 
   return l.join ("\n").trimmed();
 }
@@ -154,8 +154,8 @@ QHash <QString, QString> stringlist_to_hash (const QStringList &l)
   if (l.empty())
      return result;
 
-  foreach (QString s, l)
-          result.insert (s, s);
+  for (auto s: l)
+      result.insert (s, s);
 
   return result;
 }
@@ -182,12 +182,12 @@ QHash <QString, QString> hash_load_keyval (const QString &fname)
 
   QStringList l = qstring_load (fname).split ("\n");
 
-  foreach (QString s, l)
-          {
-           QStringList sl = s.split ("=");
-           if (sl.size() > 1)
-               result.insert (sl[0], sl[1]);
-          }
+  for (auto s: l)
+      {
+       QStringList sl = s.split ("=");
+       if (sl.size() > 1)
+           result.insert (sl[0], sl[1]);
+      }
 
   return result;
 }
@@ -202,12 +202,12 @@ QMap <QString, QString> map_load_keyval (const QString &fname, const QString &se
 
   QStringList l = qstring_load (fname).split ("\n");
 
-  foreach (QString s, l)
-          {
-           QStringList sl = s.split (sep);
-           if (sl.size() > 1)
-               result.insert (sl[0], sl[1]);
-          }
+  for (auto s: l)
+      {
+       QStringList sl = s.split (sep);
+       if (sl.size() > 1)
+           result.insert (sl[0], sl[1]);
+       }
 
   return result;
 }
@@ -341,14 +341,7 @@ size_t round_to (size_t value, size_t to, bool inc)
 
 void qstring_list_print (const QStringList &l)
 {
-  foreach (QString s, l)
+  for (auto s: l)
           qDebug() << s;
 }
 
-/*
-bool is_dir (const QString &path)
-{
-  QDir d (path);
-  return d.exists();
-}
-*/

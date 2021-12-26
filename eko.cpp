@@ -1003,7 +1003,8 @@ void CEKO::open()
 
       fileNames = dialog.selectedFiles();
 
-      foreach (QString fn, fileNames)
+      //foreach (QString fn, fileNames)
+      for (auto fn: fileNames)
               {
                CDocument *d = documents->open_file (fn);
                if (d)
@@ -1517,7 +1518,7 @@ void CEKO::createToolBars()
   transportToolBar->setObjectName ("transportToolBar");
 
   cb_play_looped = new QCheckBox (tr ("looped"));
-  connect(cb_play_looped, SIGNAL(stateChanged (int )), this, SLOT(cb_play_looped_changed (int )));
+  connect(cb_play_looped, SIGNAL(stateChanged(int)), this, SLOT(cb_play_looped_changed(int)));
   transportToolBar->addWidget (cb_play_looped);
 
   transportToolBar->addAction (transport_play);
@@ -1858,12 +1859,12 @@ void CEKO::slot_sl_icons_size_sliderMoved (int value)
   tb_fman_dir->setIconSize (QSize (value, value));
 }
 
-
+/*
 void CEKO::ed_locale_override_editingFinished()
 {
   settings->setValue ("override_locale_val", ed_locale_override->text());
 }
-
+*/
 
 void CEKO::cmb_sound_dev_out_currentIndexChanged (int index)
 {
@@ -1924,12 +1925,10 @@ void CEKO::createOptions()
   QHBoxLayout *lt_h = new QHBoxLayout;
 
 
-
   QComboBox *cmb_styles = new QComboBox (page_interface);
   cmb_styles->addItems (QStyleFactory::keys());
 
-  connect (cmb_styles, SIGNAL(currentIndexChanged (int)),
-           this, SLOT(slot_style_currentIndexChanged (int)));
+  connect (cmb_styles, SIGNAL(currentIndexChanged(int)), this, SLOT(slot_style_currentIndexChanged(int)));
 
   QLabel *l_app_font = new QLabel (tr ("Interface font"));
 
@@ -1940,11 +1939,8 @@ void CEKO::createOptions()
   QFontInfo fi = QFontInfo (qApp->font());
 
   spb_app_font_size->setValue (settings->value ("app_font_size", fi.pointSize()).toInt());
-  connect (spb_app_font_size, SIGNAL(valueChanged (int)), this, SLOT(slot_app_font_size_changed (int )));
-
-  connect (cmb_app_font_name, SIGNAL(currentIndexChanged (int)),
-           this, SLOT(slot_app_fontname_changed(int)));
-
+  connect (spb_app_font_size, SIGNAL(valueChanged(int)), this, SLOT(slot_app_font_size_changed(int)));
+  connect (cmb_app_font_name, SIGNAL(currentIndexChanged(int)), this, SLOT(slot_app_fontname_changed(int)));
 
   QHBoxLayout *hb_icon_size = new QHBoxLayout;
 
@@ -1960,8 +1956,8 @@ void CEKO::createOptions()
   QComboBox *cmb_icon_size = new QComboBox;
   cmb_icon_size->addItems (sl_icon_sizes);
 
-  connect (cmb_icon_size, SIGNAL(currentIndexChanged (int)),
-           this, SLOT(cmb_icon_sizes_currentIndexChanged (int)));
+  connect (cmb_icon_size, SIGNAL(currentIndexChanged(int)),
+           this, SLOT(cmb_icon_sizes_currentIndexChanged(int)));
 
   cmb_icon_size->setCurrentIndex (sl_icon_sizes.indexOf (settings->value ("icon_size", "32").toString()));
 
@@ -1975,11 +1971,11 @@ void CEKO::createOptions()
 
   QCheckBox *cb_show_meterbar_in_db = new QCheckBox (tr ("Amplitude meter bar in dB"), tab_options);
   cb_show_meterbar_in_db->setCheckState (Qt::CheckState (settings->value ("meterbar_show_db", "1").toInt()));
-  connect(cb_show_meterbar_in_db, SIGNAL(stateChanged (int )), this, SLOT(cb_show_meterbar_in_db_changed (int )));
+  connect(cb_show_meterbar_in_db, SIGNAL(stateChanged(int)), this, SLOT(cb_show_meterbar_in_db_changed(int)));
 
   QCheckBox *cb_use_trad_dialogs = new QCheckBox (tr ("Use traditional File Save/Open dialogs"), tab_options);
   cb_use_trad_dialogs->setCheckState (Qt::CheckState (settings->value ("use_trad_dialogs", "0").toInt()));
-  connect (cb_use_trad_dialogs, SIGNAL(stateChanged (int )), this, SLOT(cb_use_trad_dialogs_changed (int )));
+  connect (cb_use_trad_dialogs, SIGNAL(stateChanged(int)), this, SLOT(cb_use_trad_dialogs_changed(int)));
 
 
   QVBoxLayout *page_interface_layout = new QVBoxLayout;
@@ -2027,8 +2023,7 @@ void CEKO::createOptions()
   else
       cb_altmenu->setCheckState (Qt::Unchecked);
 
-  connect (cb_altmenu, SIGNAL(stateChanged (int)),
-           this, SLOT(cb_altmenu_stateChanged (int)));
+  connect (cb_altmenu, SIGNAL(stateChanged(int)), this, SLOT(cb_altmenu_stateChanged(int)));
 
 
   page_interface_layout->addLayout (lt_h);
@@ -2172,13 +2167,13 @@ void CEKO::createOptions()
 
   QCheckBox *cb_session_restore = new QCheckBox (tr ("Restore the last session on start-up"), tab_options);
   cb_session_restore->setCheckState (Qt::CheckState (settings->value ("session_restore", "0").toInt()));
-  connect(cb_session_restore, SIGNAL(stateChanged (int )), this, SLOT(cb_session_restore (int )));
+  connect(cb_session_restore, SIGNAL(stateChanged (int)), this, SLOT(cb_session_restore (int)));
 
-  QCheckBox *cb_override_locale = new QCheckBox (tr ("Override locale"), tab_options);
+ /* QCheckBox *cb_override_locale = new QCheckBox (tr ("Override locale"), tab_options);
   cb_override_locale->setCheckState (Qt::CheckState (settings->value ("override_locale", 0).toInt()));
-  connect(cb_override_locale, SIGNAL(stateChanged (int )), this, SLOT(cb_locale_override (int )));
-
-  ed_locale_override = new QLineEdit (this);
+  connect(cb_override_locale, SIGNAL(stateChanged (int)), this, SLOT(cb_locale_override (int)));
+*/
+ /* ed_locale_override = new QLineEdit (this);
   ed_locale_override->setText (settings->value ("override_locale_val", "en").toString());
   connect(ed_locale_override, SIGNAL(editingFinished()), this, SLOT(ed_locale_override_editingFinished()));
 
@@ -2186,7 +2181,7 @@ void CEKO::createOptions()
 
   hb_locovr->addWidget (cb_override_locale);
   hb_locovr->addWidget (ed_locale_override);
-
+*/
   page_common_layout->addWidget (bt_set_def_format);
 
   page_common_layout->addLayout (h_proxy_video_decoder);
@@ -2205,7 +2200,7 @@ void CEKO::createOptions()
 
   page_common_layout->addWidget (cb_session_restore);
 
-  page_common_layout->addLayout (hb_locovr);
+  //page_common_layout->addLayout (hb_locovr);
 
 
   page_common->setLayout (page_common_layout);
@@ -2333,7 +2328,7 @@ void CEKO::createOptions()
 
   QCheckBox *cb_monitor_input = new QCheckBox (tr ("Monitor input"), tab_options);
   cb_monitor_input->setCheckState (Qt::CheckState (settings->value ("b_monitor_input", 0).toInt()));
-  connect(cb_monitor_input, SIGNAL(stateChanged (int )), this, SLOT(cb_monitor_input_changed (int )));
+  connect(cb_monitor_input, SIGNAL(stateChanged(int)), this, SLOT(cb_monitor_input_changed(int)));
 
 
 
@@ -2359,8 +2354,8 @@ void CEKO::createOptions()
 
   lt_vkeys->addWidget (lv_menuitems);
 
-  connect (lv_menuitems, SIGNAL(currentItemChanged (QListWidgetItem *, QListWidgetItem *)),
-           this, SLOT(slot_lv_menuitems_currentItemChanged (QListWidgetItem *, QListWidgetItem *)));
+  connect (lv_menuitems, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
+           this, SLOT(slot_lv_menuitems_currentItemChanged(QListWidgetItem *, QListWidgetItem *)));
 
   ent_shtcut = new CShortcutEntry;
   lt_vbuttons->addWidget (ent_shtcut);
@@ -2426,12 +2421,12 @@ void CEKO::cb_use_trad_dialogs_changed (int state)
   settings->setValue ("use_trad_dialogs", state);
 }
 
-
+/*
 void CEKO::cb_locale_override (int state)
 {
   settings->setValue ("override_locale", state);
 }
-
+*/
 
 void CEKO::cb_monitor_input_changed (int state)
 {
@@ -2497,6 +2492,13 @@ void CEKO::createManual()
 
   QString loc = QLocale::system().name().left (2);
 
+  QString lng = settings->value ("lng", QLocale::system().name()).toString().left(2).toLower();
+
+  //if (! file_exists (":/manii" + lng + ".qm"))
+    // lng = "en";
+
+
+      /*
   if (settings->value ("override_locale", 0).toBool())
      {
       QString ts = settings->value ("override_locale_val", "en").toString();
@@ -2504,9 +2506,9 @@ void CEKO::createManual()
           ts = "en";
       loc = ts;
      }
-
+*/
   QString filename (":/manuals/");
-  filename.append (loc).append (".html");
+  filename.append (lng).append (".html");
 
   if (! file_exists (filename))
       filename = ":/manuals/en.html";
@@ -2594,7 +2596,8 @@ void CEKO::dropEvent (QDropEvent *event)
   if (! event->mimeData()->hasUrls())
      return;
 
-  foreach (QUrl u, event->mimeData()->urls())
+  //foreach (QUrl u, event->mimeData()->urls())
+  for (const auto &u: event->mimeData()->urls())
           {
            fName = u.toLocalFile();
            info.setFile (fName);
@@ -2960,7 +2963,7 @@ void CEKO::fman_open()
       return;
      }
 
-  foreach (QString fname, li)
+  for (auto fname: li)
           {
            CDocument *d = 0;
            d = documents->open_file (fname);
@@ -3161,9 +3164,9 @@ void CEKO::createFman()
 
   fman = new CFMan;
 
-  connect (fman, SIGNAL(file_activated (const QString &)), this, SLOT(fman_file_activated (const QString &)));
-  connect (fman, SIGNAL(dir_changed  (const QString &)), this, SLOT(fman_dir_changed  (const QString &)));
-  connect (fman, SIGNAL(current_file_changed  (const QString &, const QString &)), this, SLOT(fman_current_file_changed (const QString &, const QString &)));
+  connect (fman, SIGNAL(file_activated(QString)), this, SLOT(fman_file_activated(QString)));
+  connect (fman, SIGNAL(dir_changed(QString)), this, SLOT(fman_dir_changed(QString)));
+  connect (fman, SIGNAL(current_file_changed  (QString,QString)), this, SLOT(fman_current_file_changed (const QString &, const QString &)));
 
   connect (act_fman_refresh, SIGNAL(triggered()), fman, SLOT(refresh()));
 
@@ -5375,7 +5378,8 @@ void create_menu_from_themes (QObject *handler,
                                           QDir::IgnoreCase | QDir::LocaleAware | QDir::Name);
 
 
-  foreach (QFileInfo fi, lst_fi)
+ // foreach (QFileInfo fi, lst_fi)
+  for (auto fi: lst_fi)
          {
           if (fi.isDir())
              {
@@ -5487,8 +5491,8 @@ void CEKO::file_export_mp3()
                                           tr ("%1 already exists\n"
                                           "Do you want to overwrite?")
                                            .arg (fileName),
-                                          QMessageBox::Yes | QMessageBox::Default,
-                                          QMessageBox::Cancel | QMessageBox::Escape);
+                                          QMessageBox::Yes,
+                                          QMessageBox::Cancel);
 
           if (ret == QMessageBox::Cancel)
              return;
@@ -5631,6 +5635,7 @@ bool is_app_installed (const QString &binname)
 
 #else
 
+//НЕ РАБОТАЕТ ДЛЯ FFMPEG!!!!!!!!!!!!!!!!!!!!!!!!!!
 bool is_app_installed (const QString &binname)
 {
   int status = QProcess::execute ("which " + binname);
