@@ -154,7 +154,7 @@ QHash <QString, QString> stringlist_to_hash (const QStringList &l)
   if (l.empty())
      return result;
 
-  for (auto s: l)
+  for (const auto &s: l)
       result.insert (s, s);
 
   return result;
@@ -182,7 +182,7 @@ QHash <QString, QString> hash_load_keyval (const QString &fname)
 
   QStringList l = qstring_load (fname).split ("\n");
 
-  for (auto s: l)
+  for (const auto &s: l)
       {
        QStringList sl = s.split ("=");
        if (sl.size() > 1)
@@ -202,7 +202,7 @@ QMap <QString, QString> map_load_keyval (const QString &fname, const QString &se
 
   QStringList l = qstring_load (fname).split ("\n");
 
-  for (auto s: l)
+  for (const auto &s: l)
       {
        QStringList sl = s.split (sep);
        if (sl.size() > 1)
@@ -341,7 +341,7 @@ size_t round_to (size_t value, size_t to, bool inc)
 
 void qstring_list_print (const QStringList &l)
 {
-  for (auto s: l)
+  for (const auto &s: l)
           qDebug() << s;
 }
 

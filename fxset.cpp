@@ -333,7 +333,7 @@ CFxDelay::CFxDelay()
   spb_mixlevel->setRange (-26.0f, 0);
   spb_mixlevel->setSingleStep (0.1f);
   spb_mixlevel->setValue (-6.0f);
-  connect (spb_mixlevel, SIGNAL(valueChanged (double )), this, SLOT(spb_mixlevel_changed (double )));
+  connect (spb_mixlevel, SIGNAL(valueChanged(double)), this, SLOT(spb_mixlevel_changed(double)));
 
   hbl_mixlevel->addWidget (label);
   hbl_mixlevel->addWidget (spb_mixlevel);
@@ -348,7 +348,7 @@ CFxDelay::CFxDelay()
   spb_time->setSingleStep (0.010f);
   spb_time->setValue (0.5f);
   spb_time->setDecimals (3); 
-  connect (spb_time, SIGNAL(valueChanged (double )), this, SLOT(spb_time_changed (double )));
+  connect (spb_time, SIGNAL(valueChanged(double)), this, SLOT(spb_time_changed(double)));
 
   hbl_time->addWidget (label);
   hbl_time->addWidget (spb_time);
@@ -498,8 +498,8 @@ CFxSimpleFilter::CFxSimpleFilter()
   cmb_filter_mode->addItem (tr ("Highpass"));
   cmb_filter_mode->addItem (tr ("Bandpass"));
 
-  connect (cmb_filter_mode, SIGNAL(currentIndexChanged (int)),
-           this, SLOT(cmb_filter_mode_currentIndexChanged (int)));
+  connect (cmb_filter_mode, SIGNAL(currentIndexChanged(int)),
+           this, SLOT(cmb_filter_mode_currentIndexChanged(int)));
 
 
   h_box_filter_mode->addWidget (l_filter_mode);
@@ -778,7 +778,7 @@ algoritm from the article written by Cheng-Hao Chang
 */
 
   float a = sin (((drive + 1) / 101) * (M_PI / 2));
-  float k = 2 * atan (a) / (1 - a);
+  float k = 2 * atanf (a) / (1 - a);
   drive = (1 + k) * value / (1 + k * abs (value));
 }
 
@@ -810,7 +810,7 @@ size_t CFxMetaluga::execute (float **input, float **output, size_t frames)
            {
             output[ch][i] = input[ch][i] * gain;
             
-            output[ch][i] = (float) (atan(output[ch][i] * drive) / atan(drive));
+            output[ch][i] = (float) (atanf(output[ch][i] * drive) / atanf(drive));
             
             output[ch][i] *= drive;
 
@@ -1028,7 +1028,7 @@ size_t CFxJest::execute (float **input, float **output, size_t frames)
        for (size_t i = 0; i < frames; i++)
            {
             output[ch][i] = input[ch][i] * gain;
-            output[ch][i] = (float) (atan(output[ch][i] * drive) / atan(drive));
+            output[ch][i] = (float) (atanf(output[ch][i] * drive) / atanf(drive));
             output[ch][i] = filter.process (output[ch][i], ch);
             output[ch][i] *= level;  
            }       
@@ -1104,7 +1104,7 @@ CFxVynil::CFxVynil()
   spb_mixlevel->setRange (-26.0f, 0);
   spb_mixlevel->setSingleStep (0.1f);
   
-  connect (spb_mixlevel, SIGNAL(valueChanged (double )), this, SLOT(spb_mixlevel_changed (double )));
+  connect (spb_mixlevel, SIGNAL(valueChanged(double)), this, SLOT(spb_mixlevel_changed(double)));
 
   spb_mixlevel->setValue (-16.0f);
   

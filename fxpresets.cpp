@@ -22,8 +22,8 @@ CFxPresets::CFxPresets (QWidget *parent): QWidget (parent)
   h_box->addWidget (cmb_presets);
   h_box->addWidget (bt_menu);
   
-  connect (cmb_presets, SIGNAL(currentIndexChanged (const QString &)),
-           this, SLOT(cmb_presets_currentIndexChanged (const QString &)));
+  connect (cmb_presets, SIGNAL(currentIndexChanged(QString)),
+           this, SLOT(cmb_presets_currentIndexChanged(QString)));
 
 
   menu_banks = new QMenu (tr ("Banks"));

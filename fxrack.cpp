@@ -146,8 +146,8 @@ CFxRack::CFxRack (QObject *parent): QObject (parent)
 
   model = new QStandardItemModel (0, 1, parent);
 
-  connect (model, SIGNAL(dataChanged (const QModelIndex &, const QModelIndex &)),
-          this, SLOT(bypass_dataChanged (const QModelIndex &, const QModelIndex &)));
+  connect (model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+          this, SLOT(bypass_dataChanged(QModelIndex,QModelIndex)));
 
 
   tree_view = new CFxTreeView;
@@ -164,7 +164,7 @@ CFxRack::CFxRack (QObject *parent): QObject (parent)
   tree_view->setSelectionMode (QAbstractItemView::ExtendedSelection);
   tree_view->setSelectionBehavior (QAbstractItemView::SelectRows);
 
-  connect (tree_view, SIGNAL(activated(const QModelIndex &)), this, SLOT(tv_activated(const QModelIndex &)));
+  connect (tree_view, SIGNAL(activated(QModelIndex)), this, SLOT(tv_activated(QModelIndex)));
 
 
   inserts = new QWidget;
@@ -238,7 +238,7 @@ void CFxRack::del_fx()
 
 CFxRack::~CFxRack()
 {
-  foreach (AFx *f, effects)
+  for (auto *f: effects)
          {
           f->wnd_ui->close();
           delete f;
@@ -311,7 +311,7 @@ void CFxTreeView::mouseMoveEvent (QMouseEvent *event)
 
 void CFxRack::print_fx_list()
 {
-  foreach (AFx *f, effects)
+  for (auto *f: effects)
           qDebug() << f->modulename;
 }
 
@@ -345,7 +345,7 @@ void CFxRack::bypass_all (bool mode)
 
 void CFxRack::set_state_all (FxState state)
 {
-  foreach (AFx *f, effects)
+  for (auto *f: effects)
           {
            f->set_state (state);
           }
@@ -354,7 +354,7 @@ void CFxRack::set_state_all (FxState state)
 
 void CFxRack::reset_all_fx (size_t srate, size_t ch)
 {
-  foreach (AFx *f, effects)
+  for (auto *f: effects)
           {
            f->reset_params (srate, ch);
           }

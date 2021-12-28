@@ -75,7 +75,7 @@ void create_menu_from_dir_dir (QObject *handler,
   QFileInfoList lst_fi = d.entryInfoList (QDir::NoDotAndDotDot | QDir::Dirs,
                                           QDir::IgnoreCase | QDir::LocaleAware | QDir::Name);
 
-  foreach (QFileInfo fi, lst_fi)
+  for (auto fi: lst_fi)
          {
           if (fi.isDir())
              {
@@ -163,7 +163,7 @@ CTextListWindow::CTextListWindow (const QString &title, const QString &label_tex
   QPushButton *bt_apply = new QPushButton (tr ("OK"));
   QPushButton *bt_exit = new QPushButton (tr ("Exit"));
 
-  connect (list, SIGNAL(itemActivated ( QListWidgetItem *)), this, SLOT(accept()));
+  connect (list, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(accept()));
 
 
   connect (bt_apply, SIGNAL(clicked()), this, SLOT(accept()));

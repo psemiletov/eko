@@ -130,11 +130,11 @@ QDir::LocaleAware 0x40  Sort items appropriately using the current locale settin
 #endif
 
   //foreach (QFileInfo fi, lst)
-  for (auto fi: lst)
+  for (const auto &fi: lst)
            add_entry (fi);
 
   setModel (mymodel);
-  connect (selectionModel(), SIGNAL(currentChanged (QModelIndex, QModelIndex)), this, SLOT(cb_fman_currentChanged (QModelIndex, QModelIndex)));
+  connect (selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(cb_fman_currentChanged(QModelIndex,QModelIndex)));
   emit dir_changed (path);
 }
 
@@ -281,14 +281,14 @@ CFMan::CFMan (QWidget *parent): QTreeView (parent)
   header()->setSortIndicator (sort_mode, sort_order);
   header()->setSortIndicatorShown (true);
 
-  connect (header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(header_view_sortIndicatorChanged(int, Qt::SortOrder)));
+  connect (header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), this, SLOT(header_view_sortIndicatorChanged(int,Qt::SortOrder)));
 
   header()->setStretchLastSection (false);
 
   setSelectionMode (QAbstractItemView::ExtendedSelection);
   setSelectionBehavior (QAbstractItemView::SelectRows);
 
-  connect (this, SIGNAL(activated(const QModelIndex &)), this, SLOT(tv_activated(const QModelIndex &)));
+  connect (this, SIGNAL(activated(QModelIndex)), this, SLOT(tv_activated(QModelIndex)));
 }
 
 

@@ -2136,8 +2136,8 @@ void CEKO::createOptions()
   cmb_proxy_video_decoder->setCurrentIndex (settings->value ("proxy_video_decoder", 0).toInt());
 
 
-  connect (cmb_proxy_video_decoder, SIGNAL(currentIndexChanged (int)),
-           this, SLOT(cmb_proxy_video_decoder_currentIndexChanged (int)));
+  connect (cmb_proxy_video_decoder, SIGNAL(currentIndexChanged(int)),
+           this, SLOT(cmb_proxy_video_decoder_currentIndexChanged(int)));
 
 
   QHBoxLayout *lt_maxundos = new QHBoxLayout;
@@ -2146,7 +2146,7 @@ void CEKO::createOptions()
   QSpinBox *spb_max_undos = new QSpinBox;
   spb_max_undos->setValue (settings->value ("max_undos", 6).toInt());
   spb_max_undos->setMinimum (1);
-  connect (spb_max_undos, SIGNAL(valueChanged (int )), this, SLOT(spb_max_undos_valueChanged (int )));
+  connect (spb_max_undos, SIGNAL(valueChanged(int)), this, SLOT(spb_max_undos_valueChanged(int)));
 
   lt_maxundos->addWidget (l_maxundos);
   lt_maxundos->addWidget (spb_max_undos);
@@ -2167,7 +2167,7 @@ void CEKO::createOptions()
 
   QCheckBox *cb_session_restore = new QCheckBox (tr ("Restore the last session on start-up"), tab_options);
   cb_session_restore->setCheckState (Qt::CheckState (settings->value ("session_restore", "0").toInt()));
-  connect(cb_session_restore, SIGNAL(stateChanged (int)), this, SLOT(cb_session_restore (int)));
+  connect(cb_session_restore, SIGNAL(stateChanged(int)), this, SLOT(cb_session_restore(int)));
 
  /* QCheckBox *cb_override_locale = new QCheckBox (tr ("Override locale"), tab_options);
   cb_override_locale->setCheckState (Qt::CheckState (settings->value ("override_locale", 0).toInt()));
@@ -2264,11 +2264,11 @@ void CEKO::createOptions()
   cmb_sound_dev_out->setCurrentIndex (pa_device_id_out);
 
 
-  connect (cmb_sound_dev_in, SIGNAL(currentIndexChanged (int)),
-           this, SLOT(cmb_sound_dev_in_currentIndexChanged (int)));
+  connect (cmb_sound_dev_in, SIGNAL(currentIndexChanged(int)),
+           this, SLOT(cmb_sound_dev_in_currentIndexChanged(int)));
 
-  connect (cmb_sound_dev_out, SIGNAL(currentIndexChanged (int)),
-           this, SLOT(cmb_sound_dev_out_currentIndexChanged (int)));
+  connect (cmb_sound_dev_out, SIGNAL(currentIndexChanged(int)),
+           this, SLOT(cmb_sound_dev_out_currentIndexChanged(int)));
 
 
 
@@ -2289,8 +2289,8 @@ void CEKO::createOptions()
   hb_mono_recording_mode->addWidget (l_mono_recording_mode);
   hb_mono_recording_mode->addWidget (cmb_mono_recording_mode);
 
-  connect (cmb_mono_recording_mode, SIGNAL(currentIndexChanged (int)),
-           this, SLOT(cmb_mono_recording_mode_currentIndexChanged (int)));
+  connect (cmb_mono_recording_mode, SIGNAL(currentIndexChanged(int)),
+           this, SLOT(cmb_mono_recording_mode_currentIndexChanged(int)));
 
   cmb_mono_recording_mode->setCurrentIndex (settings->value ("mono_recording_mode", 0).toInt());
 
@@ -2321,8 +2321,8 @@ void CEKO::createOptions()
   cmb_buffer_size_frames->setCurrentIndex (idx);
 
 
-  connect (cmb_buffer_size_frames, SIGNAL(currentIndexChanged (int)),
-           this, SLOT(cmb_buffer_size_frames_currentIndexChanged (int)));
+  connect (cmb_buffer_size_frames, SIGNAL(currentIndexChanged(int)),
+           this, SLOT(cmb_buffer_size_frames_currentIndexChanged(int)));
 
 
 
@@ -2354,8 +2354,8 @@ void CEKO::createOptions()
 
   lt_vkeys->addWidget (lv_menuitems);
 
-  connect (lv_menuitems, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
-           this, SLOT(slot_lv_menuitems_currentItemChanged(QListWidgetItem *, QListWidgetItem *)));
+  connect (lv_menuitems, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
+           this, SLOT(slot_lv_menuitems_currentItemChanged(QListWidgetItem*, QListWidgetItem*)));
 
   ent_shtcut = new CShortcutEntry;
   lt_vbuttons->addWidget (ent_shtcut);
@@ -2490,7 +2490,7 @@ void CEKO::createManual()
 
   QVBoxLayout *lv_t = new QVBoxLayout;
 
-  QString loc = QLocale::system().name().left (2);
+  //QString loc = QLocale::system().name().left (2);
 
   QString lng = settings->value ("lng", QLocale::system().name()).toString().left(2).toLower();
 
@@ -2567,11 +2567,10 @@ void CEKO::file_save_version()
   QString version_timestamp_fmt = settings->value ("version_timestamp_fmt", "yyyy-MM-dd").toString();
   QTime t = QTime::currentTime();
 
-  QString fname = QString ("%1/%2-%3-%4.%5").arg (
-                           fi.absoluteDir().absolutePath()).arg (
-                           date.toString (version_timestamp_fmt)).arg (
-                           t.toString("hh-mm-ss")).arg (
-                           fi.baseName()).arg (
+  QString fname = QString ("%1/%2-%3-%4.%5").arg (fi.absoluteDir().absolutePath(),
+                           date.toString (version_timestamp_fmt),
+                           t.toString("hh-mm-ss"),
+                           fi.baseName(),
                            fi.suffix());
 
   if (d->save_with_name_plain (fname))
@@ -2927,7 +2926,7 @@ void CEKO::fman_places_itemActivated (QListWidgetItem *item)
 void CEKO::update_places_bookmarks()
 {
   lv_places->clear();
-  QStringList sl_items;
+ // QStringList sl_items;
 
   if (! file_exists (fname_places_bookmarks))
      return;
@@ -2963,13 +2962,13 @@ void CEKO::fman_open()
       return;
      }
 
-  for (auto fname: li)
-          {
-           CDocument *d = 0;
-           d = documents->open_file (fname);
-           if (d)
-               dir_last = get_file_path (d->file_name);
-          }
+  for (const auto &fname: li)
+      {
+       CDocument *d = 0;
+       d = documents->open_file (fname);
+       if (d)
+           dir_last = get_file_path (d->file_name);
+      }
 }
 
 
@@ -3166,7 +3165,7 @@ void CEKO::createFman()
 
   connect (fman, SIGNAL(file_activated(QString)), this, SLOT(fman_file_activated(QString)));
   connect (fman, SIGNAL(dir_changed(QString)), this, SLOT(fman_dir_changed(QString)));
-  connect (fman, SIGNAL(current_file_changed  (QString,QString)), this, SLOT(fman_current_file_changed (const QString &, const QString &)));
+  connect (fman, SIGNAL(current_file_changed(QString,QString)), this, SLOT(fman_current_file_changed(QString,QString)));
 
   connect (act_fman_refresh, SIGNAL(triggered()), fman, SLOT(refresh()));
 
@@ -3206,7 +3205,7 @@ void CEKO::createFman()
 
   lv_places = new QListWidget;
   update_places_bookmarks();
-  connect (lv_places, SIGNAL(itemActivated (QListWidgetItem *)), this, SLOT(fman_places_itemActivated (QListWidgetItem *)));
+  connect (lv_places, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(fman_places_itemActivated(QListWidgetItem*)));
 
   QVBoxLayout *vbox = new QVBoxLayout;
   vbox->addLayout (lah_places_bar);
@@ -3909,8 +3908,8 @@ CChangeFormatWindow::CChangeFormatWindow (QWidget *parent, CWaveform *waveform, 
   QString sf = file_formats->hformatnames.value (f);
   cmb_format->setCurrentIndex (cmb_format->findText (sf));
 
-  connect (cmb_format, SIGNAL(currentIndexChanged (int)),
-           this, SLOT(format_currentIndexChanged (int)));
+  connect (cmb_format, SIGNAL(currentIndexChanged(int)),
+           this, SLOT(format_currentIndexChanged(int)));
 
   int idx = cmb_format->findText (sf);
   format_currentIndexChanged (idx);
@@ -5379,26 +5378,24 @@ void create_menu_from_themes (QObject *handler,
 
 
  // foreach (QFileInfo fi, lst_fi)
-  for (auto fi: lst_fi)
-         {
-          if (fi.isDir())
-             {
-              if (has_css_file (fi.absoluteFilePath()))
-                 {
-                  QAction *act = new QAction (fi.fileName(), menu->parentWidget());
-                  act->setData (fi.filePath());
-                  handler->connect (act, SIGNAL(triggered()), handler, method);
-                  menu->addAction (act);
-                }
-             else
-                 {
-                  QMenu *mni_temp = menu->addMenu (fi.fileName());
-                  create_menu_from_themes (handler, mni_temp,
-                                           fi.filePath(), method);
-
-                 }
-             }
-         }
+  for (const auto &fi: lst_fi)
+      {
+       if (fi.isDir())
+          {
+           if (has_css_file (fi.absoluteFilePath()))
+              {
+               QAction *act = new QAction (fi.fileName(), menu->parentWidget());
+               act->setData (fi.filePath());
+               handler->connect (act, SIGNAL(triggered()), handler, method);
+               menu->addAction (act);
+              }
+           else
+               {
+                QMenu *mni_temp = menu->addMenu (fi.fileName());
+                create_menu_from_themes (handler, mni_temp, fi.filePath(), method);
+               }
+           }
+     }
 }
 
 
@@ -5425,7 +5422,7 @@ void CEKO::cb_altmenu_stateChanged (int state)
   if (state == Qt::Unchecked)
       b_altmenu = false;
   else
-       b_altmenu = true;
+      b_altmenu = true;
 
   settings->setValue ("b_altmenu", b_altmenu);
 }
