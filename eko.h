@@ -387,7 +387,7 @@ prefs window callbacks
 
   void cb_use_trad_dialogs_changed (int state);
 
-  void cmb_proxy_video_decoder_currentIndexChanged (int index);
+//  void cmb_proxy_video_decoder_currentIndexChanged (int index);
 
 
   void pb_assign_hotkey_clicked();

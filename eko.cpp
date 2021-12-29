@@ -100,7 +100,7 @@ extern int meter_msecs_delay;
 
 extern int buffer_size_frames;
 
-extern int proxy_video_decoder;
+//extern int proxy_video_decoder;
 
 CFloatBuffer *fb_record;
 
@@ -472,7 +472,7 @@ void CEKO::readSettings()
   zoom_a = settings->value ("zoom_a", "1").toInt();
   zoom_b = settings->value ("zoom_b", "1").toInt();
 
-  proxy_video_decoder = settings->value ("proxy_video_decoder", "0").toInt();
+ // proxy_video_decoder = settings->value ("proxy_video_decoder", "0").toInt();
 
   fname_def_palette = settings->value ("fname_def_palette", ":/palettes/EKO").toString();
 
@@ -1893,13 +1893,13 @@ void CEKO::cmb_panner_currentIndexChanged (int index)
   dsp->panner = index;
 }
 */
-
+/*
 void CEKO::cmb_proxy_video_decoder_currentIndexChanged (int index)
 {
   settings->setValue ("proxy_video_decoder", index);
   proxy_video_decoder = index;
 }
-
+*/
 
 void CEKO::pb_choose_temp_path_clicked()
 {
@@ -2118,7 +2118,7 @@ void CEKO::createOptions()
            this, SLOT(cmb_panner_currentIndexChanged (int)));
 */
 
-
+/*
   QHBoxLayout *h_proxy_video_decoder = new QHBoxLayout;
   QLabel *l_proxy_video_decoder = new QLabel (tr ("MP3 and video decoder (restart EKO to apply):"));
 
@@ -2139,7 +2139,7 @@ void CEKO::createOptions()
   connect (cmb_proxy_video_decoder, SIGNAL(currentIndexChanged(int)),
            this, SLOT(cmb_proxy_video_decoder_currentIndexChanged(int)));
 
-
+*/
   QHBoxLayout *lt_maxundos = new QHBoxLayout;
 
   QLabel *l_maxundos = new QLabel (tr ("Max undo items per file"));
@@ -2184,7 +2184,7 @@ void CEKO::createOptions()
 */
   page_common_layout->addWidget (bt_set_def_format);
 
-  page_common_layout->addLayout (h_proxy_video_decoder);
+ // page_common_layout->addLayout (h_proxy_video_decoder);
 
   page_common_layout->addLayout (hb_mp3_encode);
 
