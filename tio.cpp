@@ -7,6 +7,7 @@
 
 #include <sndfile.h>
 #include <limits>
+#include <cstdlib>
 
 #include "tio.h"
 #include "utils.h"
@@ -494,45 +495,10 @@ bool CTioPlainAudio::save_16bit_pcm (const QString &fname)
 
 CTioProxy::CTioProxy()
 {
-  //qDebug() << "CTioProxy::CTioProxy";
   ronly = true;
   id = "CTioProxy";
-  
-  
- // proxies[exts_mp3] = "lame --decode \"@FILEIN\" \"@FILEOUT\"";
-  //extensions += exts_mp3;
-  
+
   QString exts_videos = "mp3,avi,mp4,mpeg2,flv,mkv,aac,vob,wmv,3gp,3ga,m2t,mov,mpeg,h264,ts,webm,asf,wma,ogm,wv,wvc,rm,qt,nut,smi,ac3,divx,dv,fli,flc,cpk";
-    
-  //QString exts_videos = "avi,mp4";
-  
-  //FFMPEG: ffmpeg -i \"@FILEIN\" -acodec pcm_s16le -ac 2 \"@FILEOUT\"
- 
-  //QString handler_ffmpeg = "ffmpeg -y -nostats -i \"@FILEIN\" -acodec pcm_s16le -ac 2 \"@FILEOUT\"";
-  
-//  QString handler_mplayer = "mplayer -ao pcm:fast:file=\"@FILEOUT\" -vo null -vc null \"@FILEIN\"";
-  
-  QStringList sl_proxy_video_decoders;
-
-#if defined(Q_OS_WIN) || defined(Q_OS_OS2)
-
-  QString ffmpeg_path = QCoreApplication::applicationDirPath() + "/" + "ffmpeg.exe";
-  sl_proxy_video_decoders.append (ffmpeg_path + " -y -nostats -i \"@FILEIN\" -acodec pcm_s16le -ac 2 \"@FILEOUT\"");
-
-  QString mplayer_path = QCoreApplication::applicationDirPath() + "/" + "mplayer.exe";
-  sl_proxy_video_decoders.append (mplayer_path + " -really-quiet -ao pcm:fast:file=\"@FILEOUT\" -vo null -vc null \"@FILEIN\"");
-
-#else
-
-  sl_proxy_video_decoders.append ("ffmpeg -y -nostats -i \"@FILEIN\" -acodec pcm_s16le -ac 2 \"@FILEOUT\"");
-  sl_proxy_video_decoders.append ("mplayer -really-quiet -ao pcm:fast:file=\"@FILEOUT\" -vo null -vc null \"@FILEIN\"");
-
-#endif
-  
-  //qDebug() << "=========== proxy_video_decoder: " << proxy_video_decoder; 
-    
-  proxies[exts_videos] = sl_proxy_video_decoders[proxy_video_decoder];
-  
   QStringList lexts_videos = exts_videos.split (",");
   for (const auto &ext: lexts_videos)
       {
@@ -548,54 +514,50 @@ CTioProxy::~CTioProxy()
 
 CFloatBuffer* CTioProxy::load (const QString &fname)
 {
-  QString ext = file_get_ext (fname);
+  QString command = "ffmpeg -y -nostats -i \"@FILEIN\" -acodec pcm_f32le -ac 2 \"@FILEOUT\"";
 
-  QString command; 
+  command = command.replace ("@FILEIN", fname);
+  command = command.replace ("@FILEOUT", temp_mp3_fname);
 
-  QList <QString> keys = proxies.keys();
- 
-  for (int i = 0; i < keys.size(); i++)
-      {
-       QString key = keys[i];
-      
-       if (key.indexOf (",") != -1)
-          {
-           QStringList l = key.split (",");
-           if (l.indexOf (ext) != -1)
-              command = proxies[key]; 
-          }
-       else
-           if (key == ext)
-              command = proxies[key];
-      }
+  QApplication::setOverrideCursor (QCursor(Qt::WaitCursor));
+  
+  int exit_code = system (command.toUtf8().data());
 
-   if (command.isEmpty() || command.isNull())
-      return 0;
-  
-   command = command.replace ("@FILEIN", fname);
-   command = command.replace ("@FILEOUT", temp_mp3_fname);
-    
-   QApplication::setOverrideCursor (QCursor(Qt::WaitCursor));
-  
-//   QTime tm;
-//   tm.start();
-  
-   int exit_code = QProcess::execute (command);
-  
-  // qDebug() << "elapsed: " << tm.elapsed();
-  
-   QApplication::restoreOverrideCursor();
-  
-   if (exit_code < 0)
-       return 0;
+  /*  QProcess *process = new QProcess;
 
-   if (file_exists (temp_mp3_fname))
-      {
-       CTioPlainAudio *pa = new CTioPlainAudio (true);
-       CFloatBuffer *fb = pa->load (temp_mp3_fname);
-       delete pa;
-       return fb;
-      }
+
+#if QT_VERSION >= 0x060000
+  process->startCommand (command);
+#else
+  process->startCommand (command);
+#endif
+*/
+/*
+    QProcess ffmpeg;
+       ffmpeg.start("ffmpeg" , QStringList()
+                            << "-y"
+                            << "-nostats"
+                            << "-i" << "\"" << fname << "\""
+                            << "-acodec" << "pcm_f32le"
+                            << "-ac" << "2"
+                            << "\"" << temp_mp3_fname << "\"");
+
+                    ffmpeg.waitForFinished(-1);
+*/
+//  qDebug() << "exit_code" << exit_code;
+
+  QApplication::restoreOverrideCursor();
+  
+ if (exit_code < 0)
+     return 0;
+
+  if (file_exists (temp_mp3_fname))
+     {
+      CTioPlainAudio *pa = new CTioPlainAudio (true);
+      CFloatBuffer *fb = pa->load (temp_mp3_fname);
+      delete pa;
+      return fb;
+     }
      
   return 0;   
 }

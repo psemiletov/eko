@@ -5635,9 +5635,19 @@ bool is_app_installed (const QString &binname)
 //НЕ РАБОТАЕТ ДЛЯ FFMPEG!!!!!!!!!!!!!!!!!!!!!!!!!!
 bool is_app_installed (const QString &binname)
 {
-  int status = QProcess::execute ("which " + binname);
+ // int status = QProcess::execute ("which " + binname);
 
-  return ! status;
+  int status = QProcess::execute (binname);
+
+
+  if (status == -2)
+      return false;
+  else
+      return true;
+
+  //return ! status;
+  //return QProcess::execute ("which " + binname);
+
 }
 
 
