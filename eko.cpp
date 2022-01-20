@@ -1,5 +1,5 @@
 /***************************************************************************
- *   2010-2021 by Peter Semiletov                                          *
+ *   2010-2023 by Peter Semiletov                                          *
  *   tea@list.ru                                                           *
 
 started at 25 July 2010
@@ -100,8 +100,6 @@ extern int meter_msecs_delay;
 
 extern int buffer_size_frames;
 
-//extern int proxy_video_decoder;
-
 CFloatBuffer *fb_record;
 
 
@@ -121,14 +119,12 @@ SNDFILE *file_temp_handle;
 
 
 int mono_recording_mode;
-
 int rec_channels;
 
 int pa_device_id_in;
 int pa_device_id_out;
 
 extern CDSP *dsp;
-
 
 QStringList lpa_apis;
 QStringList lpa_devices;
@@ -659,43 +655,6 @@ CEKO::CEKO()
   if (transl_app.load (":/translations/" + lng))
       qApp->installTranslator (&transl_app);
 
-
-  /*
-  if (settings->value ("override_locale", 0).toBool())
-     {
-      QString ts = settings->value ("override_locale_val", "en").toString();
-      if (ts.length() != 2)
-         ts = "en";
-
-      qtTranslator.load (QString ("qt_%1").arg (ts),
-                         QLibraryInfo::location (QLibraryInfo::TranslationsPath));
-      qApp->installTranslator (&qtTranslator);
-
-      myappTranslator.load (":/translations/eko_" + ts);
-      qApp->installTranslator (&myappTranslator);
-     }
-  else
-      {
-       qtTranslator.load (QString ("qt_%1").arg (QLocale::system().name()),
-                          QLibraryInfo::location (QLibraryInfo::TranslationsPath));
-       qApp->installTranslator (&qtTranslator);
-
-       myappTranslator.load (":/translations/eko_" + QLocale::system().name());
-       qApp->installTranslator (&myappTranslator);
-*/
-/*
-#if QT_VERSION >= 0x060000
-  if (transl_app.load (QString ("qt_%1").arg (lng), QLibraryInfo::path (QLibraryInfo::TranslationsPath)))
-     qApp->installTranslator (&transl_app);
-#else
-  if (transl_system.load (QString ("qt_%1").arg (lng), QLibraryInfo::location (QLibraryInfo::TranslationsPath)))
-     qApp->installTranslator (&transl_system);
-#endif
-
-*/
-
-
-
   createActions();
   createMenus();
   createToolBars();
@@ -744,8 +703,6 @@ CEKO::CEKO()
   createOptions();
   createManual();
 
-//  updateFonts();
-
   dir_last = settings->value ("dir_last", QDir::homePath()).toString();
   b_preview = settings->value ("b_preview", false).toBool();
 
@@ -782,7 +739,7 @@ CEKO::CEKO()
 
   setAcceptDrops (true);
   qApp->setWindowIcon (QIcon (":/icons/eko.png"));
-  log->log (tr ("<b>EKO %1 @ http://semiletov.org/eko</b><br>or <i>https://github.com/psemiletov/eko</i><br>by Peter Semiletov (tea@list.ru)<br>read the Manual under the <i>learn</i> tab!").arg (QString (VERSION_NUMBER)));
+  log->log (tr ("<b>EKO %1 by Peter Semiletov (tea@list.ru)</b><br>@ http://semiletov.org/eko or https://github.com/psemiletov/eko<br>read the Manual under the <i>learn</i> tab!<br>BTC donate: 1PCo2zznEGMFJey4qFKGQ8CoFK2nzNnJJf").arg (QString (VERSION_NUMBER)));
 
   idx_tab_edit_activate();
 
@@ -1004,7 +961,7 @@ void CEKO::open()
       fileNames = dialog.selectedFiles();
 
       //foreach (QString fn, fileNames)
-      for (auto fn: fileNames)
+      for (const auto &fn: fileNames)
               {
                CDocument *d = documents->open_file (fn);
                if (d)
@@ -2354,8 +2311,8 @@ void CEKO::createOptions()
 
   lt_vkeys->addWidget (lv_menuitems);
 
-  connect (lv_menuitems, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
-           this, SLOT(slot_lv_menuitems_currentItemChanged(QListWidgetItem*, QListWidgetItem*)));
+  connect (lv_menuitems, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+           this, SLOT(slot_lv_menuitems_currentItemChanged(QListWidgetItem*,QListWidgetItem*)));
 
   ent_shtcut = new CShortcutEntry;
   lt_vbuttons->addWidget (ent_shtcut);

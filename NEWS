@@ -1,14 +1,14 @@
 _____________________________________________________
        ===== NEWS ABOUT EKO ====                 
 
-                   EKO 6.0.0, May 2019                         
+                   EKO 7.0.0, January 2022                         
 _____________________________________________________
 
 http://semiletov.org/eko (stable ver. with win32 builds)
 https://github.com/psemiletov/eko (development ver.)
 _____________________________________________________
 
-   This version is a basis for further improvements. IO subsysten has been fixed. New Zoom menu, code cleanup.
+   EKO has been ported to Qt6, but source is still compatible with Qt5. The best option to build EKO is cmake (for Qt5/6), not qmake (still supported, but for Qt5).
    
    Stay tuned.
 

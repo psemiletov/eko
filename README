@@ -1,13 +1,26 @@
-===INTRO===
-
+===EKO============
 EKO is a simple sound editor.
+==================
+
+http://semiletov.org/eko
+https://github.com/psemiletov/eko
+
+BTC donate: 1PCo2zznEGMFJey4qFKGQ8CoFK2nzNnJJf
 
 ===INSTALLATION===
 
-You need devel packages of Qt 4.x or Qt 5.x, portaudio, libsndfile and libsamplerate.
+You need devel packages of Qt 5 or Qt6, portaudio, libsndfile and libsamplerate.
 C++ 11 compatible version of GCC or Clang.
 
-Just run:
+To build EKO from source using cmake (Qt5/Qt6 build):
+
+mkdir b
+cd b
+cmake ..
+make
+make install
+
+To build EKO from source using qmake (Qt5 build):
 
 qmake
 make
@@ -16,15 +29,4 @@ make install
 
 ===NOTE FOR PACKAGE MAINTAINERS===
 
-EKO after the compilation is a single binary file (with embeded resources). To override the 
-default installation path (/usr/local, with usr/local/bin for binary) use:
-
-qmake PREFIX=your_path
-make
-make install
-
-
-===SITE===
-
-http://semiletov.org/eko - main site, stable version, win32 builds
-https://github.com/psemiletov/eko - unstable devel. version 
+EKO after the compilation is a single binary file (with embeded resources). Please prefer cmake over qmake to build EKO.

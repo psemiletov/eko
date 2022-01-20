@@ -1,9 +1,9 @@
 project('eko', ['cpp','c'],
          default_options : ['cpp_std=c++11'],
-         version : '6.0.0',
+         version : '7.0.0',
          license : 'GPLv3')
 
-add_global_arguments('-DVERSION_NUMBER="6.0.0"', language : 'cpp')
+add_global_arguments('-DVERSION_NUMBER="7.0.0"', language : 'cpp')
 add_global_arguments('-DUSE_QML_STUFF=1', language : 'cpp')
 
 #harcoded for now

@@ -75,7 +75,7 @@ void create_menu_from_dir_dir (QObject *handler,
   QFileInfoList lst_fi = d.entryInfoList (QDir::NoDotAndDotDot | QDir::Dirs,
                                           QDir::IgnoreCase | QDir::LocaleAware | QDir::Name);
 
-  for (auto fi: lst_fi)
+  for (const auto &fi: lst_fi)
          {
           if (fi.isDir())
              {
