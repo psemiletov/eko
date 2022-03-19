@@ -1,6 +1,6 @@
 /***************************************************************************
- *   2010-2023 by Peter Semiletov                                          *
- *   tea@list.ru                                                           *
+ *   2010-2022 by Peter Semiletov                                          *
+ *   peter.semiletov@gmail.com                                                           *
 
 started at 25 July 2010
  *                                                                         *
@@ -739,7 +739,7 @@ CEKO::CEKO()
 
   setAcceptDrops (true);
   qApp->setWindowIcon (QIcon (":/icons/eko.png"));
-  log->log (tr ("<b>EKO %1 by Peter Semiletov (tea@list.ru)</b><br>@ http://semiletov.org/eko or https://github.com/psemiletov/eko<br>read the Manual under the <i>learn</i> tab!<br>BTC donate: 1PCo2zznEGMFJey4qFKGQ8CoFK2nzNnJJf").arg (QString (VERSION_NUMBER)));
+  log->log (tr ("<b>EKO %1 by Peter Semiletov</b><br>PayPal donate: peter.semiletov@gmail.com<br>http://semiletov.org/eko or https://github.com/psemiletov/eko<br>read the Manual under the <i>learn</i> tab!<br>BTC donate: 1PCo2zznEGMFJey4qFKGQ8CoFK2nzNnJJf").arg (QString (VERSION_NUMBER)));
 
   idx_tab_edit_activate();
 
