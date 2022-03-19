@@ -138,8 +138,8 @@ INSTALLS += target desktop icon64
 
 
 RESOURCES += eko.qrc
-TRANSLATIONS += translations/eko_ru.ts \
-                translations/eko_cs.ts
+TRANSLATIONS += translations/ru.ts \
+                translations/cs.ts
 
 DISTFILES += ChangeLog \
     COPYING \
