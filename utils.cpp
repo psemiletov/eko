@@ -17,7 +17,7 @@ Peter Semiletov
 #include "utils.h"
 
 
-QString qstring_load (const QString &fileName, const char *enc)
+QString qstring_load (const QString &fileName)
 {
   QFile file (fileName);
 
@@ -25,26 +25,24 @@ QString qstring_load (const QString &fileName, const char *enc)
      return QString();
 
   QTextStream in(&file);
-  //in.setCodec (enc);
 
   return in.readAll();
 }
 
 
-bool qstring_save (const QString &fileName, const QString &data, const char *enc)
+bool qstring_save (const QString &fileName, const QString &data)
 {
   QFile file (fileName);
   if (! file.open (QFile::WriteOnly | QFile::Text))
       return false;
 
   QTextStream out (&file);
-  //out.setCodec (enc);
   out << data;
 
   return true;
 }
 
-
+/*
 QString string_between (const QString &source,
                         const QString &sep1,
                         const QString &sep2)
@@ -63,7 +61,7 @@ QString string_between (const QString &source,
   result = source.mid (pos1, pos2 - pos1);
   return result;
 }
-
+*/
 
 QString str_from_locale (const char *s)
 {

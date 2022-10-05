@@ -1,5 +1,5 @@
  /**************************************************************************
- *   2007-2018 by Peter Semiletov                                          *
+ *   2007-2022 by Peter Semiletov                                          *
  *   peter.semiletov@gmail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -26,10 +26,11 @@
 #include <QApplication>
 #include <QDateTime>
 #include <QSettings>
+#include <QMouseEvent>
 
 #include "fman.h"
 #include "utils.h"
-#include "logmemo.h"
+//#include "logmemo.h"
 
 
 extern QSettings *settings;
@@ -37,18 +38,18 @@ extern QSettings *settings;
 
 void CFMan::dir_up()
 {
-  if (dir.path() == "/")
-     return;
+  if (dir.isRoot())
+      return;
 
-  QString oldcurdir = dir.dirName();
+   QString oldcurdir = dir.dirName();
 
-  dir.cdUp();
-  nav (dir.path());
+   dir.cdUp();
+   nav (dir.path());
 
-  QModelIndex index = index_from_name (oldcurdir);
+   QModelIndex index = index_from_name (oldcurdir);
 
-  selectionModel()->setCurrentIndex(index, QItemSelectionModel::Rows | QItemSelectionModel::NoUpdate);
-  scrollTo (index);
+   selectionModel()->setCurrentIndex(index, QItemSelectionModel::Rows | QItemSelectionModel::NoUpdate);
+   scrollTo (index);
 }
 
 
@@ -309,11 +310,11 @@ void CFMan::cb_fman_currentChanged (const QModelIndex &current, const QModelInde
 
   QFileInfo f (full_path);
 
-  qDebug() << "full_path:" << full_path;
-  qDebug() << "is exists: " << f.exists();
+  //qDebug() << "full_path:" << full_path;
+  //qDebug() << "is exists: " << f.exists();
 
-  qDebug() << "is file: " << f.isFile();
-  qDebug() << "is dir: " << f.isDir();
+//  qDebug() << "is file: " << f.isFile();
+//  qDebug() << "is dir: " << f.isDir();
 
   //qDebug() << "IS DIR: " << full_path << " " << is_dir (full_path);
 
@@ -426,7 +427,7 @@ void CFMan::mouseMoveEvent (QMouseEvent *event)
 
 void CFMan::keyPressEvent (QKeyEvent *event)
 {
-  if (event->key() == Qt::Key_Insert)
+ /* if (event->key() == Qt::Key_Insert)
      {
       bool sel = false;
       QModelIndex index = selectionModel()->currentIndex();
@@ -535,7 +536,111 @@ void CFMan::keyPressEvent (QKeyEvent *event)
       }
 
 
-  QTreeView::keyPressEvent (event);
+  QTreeView::keyPressEvent (event);*/
+  if (event->key() == Qt::Key_Insert)
+       {
+        if (currentIndex().row() == mymodel->rowCount() - 1)
+           {
+            event->accept();
+            return;
+           }
+
+        selectionModel()->setCurrentIndex (indexBelow (currentIndex()), QItemSelectionModel::Rows | QItemSelectionModel::Toggle);
+
+        event->accept();
+        return;
+       }
+
+
+    if (event->key() == Qt::Key_Backspace)
+       {
+        dir_up();
+        event->accept();
+        return;
+       }
+
+
+    if (event->key() == Qt::Key_Return)
+       {
+        tv_activated (currentIndex());
+        event->accept();
+        return;
+       }
+
+
+    if (event->key() == Qt::Key_Up)
+       {
+        if (currentIndex().row() == 0)
+           {
+            event->accept();
+            return;
+           }
+
+
+        if (event->modifiers() & Qt::ShiftModifier)
+           selectionModel()->setCurrentIndex (indexAbove (currentIndex()), QItemSelectionModel::Rows | QItemSelectionModel::Toggle);
+        else
+            selectionModel()->setCurrentIndex (indexAbove (currentIndex()), QItemSelectionModel::Rows | QItemSelectionModel::NoUpdate);
+
+        event->accept();
+        return;
+       }
+
+
+    if (event->key() == Qt::Key_Down)
+       {
+        if (currentIndex().row() == mymodel->rowCount() - 1)
+           {
+            event->accept();
+            return;
+           }
+
+        if (event->modifiers() & Qt::ShiftModifier)
+           selectionModel()->setCurrentIndex (indexBelow (currentIndex()), QItemSelectionModel::Rows | QItemSelectionModel::Toggle);
+        else
+             selectionModel()->setCurrentIndex (indexBelow(currentIndex()), QItemSelectionModel::Rows | QItemSelectionModel::NoUpdate);
+
+        event->accept();
+        return;
+       }
+
+
+    if (event->key() == Qt::Key_PageUp)
+       {
+        QModelIndex idx = moveCursor (QAbstractItemView::MovePageUp, Qt::NoModifier);
+        selectionModel()->setCurrentIndex (idx, QItemSelectionModel::Rows | QItemSelectionModel::NoUpdate);
+        event->accept();
+        return;
+       }
+
+
+    if (event->key() == Qt::Key_PageDown)
+       {
+        QModelIndex idx = moveCursor (QAbstractItemView::MovePageDown, Qt::NoModifier);
+        selectionModel()->setCurrentIndex (idx, QItemSelectionModel::Rows | QItemSelectionModel::NoUpdate);
+        event->accept();
+        return;
+       }
+
+
+    if (event->key() == Qt::Key_End)
+       {
+        QModelIndex idx = mymodel->index (mymodel->rowCount() - 1, 0);
+        selectionModel()->setCurrentIndex (idx, QItemSelectionModel::Rows | QItemSelectionModel::NoUpdate );
+        event->accept();
+        return;
+       }
+
+     if (event->key() == Qt::Key_Home)
+        {
+         QModelIndex idx = mymodel->index (0, 0);
+         selectionModel()->setCurrentIndex (idx, QItemSelectionModel::Rows | QItemSelectionModel::NoUpdate);
+         event->accept();
+         return;
+        }
+
+
+    QTreeView::keyPressEvent (event);
 }
 
 

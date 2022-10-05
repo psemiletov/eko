@@ -3268,11 +3268,8 @@ void CEKO::fman_delete()
   if (! fi.exists() && ! fi.isWritable())
      return;
 
-  if (QMessageBox::warning (this, "EKO",
-                            tr ("Are you sure to delete\n"
-                            "%1?").arg (fname),
-                            QMessageBox::Yes | QMessageBox::Default,
-                            QMessageBox::No | QMessageBox::Escape) == QMessageBox::No)
+  if (QMessageBox::warning (this, "EKO", tr ("Are you sure to delete\n%1?").arg (fname),
+                            QMessageBox::Yes, QMessageBox::No) == QMessageBox::No)
       return;
 
   QFile::remove (fname);

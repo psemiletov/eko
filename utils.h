@@ -44,10 +44,10 @@ public:
 bool is_dir (const QString &path);
 
 
-bool qstring_save (const QString &fileName, const QString &data, const char *enc = "UTF-8");
-QString qstring_load (const QString &fileName, const char *enc = "UTF-8");
+bool qstring_save (const QString &fileName, const QString &data);
+QString qstring_load (const QString &fileName);
 
-QString string_between (const QString &source, const QString &sep1, const QString &sep2);
+//QString string_between (const QString &source, const QString &sep1, const QString &sep2);
 QString str_from_locale (const char *s);
 
 

@@ -376,8 +376,7 @@ CFloatBuffer* CFloatBuffer::resample (size_t new_rate, int resampler)
            return 0;
           }
       }
-     
-  
+
   //nb->frames = data.output_frames;  //REAL LENGTH!
   tfb->copy_params (this);
   tfb->length_frames = output_frames;
@@ -513,7 +512,6 @@ void CFloatBuffer::paste_at (CFloatBuffer *other, size_t pos_frames)
        memcpy (sum->buffer[ch], buffer[ch], pos_frames_corrected * sizeof (float));
       }
   
-
  //перематываем новый в позицию position_in_frames и копируем в него вставляемый
 
   for (size_t ch = 0; ch < channels; ch++)
