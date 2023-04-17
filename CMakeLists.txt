@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 3.0)
+#cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.21.1)
+
 set (QT_MIN_VERSION "5.4.0")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -9,29 +11,21 @@ set(CMAKE_AUTORCC ON)
 enable_language(CXX)
 enable_language(C)
 
-#set(CMAKE_CXX_STANDARD 17)
-#set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
-#find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
-
-
-if(Qt${QT_VERSION_MAJOR} STREQUAL "Qt6")
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Core5Compat REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets)
+if (NOT Qt6_FOUND)
+    find_package(Qt5 5.15 REQUIRED COMPONENTS Core Widgets)
 endif()
 
 
-if(Qt${QT_VERSION_MAJOR} STREQUAL "Qt5")
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
+if (Qt6_FOUND)
+message("+ Qt6 found")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 endif()
 
 
-message(Qt${QT_VERSION_MAJOR} " found")
-
-
-include_directories(${Qt${QT_VERSION_MAJOR}Widgets_INCLUDE_DIRS})
-add_definitions(${Qt${QT_VERSION_MAJOR}Widgets_DEFINITIONS})
-add_definitions(${Qt${QT_VERSION_MAJOR}Widgets_COMPILE_DEFINITIONS})
+qt_standard_project_setup()
 
 
 set(PROJECT "eko")
@@ -47,24 +41,10 @@ endif()
 
 message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 
-find_package(Qt${QT_VERSION_MAJOR} CONFIG REQUIRED Core Widgets)
 
-if(BUILD_TESTING)
-  find_package(Qt${Test}${QT_VERSION_MAJOR} CONFIG REQUIRED)
-endif()
+qt_add_resources(QT_RESOURCES eko.qrc)
 
-
-if(Qt${QT_VERSION_MAJOR} STREQUAL "Qt6")
-qt6_add_resources(QT_RESOURCES eko.qrc)
-endif()
-
-if (Qt${QT_VERSION_MAJOR} MATCHES "Qt5")
-qt5_add_resources(QT_RESOURCES eko.qrc)
-endif()
-
-
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt${QT_VERSION_MAJOR}Widgets_EXECUTABLE_COMPILE_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${QtWidgets_EXECUTABLE_COMPILE_FLAGS}")
 
 file(GLOB eko_SRCS "*.c" "*.cpp")
 file(GLOB eko_HEADERS "*.h")
@@ -121,18 +101,12 @@ if (EXISTS "/usr/include/linux/joystick.h")
    add_definitions(-DJOYSTICK_SUPPORTED)
 endif()
 
-#endif()
-#endif()
 
-
-if(Qt${QT_VERSION_MAJOR} STREQUAL "Qt6")
-   target_link_libraries(eko Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Core Qt6::Core5Compat)
+if (Qt6_FOUND)
+target_link_libraries(eko Qt::Core5Compat)
 endif()
 
-
-if(Qt${QT_VERSION_MAJOR} STREQUAL "Qt5")
-target_link_libraries(eko Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Core)
-endif()
+target_link_libraries(eko Qt::Widgets Qt::Core)
 
 
 install (TARGETS eko DESTINATION bin)
