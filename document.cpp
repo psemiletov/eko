@@ -1557,9 +1557,10 @@ void CDocumentHolder::update_recent_menu()
 
 void CDocumentHolder::open_recent()
 {
-  QAction *Act = qobject_cast<QAction *>(sender());
+ // QAction *Act = qobject_cast<QAction *>(sender());
+  QAction *a = qobject_cast<QAction *>(sender());
 
-  int i = recent_files.indexOf (Act->text ());
+  int i = recent_files.indexOf (a->data().toString());
   if (i == -1)
      return;
 

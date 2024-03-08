@@ -29,7 +29,7 @@ qt_standard_project_setup()
 
 
 set(PROJECT "eko")
-project ($PROJECT VERSION 7.0.1 LANGUAGES CXX C)
+project ($PROJECT VERSION 7.1.0 LANGUAGES CXX C)
 add_definitions(-DVERSION_NUMBER="\\"${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}\\"")
 
 

@@ -3018,10 +3018,10 @@ void CEKO::file_use_palette()
 {
   QAction *a = qobject_cast<QAction *>(sender());
   QString fname (dir_palettes);
-  fname.append ("/").append (a->text());
+  fname.append ("/").append (a->data().toString());
 
   if (! file_exists (fname))
-     fname = ":/palettes/" + a->text();
+     fname = ":/palettes/" + a->data().toString();
 
   fname_def_palette = fname;
   load_palette (fname);
@@ -5814,7 +5814,7 @@ void CEKO::zoom_to_factor()
      return;
 
   QAction *a = qobject_cast<QAction *>(sender());
-  d->wave_edit->waveform->zoom (a->text().toInt());
+  d->wave_edit->waveform->zoom (a->data().toString().toInt());
 }
 
 

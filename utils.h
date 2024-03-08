@@ -41,6 +41,9 @@ public:
 };
 
 
+QString qstring_clear (const QString &s);
+
+
 bool is_dir (const QString &path);
 
 

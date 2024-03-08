@@ -17,6 +17,12 @@ Peter Semiletov
 #include "utils.h"
 
 
+QString qstring_clear (const QString &s)
+{
+  QString t = s;
+  return t.remove ("&");
+}
+
 QString qstring_load (const QString &fileName)
 {
   QFile file (fileName);
