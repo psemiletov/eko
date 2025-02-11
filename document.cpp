@@ -1288,10 +1288,8 @@ bool CDocument::save_with_name (const QString &fileName)
   
 //  qDebug() << "fext:" << fext;
   
-  if (ext.isEmpty())
+  if (ext.toLower() != fext)
      fname = fname + "." + fext;
-  else
-      fname = change_file_ext (fname, fext);
 
   CTio *tio = holder->tio_handler.get_for_fname (fname);
   
