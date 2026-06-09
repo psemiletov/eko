@@ -3856,7 +3856,10 @@ CChangeFormatWindow::CChangeFormatWindow (QWidget *parent, CWaveform *waveform, 
   if (wf)
      channels->setValue (wf->fb->channels);
 
-  cmb_format->addItems (file_formats->hformatnames.values());
+  QStringList fmts = file_formats->hformatnames.values();
+  fmts.sort();
+
+  cmb_format->addItems (fmts);
 
   int f = (fmt & SF_FORMAT_TYPEMASK);
   QString sf = file_formats->hformatnames.value (f);
@@ -3960,6 +3963,8 @@ void CChangeFormatWindow::format_currentIndexChanged (int index)
       {
        sl.append (file_formats->hsubtype.value (values.at(i)));
       }
+
+  sl.sort();
 
   cmb_subtype->addItems (sl);
 
