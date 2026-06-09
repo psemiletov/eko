@@ -448,6 +448,11 @@ public:
   public slots:
 
   void open_recent();
+
+   void doStopPlaybackTimers();
+
+signals:
+  void stopPlaybackTimers();
 };
 
 

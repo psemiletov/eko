@@ -472,17 +472,17 @@ int pa_stream_callback (const void *input, void *output,
   }
 
   // ------ ОТЛАДОЧНЫЙ ВЫВОД (после проверки можно удалить) ------
-  static int call_count = 0;
-  qDebug() << "--- Callback #" << ++call_count
-  << "frameCount=" << frameCount
-  << "offset=" << d->wave_edit->waveform->fb->offset
-  << "total_frames=" << d->wave_edit->waveform->fb->length_frames;
+//  static int call_count = 0;
+//  qDebug() << "--- Callback #" << ++call_count
+//  << "frameCount=" << frameCount
+//  << "offset=" << d->wave_edit->waveform->fb->offset
+//  << "total_frames=" << d->wave_edit->waveform->fb->length_frames;
   // -----------------------------------------------------------
 
   // Запрашиваем обработку у DSP (он сам решит, сколько реально скопировать)
   size_t frames_processed = dsp->process(d, frameCount);
 
-  qDebug() << "frames_processed=" << frames_processed;
+//  qDebug() << "frames_processed=" << frames_processed;
 
   // Если нет ни одного фрейма – конец файла или ошибка
   if (frames_processed == 0)
@@ -538,8 +538,11 @@ int pa_stream_callback (const void *input, void *output,
   {
     qDebug() << "End of file reached (processed < requested) -> stopping";
     transport_state = STATE_STOP;
-    d->wave_edit->waveform->timer.stop();
-    wnd_fxrack->tm_level_meter.stop();
+  //  d->wave_edit->waveform->timer.stop();
+//    wnd_fxrack->tm_level_meter.stop();
+
+    emit documents->stopPlaybackTimers();
+
     wnd_fxrack->fx_rack->set_state_all(FXS_STOP);
     d->wave_edit->waveform->fb->offset = 0;
     d->wave_edit->waveform->scrollbar->setValue(0);

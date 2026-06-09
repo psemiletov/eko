@@ -1132,6 +1132,9 @@ CDocumentHolder::CDocumentHolder (QObject *parent): QObject (parent)
 {
   sound_clipboard = new CFloatBuffer (1, settings->value ("def_channels", 1).toInt());
   current = 0;
+
+  // Добавьте эту строку:
+  connect(this, SIGNAL(stopPlaybackTimers()), this, SLOT(doStopPlaybackTimers()), Qt::QueuedConnection);
 }
 
 // ----- CTransportControl -----
@@ -1435,9 +1438,9 @@ size_t CDSP::process(CDocument *d, size_t nframes)
 size_t CDSP::process(CDocument *d, size_t nframes)
 {
 
-  qDebug() << "CDSP::process: nframes=" << nframes
-  << "offset=" << d->wave_edit->waveform->fb->offset
-  << "total=" << d->wave_edit->waveform->fb->length_frames;
+ // qDebug() << "CDSP::process: nframes=" << nframes
+//  << "offset=" << d->wave_edit->waveform->fb->offset
+//  << "total=" << d->wave_edit->waveform->fb->length_frames;
 
   if (nframes == 0 || !d || transport_state == STATE_EXIT)
     return 0;
@@ -2041,5 +2044,18 @@ void CWaveform::autoScaleToFit()
     // но если хотим гарантировать, можно сделать update()
     update();
     timeruler->update();
+  }
+}
+
+
+void CDocumentHolder::doStopPlaybackTimers()
+{
+  if (current && current->wave_edit && current->wave_edit->waveform)
+  {
+    current->wave_edit->waveform->timer.stop();
+  }
+  if (wnd_fxrack)
+  {
+    wnd_fxrack->tm_level_meter.stop();
   }
 }
