@@ -883,6 +883,7 @@ bool CDocument::open_file (const QString &fileName, bool set_fname)
   wave_edit->waveform->init_state = false;
   wave_edit->timeruler->init_state = false;
   wave_edit->waveform->magic_update();
+  wave_edit->waveform->autoScaleToFit();
   holder->log->log (tr ("elapsed: %1 ms").arg (tm.elapsed()));
   return true;
 }
@@ -1776,4 +1777,45 @@ void CWaveform::prepare_image()
       }
     }
     waveform_image = img;
+}
+
+void CWaveform::autoScaleToFit()
+{
+  if (!fb || width() <= 0) return;
+
+  int w = width();
+  size_t total_frames = fb->length_frames;
+
+  // Минимальное количество фреймов, которое может отобразить виджет при стандартной детализации
+  // FRAMES_PER_SECT_MAX = 16, т.е. каждая секция = 16 фреймов
+  size_t min_frames_for_normal = w * FRAMES_PER_SECT_MAX;
+
+  if (total_frames < min_frames_for_normal)
+  {
+    // Короткий файл: растягиваем на всю ширину
+    // Рассчитываем frames_per_section так, чтобы общее количество секций = width()
+    size_t target_frames_per_section = (total_frames + w - 1) / w;
+    if (target_frames_per_section < 1) target_frames_per_section = 1;
+
+    frames_per_section = target_frames_per_section;
+    scale_factor = 1.0f;               // количество секций = width()
+    sections_total = w;                // = width() * scale_factor
+    scrollbar->setMinimum(0);
+    scrollbar->setMaximum(sections_total - w);
+    scrollbar->setValue(0);
+
+    prepare_image();
+    update();
+    timeruler->update();
+  }
+  else
+  {
+    // Длинный файл: просто сбрасываем прокрутку в начало,
+    // но не трогаем frames_per_section и scale_factor (они уже корректно заданы в recalc_view)
+    scrollbar->setValue(0);
+    // Перерисовка не требуется, так как magic_update уже вызвал prepare_image,
+    // но если хотим гарантировать, можно сделать update()
+    update();
+    timeruler->update();
+  }
 }

@@ -265,6 +265,7 @@ public:
 
   void recalc_view();
   void prepare_image();
+  void autoScaleToFit();
 
   void magic_update();
   void fix_selection_bounds();
