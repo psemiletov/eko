@@ -229,7 +229,7 @@ int pa_input_stream_callback (const void *input, void *output, unsigned long fra
   return paContinue;
 }
 
-
+/*
 int pa_stream_callback (const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData)
 {
   if (transport_state == STATE_EXIT)
@@ -245,24 +245,6 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
 
   float** pchannels = (float **)output;
 
-/*
-  if (d->wave_edit->waveform->play_looped)
-     {
-      if (! d->wave_edit->waveform->selected)
-         {
-          if (d->wave_edit->waveform->fb->offset >=
-              d->wave_edit->waveform->fb->length_frames - frameCount)
-              {
-               d->wave_edit->waveform->fb->offset = 0;
-              }
-          }
-      else //looped, but selected
-           {
-            if (d->wave_edit->waveform->fb->offset >= d->wave_edit->waveform->frames_end())
-                d->wave_edit->waveform->fb->offset = d->wave_edit->waveform->frames_start();
-           }
-     }
-   else //not looped at all*/
 
    if (! d->wave_edit->waveform->play_looped)
    if (d->wave_edit->waveform->fb->offset + frameCount >=
@@ -284,7 +266,7 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
 
 
   size_t ret = dsp->process (d, frameCount);
-  if (ret == 0/* && ! d->wave_edit->waveform->play_looped*/)
+  if (ret == 0)
      {
       qDebug() << "return from process()";
       transport_state = STATE_STOP;
@@ -319,7 +301,254 @@ int pa_stream_callback (const void *input, void *output, unsigned long frameCoun
 
   return paContinue;
 }
+*/
+/*
+int pa_stream_callback (const void *input, void *output, unsigned long frameCount,
+                        const PaStreamCallbackTimeInfo *timeInfo,
+                        PaStreamCallbackFlags statusFlags, void *userData)
+{
+  if (transport_state == STATE_EXIT)
+    return paAbort;
 
+  CDocument *d = documents->current;
+  if (!d)
+  {
+    transport_state = STATE_STOP;
+    return paAbort;
+  }
+
+  // Получаем реальное количество обработанных фреймов (может быть меньше frameCount)
+  size_t frames_processed = dsp->process(d, frameCount);
+  if (frames_processed == 0)
+  {
+    // Нет данных для воспроизведения – конец файла
+    transport_state = STATE_STOP;
+    d->wave_edit->waveform->timer.stop();
+    wnd_fxrack->tm_level_meter.stop();
+    wnd_fxrack->fx_rack->set_state_all(FXS_STOP);
+    d->wave_edit->waveform->fb->offset = 0;
+    d->wave_edit->waveform->scrollbar->setValue(0);
+    return paComplete;
+  }
+
+  float** pchannels = (float**)output;
+  size_t sz_processed = frames_processed * sizeof(float);
+  size_t sz_full = frameCount * sizeof(float);
+
+  // Левый канал
+  if (play_l)
+  {
+    memcpy(pchannels[0], dsp->temp_float_buffer->buffer[0], sz_processed);
+    if (frames_processed < frameCount)
+      memset((char*)pchannels[0] + sz_processed, 0, sz_full - sz_processed);
+  }
+  else
+  {
+    memset(pchannels[0], 0, sz_full);
+  }
+
+  // Правый канал (если есть)
+  if (dsp->temp_float_buffer->channels == 2)
+  {
+    if (play_r)
+    {
+      memcpy(pchannels[1], dsp->temp_float_buffer->buffer[1], sz_processed);
+      if (frames_processed < frameCount)
+        memset((char*)pchannels[1] + sz_processed, 0, sz_full - sz_processed);
+    }
+    else
+    {
+      memset(pchannels[1], 0, sz_full);
+    }
+  }
+
+  // Если обработали меньше запрошенного – достигнут конец файла
+  if (frames_processed < frameCount)
+  {
+    transport_state = STATE_STOP;
+    d->wave_edit->waveform->timer.stop();
+    wnd_fxrack->tm_level_meter.stop();
+    wnd_fxrack->fx_rack->set_state_all(FXS_STOP);
+    d->wave_edit->waveform->fb->offset = 0;
+    d->wave_edit->waveform->scrollbar->setValue(0);
+    return paComplete;
+  }
+
+  return paContinue;
+}
+*/
+
+/*
+int pa_stream_callback (const void *input, void *output, unsigned long frameCount,
+                        const PaStreamCallbackTimeInfo *timeInfo,
+                        PaStreamCallbackFlags statusFlags, void *userData)
+{
+  if (transport_state == STATE_EXIT)
+    return paAbort;
+
+  CDocument *d = documents->current;
+  if (!d)
+  {
+    transport_state = STATE_STOP;
+    return paAbort;
+  }
+
+  // Получаем реальное количество обработанных фреймов (может быть меньше frameCount)
+  size_t frames_processed = dsp->process(d, frameCount);
+  if (frames_processed == 0)
+  {
+    // Нет данных для воспроизведения – конец файла
+    transport_state = STATE_STOP;
+    d->wave_edit->waveform->timer.stop();
+    wnd_fxrack->tm_level_meter.stop();
+    wnd_fxrack->fx_rack->set_state_all(FXS_STOP);
+    d->wave_edit->waveform->fb->offset = 0;
+    d->wave_edit->waveform->scrollbar->setValue(0);
+    return paComplete;
+  }
+
+  float** pchannels = (float**)output;
+  size_t sz_processed = frames_processed * sizeof(float);
+  size_t sz_full = frameCount * sizeof(float);
+
+  // Левый канал
+  if (play_l)
+  {
+    memcpy(pchannels[0], dsp->temp_float_buffer->buffer[0], sz_processed);
+    if (frames_processed < frameCount)
+      memset((char*)pchannels[0] + sz_processed, 0, sz_full - sz_processed);
+  }
+  else
+  {
+    memset(pchannels[0], 0, sz_full);
+  }
+
+  // Правый канал (если есть)
+  if (dsp->temp_float_buffer->channels == 2)
+  {
+    if (play_r)
+    {
+      memcpy(pchannels[1], dsp->temp_float_buffer->buffer[1], sz_processed);
+      if (frames_processed < frameCount)
+        memset((char*)pchannels[1] + sz_processed, 0, sz_full - sz_processed);
+    }
+    else
+    {
+      memset(pchannels[1], 0, sz_full);
+    }
+  }
+
+  // Если обработали меньше запрошенного – достигнут конец файла
+  if (frames_processed < frameCount)
+  {
+    transport_state = STATE_STOP;
+    d->wave_edit->waveform->timer.stop();
+    wnd_fxrack->tm_level_meter.stop();
+    wnd_fxrack->fx_rack->set_state_all(FXS_STOP);
+    d->wave_edit->waveform->fb->offset = 0;
+    d->wave_edit->waveform->scrollbar->setValue(0);
+    return paComplete;
+  }
+
+  return paContinue;
+}
+*/
+
+int pa_stream_callback (const void *input, void *output,
+                        unsigned long frameCount,
+                        const PaStreamCallbackTimeInfo *timeInfo,
+                        PaStreamCallbackFlags statusFlags,
+                        void *userData)
+{
+  // Если система завершает работу – сразу выходим
+  if (transport_state == STATE_EXIT)
+    return paAbort;
+
+  CDocument *d = documents->current;
+  if (!d)
+  {
+    transport_state = STATE_STOP;
+    return paAbort;
+  }
+
+  // ------ ОТЛАДОЧНЫЙ ВЫВОД (после проверки можно удалить) ------
+  static int call_count = 0;
+  qDebug() << "--- Callback #" << ++call_count
+  << "frameCount=" << frameCount
+  << "offset=" << d->wave_edit->waveform->fb->offset
+  << "total_frames=" << d->wave_edit->waveform->fb->length_frames;
+  // -----------------------------------------------------------
+
+  // Запрашиваем обработку у DSP (он сам решит, сколько реально скопировать)
+  size_t frames_processed = dsp->process(d, frameCount);
+
+  qDebug() << "frames_processed=" << frames_processed;
+
+  // Если нет ни одного фрейма – конец файла или ошибка
+  if (frames_processed == 0)
+  {
+    qDebug() << "No frames processed -> stopping playback";
+    transport_state = STATE_STOP;
+    d->wave_edit->waveform->timer.stop();
+    wnd_fxrack->tm_level_meter.stop();
+    wnd_fxrack->fx_rack->set_state_all(FXS_STOP);
+    // Сбрасываем курсор в начало
+    d->wave_edit->waveform->fb->offset = 0;
+    d->wave_edit->waveform->scrollbar->setValue(0);
+    return paComplete;   // PortAudio завершит поток корректно
+  }
+
+  // Заполняем выходные буферы
+  float** pchannels = (float**)output;
+  size_t bytes_processed = frames_processed * sizeof(float);
+  size_t bytes_full = frameCount * sizeof(float);
+
+  // Левый канал (всегда есть, хотя бы моно)
+  if (play_l)
+  {
+    memcpy(pchannels[0], dsp->temp_float_buffer->buffer[0], bytes_processed);
+    // Если обработано меньше запрошенных фреймов – остаток заполняем тишиной
+    if (frames_processed < frameCount)
+      memset((char*)pchannels[0] + bytes_processed, 0, bytes_full - bytes_processed);
+  }
+  else
+  {
+    // Если левый канал выключен – полная тишина
+    memset(pchannels[0], 0, bytes_full);
+  }
+
+  // Правый канал (если стерео)
+  if (dsp->temp_float_buffer->channels == 2)
+  {
+    if (play_r)
+    {
+      memcpy(pchannels[1], dsp->temp_float_buffer->buffer[1], bytes_processed);
+      if (frames_processed < frameCount)
+        memset((char*)pchannels[1] + bytes_processed, 0, bytes_full - bytes_processed);
+    }
+    else
+    {
+      memset(pchannels[1], 0, bytes_full);
+    }
+  }
+
+  // Если обработали меньше, чем запросил PortAudio – значит достигнут конец файла.
+  // Завершаем поток корректно (paComplete), но не раньше, чем скопировали реальные данные.
+  if (frames_processed < frameCount)
+  {
+    qDebug() << "End of file reached (processed < requested) -> stopping";
+    transport_state = STATE_STOP;
+    d->wave_edit->waveform->timer.stop();
+    wnd_fxrack->tm_level_meter.stop();
+    wnd_fxrack->fx_rack->set_state_all(FXS_STOP);
+    d->wave_edit->waveform->fb->offset = 0;
+    d->wave_edit->waveform->scrollbar->setValue(0);
+    return paComplete;
+  }
+
+  // Всё нормально – продолжаем
+  return paContinue;
+}
 
 QStringList get_sound_devices()
 {
@@ -3652,6 +3881,11 @@ void CEKO::slot_transport_play()
  ////////////////////////////////////////////////////
 
       transport_state = STATE_PLAY;
+
+
+      qDebug() << "Starting stream: buffer_size_frames=" << buffer_size_frames
+      << "file length frames=" << documents->current->wave_edit->waveform->fb->length_frames;
+
       err = Pa_StartStream (pa_stream);
       qDebug() << Pa_GetErrorText (err);
 

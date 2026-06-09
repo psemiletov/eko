@@ -867,6 +867,11 @@ bool CDocument::open_file (const QString &fileName, bool set_fname)
   if (wave_edit->waveform->fb)
     delete wave_edit->waveform->fb;
   wave_edit->waveform->fb = ff;
+
+  // === ДОБАВИТЬ ЭТИ ДВЕ СТРОКИ ===
+  wave_edit->waveform->fb->offset = 0;
+  wave_edit->waveform->set_cursorpos_text();
+
   ronly = false;
   if (set_fname)
   {
@@ -1249,6 +1254,7 @@ void CFxRackWindow::closeEvent (QCloseEvent *event)
 }
 
 // ----- CDSP -----
+/*
 size_t CDSP::process (CDocument *d, size_t nframes)
 {
   if (nframes == 0 || !d || transport_state == STATE_EXIT)
@@ -1309,6 +1315,224 @@ size_t CDSP::process (CDocument *d, size_t nframes)
       wnd_fxrack->level_meter->pr = maxr;
     }
     return frames;
+}
+*/
+
+/*
+size_t CDSP::process(CDocument *d, size_t nframes)
+{
+  if (nframes == 0 || !d || transport_state == STATE_EXIT)
+    return 0;
+
+  CFloatBuffer *fb = d->wave_edit->waveform->fb;
+  size_t offset = fb->offset;
+  size_t total = fb->length_frames;
+
+  // Если достигли конца файла или offset за пределами – останавливаем
+  if (offset >= total)
+  {
+    transport_state = STATE_STOP;
+    return 0;
+  }
+
+  maxl = 0.0f;
+  maxr = 0.0f;
+
+  size_t frames_to_copy = nframes;
+  bool end_reached = false;
+
+  if (!d->wave_edit->waveform->play_looped)
+  {
+    // Сколько реально осталось фреймов до конца
+    size_t remaining = total - offset;
+    if (remaining == 0)
+    {
+      transport_state = STATE_STOP;
+      return 0;
+    }
+    if (remaining < nframes)
+    {
+      frames_to_copy = remaining;
+      end_reached = true;
+    }
+
+    fb->copy_to_pos(dsp->temp_float_buffer, offset, frames_to_copy, 0);
+    fb->offset += frames_to_copy;
+
+    if (end_reached)
+      transport_state = STATE_STOP;
+  }
+  else
+  {
+    // Looped mode – воспроизведение выделенного фрагмента
+    size_t sel_start = d->wave_edit->waveform->frames_start();
+    size_t sel_end   = d->wave_edit->waveform->frames_end();
+    size_t loop_len = sel_end - sel_start;
+    if (loop_len == 0)
+    {
+      // Если выделение нулевое – ничего не играем
+      transport_state = STATE_STOP;
+      return 0;
+    }
+
+    size_t remaining_in_loop = sel_end - offset;
+    if (remaining_in_loop < nframes)
+    {
+      // Копируем хвост
+      fb->copy_to_pos(dsp->temp_float_buffer, offset, remaining_in_loop, 0);
+      offset = sel_start;
+      size_t part = nframes - remaining_in_loop;
+      fb->copy_to_pos(dsp->temp_float_buffer, offset, part, remaining_in_loop);
+      fb->offset = offset + part;
+    }
+    else
+    {
+      fb->copy_to_pos(dsp->temp_float_buffer, offset, nframes, 0);
+      fb->offset = offset + nframes;
+    }
+    frames_to_copy = nframes;
+  }
+
+  // Применяем эффекты, усиление и измеряем пики (как в оригинале, но с frames_to_copy)
+  if (!bypass_mixer)
+  {
+    for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); ++i)
+    {
+      if (!wnd_fxrack->fx_rack->effects[i]->bypass)
+      {
+        wnd_fxrack->fx_rack->effects[i]->realtime = true;
+        wnd_fxrack->fx_rack->effects[i]->channels = fb->channels;
+        wnd_fxrack->fx_rack->effects[i]->samplerate = fb->samplerate;
+        wnd_fxrack->fx_rack->effects[i]->execute(dsp->temp_float_buffer->buffer,
+                                                 dsp->temp_float_buffer->buffer,
+                                                 frames_to_copy);
+      }
+    }
+  }
+
+  for (size_t i = 0; i < frames_to_copy; ++i)
+  {
+    if (float_greater_than(dsp->temp_float_buffer->buffer[0][i], maxl))
+      maxl = dsp->temp_float_buffer->buffer[0][i];
+    if (dsp->temp_float_buffer->channels == 2)
+      if (float_greater_than(dsp->temp_float_buffer->buffer[1][i], maxr))
+        maxr = dsp->temp_float_buffer->buffer[1][i];
+    dsp->temp_float_buffer->buffer[0][i] *= dsp->gain;
+    if (dsp->temp_float_buffer->channels == 2)
+      dsp->temp_float_buffer->buffer[1][i] *= dsp->gain;
+  }
+
+  if (wnd_fxrack->level_meter)
+  {
+    wnd_fxrack->level_meter->pl = maxl;
+    wnd_fxrack->level_meter->pr = maxr;
+  }
+
+  return frames_to_copy;
+}
+*/
+
+size_t CDSP::process(CDocument *d, size_t nframes)
+{
+
+  qDebug() << "CDSP::process: nframes=" << nframes
+  << "offset=" << d->wave_edit->waveform->fb->offset
+  << "total=" << d->wave_edit->waveform->fb->length_frames;
+
+  if (nframes == 0 || !d || transport_state == STATE_EXIT)
+    return 0;
+
+  CFloatBuffer *fb = d->wave_edit->waveform->fb;
+  size_t offset = fb->offset;
+  size_t total = fb->length_frames;
+
+  if (offset >= total)
+  {
+    transport_state = STATE_STOP;
+    return 0;
+  }
+
+  maxl = 0.0f; maxr = 0.0f;
+  size_t frames_to_copy = nframes;
+  bool end_reached = false;
+
+  if (!d->wave_edit->waveform->play_looped)
+  {
+    size_t remaining = total - offset;
+    if (remaining == 0)
+    {
+      transport_state = STATE_STOP;
+      return 0;
+    }
+    if (remaining < nframes)
+    {
+      frames_to_copy = remaining;
+      end_reached = true;
+    }
+    fb->copy_to_pos(temp_float_buffer, offset, frames_to_copy, 0);
+    fb->offset += frames_to_copy;
+    if (end_reached) transport_state = STATE_STOP;
+  }
+  else
+  {
+    // looped mode (как в предыдущем исправлении)
+    size_t sel_start = d->wave_edit->waveform->frames_start();
+    size_t sel_end   = d->wave_edit->waveform->frames_end();
+    size_t loop_len = sel_end - sel_start;
+    if (loop_len == 0)
+    {
+      transport_state = STATE_STOP;
+      return 0;
+    }
+    size_t remaining_in_loop = sel_end - offset;
+    if (remaining_in_loop < nframes)
+    {
+      fb->copy_to_pos(temp_float_buffer, offset, remaining_in_loop, 0);
+      offset = sel_start;
+      size_t part = nframes - remaining_in_loop;
+      fb->copy_to_pos(temp_float_buffer, offset, part, remaining_in_loop);
+      fb->offset = offset + part;
+    }
+    else
+    {
+      fb->copy_to_pos(temp_float_buffer, offset, nframes, 0);
+      fb->offset = offset + nframes;
+    }
+    frames_to_copy = nframes;
+  }
+
+  // Применение эффектов, усиление и т.д. (как в оригинале, но с frames_to_copy)
+  if (!bypass_mixer)
+  {
+    for (int i = 0; i < wnd_fxrack->fx_rack->effects.count(); ++i)
+    {
+      if (!wnd_fxrack->fx_rack->effects[i]->bypass)
+      {
+        wnd_fxrack->fx_rack->effects[i]->realtime = true;
+        wnd_fxrack->fx_rack->effects[i]->channels = fb->channels;
+        wnd_fxrack->fx_rack->effects[i]->samplerate = fb->samplerate;
+        wnd_fxrack->fx_rack->effects[i]->execute(temp_float_buffer->buffer,
+                                                 temp_float_buffer->buffer,
+                                                 frames_to_copy);
+      }
+    }
+  }
+
+  for (size_t i = 0; i < frames_to_copy; ++i)
+  {
+    if (float_greater_than(temp_float_buffer->buffer[0][i], maxl)) maxl = temp_float_buffer->buffer[0][i];
+    if (temp_float_buffer->channels == 2 && float_greater_than(temp_float_buffer->buffer[1][i], maxr)) maxr = temp_float_buffer->buffer[1][i];
+    temp_float_buffer->buffer[0][i] *= gain;
+    if (temp_float_buffer->channels == 2) temp_float_buffer->buffer[1][i] *= gain;
+  }
+
+  if (wnd_fxrack->level_meter)
+  {
+    wnd_fxrack->level_meter->pl = maxl;
+    wnd_fxrack->level_meter->pr = maxr;
+  }
+
+  return frames_to_copy;
 }
 
 size_t CDSP::process_rec (float **buffer, size_t channels, size_t nframes)
