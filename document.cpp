@@ -1745,6 +1745,8 @@ void CWaveform::mouseDoubleClickEvent (QMouseEvent *event)
   event->accept();
 }
 
+
+
 void CWaveform::mousePressEvent (QMouseEvent *event)
 {
   if (! fb)
@@ -1767,7 +1769,6 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
   #else
   int section = get_section_from() + event->position().x();
   #endif
-  // Ограничение секции максимальным значением
   size_t max_section = (fb->length_frames + frames_per_section - 1) / frames_per_section;
   if (section > (int)max_section)
     section = (int)max_section;
@@ -1809,6 +1810,8 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
   {
     deselect();
     set_cursor_value (section);
+    anchor_frames = fb->offset;
+    selecting = true;
   }
   else
   {
@@ -1816,11 +1819,13 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
     {
       set_selstart_value (section);
       selection_selected = 1;
+      set_cursor_value(section);
     }
     else if (x_nearby (section, get_selection_end_sections(), 2))
     {
       set_selend_value (section);
       selection_selected = 2;
+      set_cursor_value(section);
     }
   }
   if (! selected)
@@ -1829,6 +1834,8 @@ void CWaveform::mousePressEvent (QMouseEvent *event)
   set_cursorpos_text();
   previous_mouse_pos_x = section;
 }
+
+
 
 void CWaveform::mouseMoveEvent (QMouseEvent *event)
 {
@@ -1899,29 +1906,42 @@ void CWaveform::mouseMoveEvent (QMouseEvent *event)
       return;
     }
   }
+  // Создание выделения при движении мыши с зажатой кнопкой (без предварительного выделения)
   if (! selected && mouse_pressed)
   {
-    if ((int) current_section < previous_mouse_pos_x)
+    size_t anchor_sec = anchor_frames / frames_per_section;
+    if (anchor_sec <= current_section)
     {
-      set_selstart_value (current_section);
-      set_selend_value (previous_mouse_pos_x);
-      selection_selected = 1;
-    }
-    else if ((int) current_section > previous_mouse_pos_x)
-    {
-      set_selstart_value (previous_mouse_pos_x);
-      set_selend_value (current_section);
+      sel_start_frames = anchor_sec * frames_per_section;
+      sel_end_frames = current_section * frames_per_section;
       selection_selected = 2;
     }
+    else
+    {
+      sel_start_frames = current_section * frames_per_section;
+      sel_end_frames = anchor_sec * frames_per_section;
+      selection_selected = 1;
+    }
     selected = true;
+    set_cursor_value(current_section);
+    set_statusbar_text();
+    update();
+    previous_mouse_pos_x = current_section;
     return;
   }
+  // Перетаскивание существующих границ выделения
   if (mouse_pressed)
   {
     if (selection_selected == 1)
+    {
       set_selstart_value (current_section);
+      set_cursor_value(current_section);
+    }
     else if (selection_selected == 2)
+    {
       set_selend_value (current_section);
+      set_cursor_value(current_section);
+    }
     fix_selection_bounds();
     set_statusbar_text();
     update();
@@ -1929,6 +1949,8 @@ void CWaveform::mouseMoveEvent (QMouseEvent *event)
   previous_mouse_pos_x = current_section;
   QWidget::mouseMoveEvent (event);
 }
+
+
 
 void CWaveform::mouseReleaseEvent (QMouseEvent *event)
 {
