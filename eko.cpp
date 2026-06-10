@@ -4178,7 +4178,7 @@ CChangeFormatWindow::CChangeFormatWindow (QWidget *parent, CWaveform *waveform, 
   setWindowTitle (tr ("Sound file format"));
 }
 
-
+/*
 void CChangeFormatWindow::format_currentIndexChanged (int index)
 {
   if (! sender())
@@ -4214,7 +4214,31 @@ void CChangeFormatWindow::format_currentIndexChanged (int index)
 
   cmb_subtype->setCurrentIndex (i);
 }
+*/
 
+void CChangeFormatWindow::format_currentIndexChanged (int index)
+{
+  // Убрано: if (! sender()) return;
+  cmb_subtype->clear();
+
+  if (index < 0) return;
+  QString text = cmb_format->itemText(index);
+  if (text.isEmpty()) return;
+
+  int f = file_formats->hformatnames.key(text);
+  QList<int> values = file_formats->hformat.values(f);
+  QStringList sl;
+  for (int v : values)
+    sl.append(file_formats->hsubtype.value(v));
+  sl.sort();
+  cmb_subtype->addItems(sl);
+
+  int st = (fmt & SF_FORMAT_SUBMASK);
+  QString ssubtype = file_formats->hsubtype.value(st);
+  int i = cmb_subtype->findText(ssubtype);
+  if (i == -1) i = 0;
+  cmb_subtype->setCurrentIndex(i);
+}
 
 void CEKO::file_change_format()
 {
