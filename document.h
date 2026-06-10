@@ -187,6 +187,9 @@ public:
 
   CEnvelope env_vol;
 
+  size_t anchor_frames;   // позиция якоря в фреймах (начало выделения)
+  bool selecting;         // флаг, что процесс выделения активен (зажат Shift при движении)
+
   bool show_db; //false if floats
   bool play_looped;
 

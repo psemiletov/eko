@@ -1,5 +1,5 @@
 /***************************************************************************
- *   2010-2021 by Peter Semiletov                                          *
+ *   2010-2026 by Peter Semiletov                                          *
  *   peter.semiletov@gmail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -157,22 +157,25 @@ CTimeRuler::CTimeRuler (QWidget *parent): QWidget (parent)
 void CTimeRuler::paintEvent (QPaintEvent *event)
 {
   if (init_state)
-  {
-    QWidget::paintEvent (event);
-    return;
-  }
+     {
+      QWidget::paintEvent (event);
+      return;
+     }
+
   if (! waveform)
-  {
-    event->accept();
-    return;
-  }
+     {
+      event->accept();
+      return;
+     }
+
   if (waveform->frames_per_section == 0 || ! waveform->fb)
-  {
-    event->accept();
-    return;
-  }
+     {
+      event->accept();
+      return;
+    }
+
   QPainter painter (this);
-  painter.setFont (QFont ("Mono", 6));
+  painter.setFont (QFont ("Mono", 6)); //вынести в член класса?
   painter.setBrush (background_color);
   painter.drawRect (0, 0, width(), height());
 
@@ -181,43 +184,48 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
   size_t seconds_start = waveform->get_section_from() / sections_per_second;
   size_t seconds_end = waveform->get_section_to() / sections_per_second;
   size_t seconds = seconds_end - seconds_start;
+
   bool measure_in_seconds = true;
   if (seconds > 15)
-    measure_in_seconds = false;
+     measure_in_seconds = false;
 
   painter.setPen (foreground_color);
   for (size_t x = 0; x < sections; x++)
-  {
-    if (measure_in_seconds)
-    {
-      if (x % (int)ceil (sections_per_second) == 0)
       {
-        QPoint p1 (x, 1);
-        QPoint p2 (x, 12);
-        QTime t (0, 0);
-        t = t.addSecs ((waveform->get_section_from() + x) / sections_per_second);
-        painter.drawLine (p1, p2);
-        painter.drawText (x + 2, 20, t.toString ("ss:zzz") + "s");
-      }
-    }
-    else
-    {
-      if (x % 60 == 0)
-      {
-        QPoint p1 (x, 1);
-        QPoint p2 (x, 12);
-        size_t minutes = (waveform->fb->length_frames / waveform->fb->samplerate) / 60;
-        bool larger_than_hour = minutes > 60;
-        QTime t (0, 0);
-        t = t.addSecs ((waveform->get_section_from() + x) / sections_per_second);
-        painter.drawLine (p1, p2);
-        if (! larger_than_hour)
-          painter.drawText (x + 2, 20, t.toString ("mm:ss") + "m");
-        else
-          painter.drawText (x + 2, 20, t.toString ("hh:mm:ss") + "m");
-      }
-    }
-  }
+       if (measure_in_seconds)
+          {
+           if (x % (int)ceil (sections_per_second) == 0)
+              {
+               QPoint p1 (x, 1);
+               QPoint p2 (x, 12);
+               QTime t (0, 0);
+               t = t.addSecs ((waveform->get_section_from() + x) / sections_per_second);
+               painter.drawLine (p1, p2);
+               painter.drawText (x + 2, 20, t.toString ("ss:zzz") + "s");
+              }
+         }
+      else
+          {
+           if (x % 60 == 0)
+              {
+               QPoint p1 (x, 1);
+               QPoint p2 (x, 12);
+
+               size_t minutes = (waveform->fb->length_frames / waveform->fb->samplerate) / 60;
+               bool larger_than_hour = minutes > 60;
+
+               QTime t (0, 0);
+               t = t.addSecs ((waveform->get_section_from() + x) / sections_per_second);
+
+               painter.drawLine (p1, p2);
+
+               if (! larger_than_hour)
+                  painter.drawText (x + 2, 20, t.toString ("mm:ss") + "m");
+               else
+                   painter.drawText (x + 2, 20, t.toString ("hh:mm:ss") + "m");
+             }
+         }
+     }
   event->accept();
 }
 
@@ -225,42 +233,54 @@ void CTimeRuler::paintEvent (QPaintEvent *event)
 void CWaveform::paintEvent (QPaintEvent *event)
 {
   if (init_state)
-  {
-    QWidget::paintEvent (event);
-    return;
-  }
+     {
+      QWidget::paintEvent (event);
+      return;
+     }
+
   QPainter painter (this);
   painter.drawImage (0, 0, waveform_image);
   int section = get_cursor_position_sections();
   painter.setPen (cl_cursor);
   int x = section - get_section_from();
   painter.drawLine (x, 1, x, height());
+
   if (selected)
-    if (get_selection_start_sections() != get_selection_end_sections())
-    {
-      int s_start = get_selection_start_sections() - get_section_from();
-      int s_end = get_selection_end_sections() - get_section_from();
-      QPoint p1 (s_start, 0);
-      QPoint p2 (s_end, height());
-      QRect r (p1, p2);
-      painter.fillRect (r, cl_waveform_selection_foreground);
-    }
-    event->accept();
+     if (get_selection_start_sections() != get_selection_end_sections())
+        {
+         int s_start = get_selection_start_sections() - get_section_from();
+         int s_end = get_selection_end_sections() - get_section_from();
+         QPoint p1 (s_start, 0);
+         QPoint p2 (s_end, height());
+         QRect r (p1, p2);
+         painter.fillRect (r, cl_waveform_selection_foreground);
+       }
+
+  event->accept();
 }
+
 
 void CWaveform::timer_timeout()
 {
   int cursor_pos_sections = get_cursor_position_sections();
+
   if (cursor_pos_sections >= (int) get_section_to())
-    scrollbar->setValue (scrollbar->value() + width());
+     scrollbar->setValue (scrollbar->value() + width());
+
   if (scrollbar->value() >= cursor_pos_sections)
-    scrollbar->setValue (get_selection_start_sections());
+     scrollbar->setValue (get_selection_start_sections());
+
   update();
   set_cursorpos_text();
 }
 
+
 CWaveform::CWaveform (QWidget *parent): QWidget (parent)
 {
+
+  anchor_frames = 0;
+  selecting = false;
+
   play_looped = false;
   show_db = true;
   envelope_selected = -1;
@@ -274,8 +294,10 @@ CWaveform::CWaveform (QWidget *parent): QWidget (parent)
   normal_cursor_shape = true;
   selected = false;
   minmaxes = 0;
+
   fb = new CFloatBuffer (32, settings->value ("def_channels", 1).toInt());
   fb->samplerate = settings->value ("def_samplerate", 44100).toInt();
+
   set_cursor_value (0);
   set_selstart_value (0);
   set_selend_value (0);
@@ -283,91 +305,120 @@ CWaveform::CWaveform (QWidget *parent): QWidget (parent)
   timer.setInterval (50);
 }
 
+
 CWaveform::~CWaveform()
 {
   timer.stop();
+
   if (fb)
-    delete fb;
+     delete fb;
+
   if (minmaxes)
     delete minmaxes;
+
   flush_undos();
 }
+
 
 void CWaveform::flush_undos()
 {
   for (auto el: undos)
-    delete el;
+      delete el;
 }
+
 
 void CWaveform::deselect()
 {
+  selecting = false; //for anchor
+
   selected = false;
   sel_start_frames = fb->offset;
   sel_end_frames = fb->offset;
   selection_selected = 0;
 }
 
+
 void CWaveform::recalc_view()
 {
   if (! fb)
     return;
+
   sections_total = width() * scale_factor;
   if (sections_total == 0)
     return;
+
   frames_per_section = ceil (fb->length_frames / sections_total);
+
   if (frames_per_section < FRAMES_PER_SECT_MAX)
     frames_per_section = FRAMES_PER_SECT_MAX;
+
   scrollbar->setMinimum (0);
   scrollbar->setMaximum (sections_total - width());
 }
+
 
 void CWaveform::zoom (int factor)
 {
   if (! fb || frames_per_section == 0)
     return;
+
   int old_frame_from = get_section_from() * frames_per_section;
   scale_factor = factor;
+
   if ((width() * scale_factor) >= fb->length_frames - 1)
     return;
+
   recalc_view();
   prepare_image();
+
   int new_section = old_frame_from / frames_per_section;
   scrollbar->setValue (new_section);
   update();
   timeruler->update();
 }
+
 
 void CWaveform::scale (int delta)
 {
   if (! fb || frames_per_section == 0)
     return;
+
   int old_frame_from = get_section_from() * frames_per_section;
+
   if (delta > 0)
-    scale_factor += 0.1f;
+     scale_factor += 0.1f;
   else
-    scale_factor -= 0.1f;
+      scale_factor -= 0.1f;
+
   if (scale_factor < 1.0f)
     scale_factor = 1.0f;
+
   if ((width() * scale_factor) >= fb->length_frames - 1)
-    return;
+     return;
+
   recalc_view();
   prepare_image();
+
   int new_section = old_frame_from / frames_per_section;
   scrollbar->setValue (new_section);
+
   update();
   timeruler->update();
 }
 
+
 void CWaveform::wheelEvent (QWheelEvent *e)
 {
-  #if QT_VERSION < 0x050000
+#if QT_VERSION < 0x050000
   const int delta = e->delta();
-  #else
+#else
   const int delta = e->angleDelta().y();
-  #endif
+#endif
+
   scale (delta);
   e->accept();
 }
+
 
 void CWaveform::resizeEvent (QResizeEvent *event)
 {
@@ -375,134 +426,184 @@ void CWaveform::resizeEvent (QResizeEvent *event)
   prepare_image();
 }
 
+
 void CWaveform::keyPressEvent (QKeyEvent *event)
 {
   if (! fb)
-  {
-    event->accept();
-    return;
-  }
+     {
+      event->accept();
+      return;
+     }
+
   if (event->key() == Qt::Key_Delete)
-  {
-    wave_edit->waveform->delete_selected();
-    set_statusbar_text();
-    event->accept();
-    return;
-  }
+     {
+      wave_edit->waveform->delete_selected();
+      set_statusbar_text();
+      event->accept();
+      return;
+    }
+
   if (event->key() == Qt::Key_Space)
-  {
-    wave_edit->doc->holder->transport_control->call_play_pause();
-    event->accept();
-    return;
-  }
+     {
+      wave_edit->doc->holder->transport_control->call_play_pause();
+      event->accept();
+      return;
+     }
+
   if (event->key() == Qt::Key_Return)
-  {
-    wave_edit->doc->holder->transport_control->call_stop();
-    event->accept();
-    return;
-  }
+     {
+      wave_edit->doc->holder->transport_control->call_stop();
+      event->accept();
+      return;
+     }
+
   if (event->key() == Qt::Key_Home)
-  {
-    set_cursor_value (0);
-    scrollbar->setValue (0);
-    if (event->modifiers() & Qt::ShiftModifier)
-    {
-      set_selstart_value (0);
-      selected = true;
-    }
-    update();
-    set_cursorpos_text();
-    set_statusbar_text();
-    event->accept();
-    return;
-  }
+     {
+      set_cursor_value (0);
+      scrollbar->setValue (0);
+
+      if (event->modifiers() & Qt::ShiftModifier)
+         {
+          set_selstart_value (0);
+          selected = true;
+         }
+
+      update();
+      set_cursorpos_text();
+      set_statusbar_text();
+      event->accept();
+      return;
+     }
+
   if (event->key() == Qt::Key_End)
-  {
-    set_cursor_value (sections_total - 1);
-    scrollbar->setValue (sections_total - width());
-    if (event->modifiers() & Qt::ShiftModifier)
-    {
-      set_selend_value (sections_total - 1);
-      selected = true;
-    }
-    update();
-    set_cursorpos_text();
-    set_statusbar_text();
-    event->accept();
-    return;
-  }
-  if (event->key() == Qt::Key_Left)
-  {
-    if (get_cursor_position_sections() != 0)
-      set_cursor_by_section (get_cursor_position_sections() - 1);
-    if (get_cursor_position_sections() == (int) get_section_from())
-    {
-      if (scrollbar->value() != scrollbar->minimum())
-        scrollbar->setValue (scrollbar->value() - 1);
+     {
+      set_cursor_value (sections_total - 1);
+      scrollbar->setValue (sections_total - width());
+
+      if (event->modifiers() & Qt::ShiftModifier)
+         {
+          set_selend_value (sections_total - 1);
+          selected = true;
+         }
+
+      update();
+      set_cursorpos_text();
+      set_statusbar_text();
       event->accept();
       return;
-    }
-    if (event->modifiers() & Qt::AltModifier)
-    {
-      if (get_selection_start_sections() != 0)
-      {
-        set_selstart_value (get_selection_start_sections() - 1);
-        fix_selection_bounds();
-      }
-      selected = true;
-    }
-    if (event->modifiers() & Qt::ShiftModifier)
-    {
-      if (get_selection_start_sections() != 0)
-      {
-        set_selend_value (get_selection_end_sections() - 1);
-        fix_selection_bounds();
-      }
-      selected = true;
-    }
-    update();
-    set_cursorpos_text();
-    set_statusbar_text();
-    event->accept();
-    return;
-  }
-  if (event->key() == Qt::Key_Right)
-  {
-    set_cursor_by_section (get_cursor_position_sections() + 1);
-    if (get_cursor_position_sections() == (int) sections_total)
-      set_cursor_by_section (get_cursor_position_sections() - 1);
-    if (get_cursor_position_sections() == (int) get_section_to())
-    {
-      if (scrollbar->value() != scrollbar->maximum())
-        scrollbar->setValue (scrollbar->value() + 1);
-      event->accept();
-      return;
-    }
-    if (event->modifiers() & Qt::AltModifier)
-    {
-      if (get_selection_start_sections() != 0)
-      {
-        set_selstart_value (get_selection_start_sections() + 1);
-        fix_selection_bounds();
-      }
-      selected = true;
-    }
-    if (event->modifiers() & Qt::ShiftModifier)
-    {
-      if (get_selection_end_sections() != (int) sections_total)
-      {
-        set_selend_value (get_selection_end_sections() + 1);
-        fix_selection_bounds();
-      }
-      selected = true;
-    }
-    update();
-    set_cursorpos_text();
-    set_statusbar_text();
-    event->accept();
-    return;
-  }
-  if (event->key() == Qt::Key_Plus)
+     }
+
+     if (event->key() == Qt::Key_Left)
+     {
+       int cur_section = get_cursor_position_sections();
+       int new_section = cur_section - 1;
+       if (new_section < 0) new_section = 0;
+
+       bool shift = event->modifiers() & Qt::ShiftModifier;
+
+       if (!shift)
+       {
+         // Обычное перемещение курсора, сброс выделения
+         set_cursor_value(new_section);
+         deselect();
+         selecting = false;
+       }
+       else
+       {
+         // Начинаем или продолжаем выделение с якорем
+         if (!selected || !selecting)
+         {
+           // Первый шаг выделения: устанавливаем якорь в текущую позицию курсора
+           anchor_frames = cur_section * frames_per_section;
+           selecting = true;
+         }
+         // Перемещаем курсор
+         set_cursor_value(new_section);
+         // Устанавливаем выделение между anchor и новым курсором
+         size_t anchor_sec = anchor_frames / frames_per_section;
+         size_t cursor_sec = new_section;
+         if (anchor_sec <= cursor_sec)
+         {
+           sel_start_frames = anchor_sec * frames_per_section;
+           sel_end_frames   = cursor_sec * frames_per_section;
+         }
+         else
+         {
+           sel_start_frames = cursor_sec * frames_per_section;
+           sel_end_frames   = anchor_sec * frames_per_section;
+         }
+         selected = true;
+         fix_selection_bounds();
+       }
+
+       // Прокрутка при достижении края
+       if (get_cursor_position_sections() == (int) get_section_from() && scrollbar->value() != scrollbar->minimum())
+         scrollbar->setValue(scrollbar->value() - 1);
+
+       update();
+       set_cursorpos_text();
+       set_statusbar_text();
+       event->accept();
+       return;
+     }
+
+
+     if (event->key() == Qt::Key_Right)
+     {
+       int cur_section = get_cursor_position_sections();
+       int new_section = cur_section + 1;
+       if (new_section >= (int) sections_total)
+         new_section = sections_total - 1;
+
+       bool shift = (event->modifiers() & Qt::ShiftModifier);
+
+       if (!shift)
+       {
+         // Обычное перемещение курсора, сброс выделения
+         set_cursor_value(new_section);
+         deselect();
+         selecting = false;
+       }
+       else
+       {
+         // Начинаем или продолжаем выделение с якорем
+         if (!selected || !selecting)
+         {
+           // Первый шаг выделения: устанавливаем якорь в текущую позицию курсора
+           anchor_frames = cur_section * frames_per_section;
+           selecting = true;
+         }
+         // Перемещаем курсор
+         set_cursor_value(new_section);
+         // Устанавливаем выделение между anchor и новым курсором
+         size_t anchor_sec = anchor_frames / frames_per_section;
+         size_t cursor_sec = new_section;
+         if (anchor_sec <= cursor_sec)
+         {
+           sel_start_frames = anchor_sec * frames_per_section;
+           sel_end_frames   = cursor_sec * frames_per_section;
+         }
+         else
+         {
+           sel_start_frames = cursor_sec * frames_per_section;
+           sel_end_frames   = anchor_sec * frames_per_section;
+         }
+         selected = true;
+         fix_selection_bounds();
+       }
+
+       // Прокрутка при достижении правого края
+       if (get_cursor_position_sections() == (int) get_section_to() && scrollbar->value() != scrollbar->maximum())
+         scrollbar->setValue(scrollbar->value() + 1);
+
+       update();
+       set_cursorpos_text();
+       set_statusbar_text();
+       event->accept();
+       return;
+     }
+
+     if (event->key() == Qt::Key_Plus)
   {
     scale (1);
     event->accept();
@@ -548,23 +649,30 @@ size_t CWaveform::frames_start()
   return sel_start_frames;
 }
 
+
 size_t CWaveform::frames_end()
 {
   if (! fb)
     return 0;
+
   if (! selected)
-    return fb->length_frames;
+     return fb->length_frames;
+
   return sel_end_frames;
 }
+
 
 void CWaveform::copy_selected()
 {
   if (! selected)
-    return;
+     return;
+
   if (sound_clipboard)
-    delete sound_clipboard;
+     delete sound_clipboard;
+
   sound_clipboard = fb->copy (frames_start(), frames_end() - frames_start());
 }
+
 
 void CWaveform::paste()
 {
