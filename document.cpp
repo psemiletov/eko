@@ -1001,19 +1001,23 @@ bool CDocument::open_file (const QString &fileName, bool set_fname)
   return true;
 }
 
+/*
 bool CDocument::save_with_name (const QString &fileName)
 {
   int fmt = wave_edit->waveform->fb->sndfile_format & SF_FORMAT_TYPEMASK;
   QString fname = fileName;
   QString ext = file_get_ext (fileName);
   QString fext = file_formats->hextensions.value (fmt);
+
   if (ext.isEmpty())
     fname = fname + "." + fext;
-  else
-    fname = change_file_ext (fname, fext);
+ // else
+   // fname = change_file_ext (fname, fext);
+
   CTio *tio = holder->tio_handler.get_for_fname (fname);
   if (! tio)
     return false;
+
   tio->float_input_buffer = wave_edit->waveform->fb;
   QElapsedTimer tm;
   tm.start();
@@ -1027,6 +1031,43 @@ bool CDocument::save_with_name (const QString &fileName)
   set_tab_caption (QFileInfo (file_name).fileName());
   holder->log->log (tr ("%1 is saved").arg (file_name));
   holder->log->log (tr ("elapsed: %1 milliseconds").arg (elapsed));
+  update_title();
+  return true;
+}
+*/
+
+bool CDocument::save_with_name (const QString &fileName)
+{
+  int fmt = wave_edit->waveform->fb->sndfile_format & SF_FORMAT_TYPEMASK;
+  QString fname = fileName;
+  QString fext = file_formats->hextensions.value(fmt);
+
+  // Добавляем расширение, если его нет (без учёта регистра)
+  if (!fname.endsWith("." + fext, Qt::CaseInsensitive))
+    fname += "." + fext;
+
+  CTio *tio = holder->tio_handler.get_for_fname(fname);
+  if (!tio)
+  {
+    holder->log->log(tr("No handler for format of %1").arg(fname));
+    return false;
+  }
+
+  tio->float_input_buffer = wave_edit->waveform->fb;
+  QElapsedTimer tm;
+  tm.start();
+
+  if (!tio->save(fname))
+  {
+    holder->log->log(tr("Save failed: %1").arg(tio->error_string));
+    return false;
+  }
+
+  int elapsed = tm.elapsed();
+  file_name = fname;
+  set_tab_caption(QFileInfo(file_name).fileName());
+  holder->log->log(tr("%1 is saved").arg(file_name));
+  holder->log->log(tr("elapsed: %1 milliseconds").arg(elapsed));
   update_title();
   return true;
 }
@@ -1075,15 +1116,16 @@ void CDocument::set_tab_caption (const QString &fileName)
   holder->tab_widget->setTabText (get_tab_idx(), fileName);
 }
 
+
 bool CDocument::save_with_name_plain (const QString &fileName)
 {
   CTio *tio = holder->tio_handler.get_for_fname (fileName);
   tio->float_input_buffer = wave_edit->waveform->fb;
   if (! tio->save (fileName))
-  {
-    holder->log->log (tr ("cannot save %1 because of: %2").arg (fileName, tio->error_string));
-    return false;
-  }
+     {
+      holder->log->log (tr ("cannot save %1 because of: %2").arg (fileName, tio->error_string));
+      return false;
+     }
   return true;
 }
 
@@ -1965,23 +2007,26 @@ void CWaveform::mouseReleaseEvent (QMouseEvent *event)
   QWidget::mouseReleaseEvent (event);
 }
 
+
 // ===================== ИСПРАВЛЕННАЯ prepare_image =====================
 void CWaveform::prepare_image()
 {
   if (! fb)
-  {
-    qDebug() << "! sound_buffer";
-    return;
-  }
+     {
+      qDebug() << "! sound_buffer";
+      return;
+     }
+
   if (frames_per_section == 0)
-    return;
+     return;
 
   size_t sections = get_section_to() - get_section_from();
   int image_height = height();
   int channel_height = image_height / fb->channels;
 
   if (minmaxes)
-    delete minmaxes;
+      delete minmaxes;
+
   minmaxes = new CMinmaxes (fb->channels, sections);
 
   size_t total_frames = fb->length_frames;
@@ -1990,44 +2035,44 @@ void CWaveform::prepare_image()
 
   // Инициализация временных значений для первой секции
   for (size_t ch = 0; ch < fb->channels; ch++)
-  {
-    minmaxes->values[ch]->min_values->temp = 1.0f;   // больше любого sample
-    minmaxes->values[ch]->max_values->temp = -1.0f;  // меньше любого sample
-  }
+      {
+       minmaxes->values[ch]->min_values->temp = 1.0f;   // больше любого sample
+       minmaxes->values[ch]->max_values->temp = -1.0f;  // меньше любого sample
+      }
 
   // Основной цикл по секциям, но не выходим за границы буфера
   while (section < sections && frameno < total_frames)
-  {
-    for (size_t ch = 0; ch < fb->channels; ch++)
-    {
-      float sample = fb->buffer[ch][frameno];
-      if (sample < minmaxes->values[ch]->min_values->temp)
-        minmaxes->values[ch]->min_values->temp = sample;
-      if (sample > minmaxes->values[ch]->max_values->temp)
-        minmaxes->values[ch]->max_values->temp = sample;
-    }
-    frameno++;
+        {
+         for (size_t ch = 0; ch < fb->channels; ch++)
+             {
+              float sample = fb->buffer[ch][frameno];
+
+              if (sample < minmaxes->values[ch]->min_values->temp)
+                 minmaxes->values[ch]->min_values->temp = sample;
+
+              if (sample > minmaxes->values[ch]->max_values->temp)
+                 minmaxes->values[ch]->max_values->temp = sample;
+        } frameno++;
 
     // Если достигли конца секции или конца файла
-    if ((frameno % frames_per_section == 0) || (frameno == total_frames))
-    {
+  if ((frameno % frames_per_section == 0) || (frameno == total_frames))
+     {
       for (size_t ch = 0; ch < fb->channels; ch++)
-      {
+          {
         // Если в секции не было данных (frameno достигло конца файла)
-        if (minmaxes->values[ch]->min_values->temp > 0.5f)
-          minmaxes->values[ch]->min_values->samples[section] = 0.0f;
-        else
-          minmaxes->values[ch]->min_values->samples[section] = minmaxes->values[ch]->min_values->temp;
+           if (minmaxes->values[ch]->min_values->temp > 0.5f)
+              minmaxes->values[ch]->min_values->samples[section] = 0.0f;
+           else
+               minmaxes->values[ch]->min_values->samples[section] = minmaxes->values[ch]->min_values->temp;
 
-        if (minmaxes->values[ch]->max_values->temp < -0.5f)
-          minmaxes->values[ch]->max_values->samples[section] = 0.0f;
-        else
-          minmaxes->values[ch]->max_values->samples[section] = minmaxes->values[ch]->max_values->temp;
-
+           if (minmaxes->values[ch]->max_values->temp < -0.5f)
+               minmaxes->values[ch]->max_values->samples[section] = 0.0f;
+           else
+                minmaxes->values[ch]->max_values->samples[section] = minmaxes->values[ch]->max_values->temp;
         // Сброс временных значений для следующей секции
-        minmaxes->values[ch]->min_values->temp = 1.0f;
-        minmaxes->values[ch]->max_values->temp = -1.0f;
-      }
+            minmaxes->values[ch]->min_values->temp = 1.0f;
+            minmaxes->values[ch]->max_values->temp = -1.0f;
+           }
       section++;
     }
   }
