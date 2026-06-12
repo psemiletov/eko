@@ -84,12 +84,14 @@ inline bool x_nearby (int x, int pos, int width)
 {
   int a = pos - width;
   int b = pos + width;
+
   if (x >= a && x <= b)
-    return true;
+     return true;
+
   return false;
 }
 
-// ---------- Реализация классов ----------
+
 CUndoElement::CUndoElement()
 {
   fb = 0;
@@ -101,11 +103,13 @@ CUndoElement::CUndoElement()
   selected = false;
 }
 
+
 CUndoElement::~CUndoElement()
 {
   if (fb)
     delete fb;
 }
+
 
 CChannelSamples::CChannelSamples (size_t size)
 {
@@ -113,10 +117,12 @@ CChannelSamples::CChannelSamples (size_t size)
   temp = 0.0f;
 }
 
+
 CChannelSamples::~CChannelSamples()
 {
   delete [] samples;
 }
+
 
 CChannelMinmax::CChannelMinmax (size_t size)
 {
@@ -124,24 +130,29 @@ CChannelMinmax::CChannelMinmax (size_t size)
   min_values = new CChannelSamples (size);
 }
 
+
 CChannelMinmax::~CChannelMinmax()
 {
   delete max_values;
   delete min_values;
 }
 
+
 CMinmaxes::CMinmaxes (size_t size, size_t sections)
 {
   values = new CChannelMinmax* [size];
   count = size;
+
   for (size_t i = 0; i < count; i++)
-    values[i] = new CChannelMinmax (sections);
+      values[i] = new CChannelMinmax (sections);
 }
+
 
 CMinmaxes::~CMinmaxes()
 {
   for (size_t i = 0; i < count; i++)
-    delete values[i];
+      delete values[i];
+
   delete [] values;
 }
 
@@ -153,6 +164,7 @@ CTimeRuler::CTimeRuler (QWidget *parent): QWidget (parent)
   resize (width(), 24);
   init_state = true;
 }
+
 
 void CTimeRuler::paintEvent (QPaintEvent *event)
 {
@@ -345,12 +357,12 @@ void CWaveform::recalc_view()
 
   sections_total = width() * scale_factor;
   if (sections_total == 0)
-    return;
+     return;
 
   frames_per_section = ceil (fb->length_frames / sections_total);
 
   if (frames_per_section < FRAMES_PER_SECT_MAX)
-    frames_per_section = FRAMES_PER_SECT_MAX;
+     frames_per_section = FRAMES_PER_SECT_MAX;
 
   scrollbar->setMinimum (0);
   scrollbar->setMaximum (sections_total - width());
@@ -493,51 +505,57 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
       return;
      }
 
-     if (event->key() == Qt::Key_Left)
+  if (event->key() == Qt::Key_Left)
      {
-       int cur_section = get_cursor_position_sections();
-       int new_section = cur_section - 1;
-       if (new_section < 0) new_section = 0;
+      int cur_section = get_cursor_position_sections();
+
+      int new_section = cur_section - 1;
+      if (new_section < 0)
+         new_section = 0;
 
        bool shift = event->modifiers() & Qt::ShiftModifier;
 
        if (!shift)
-       {
-         // Обычное перемещение курсора, сброс выделения
-         set_cursor_value(new_section);
-         deselect();
-         selecting = false;
-       }
+          {
+           // Обычное перемещение курсора, сброс выделения
+           set_cursor_value(new_section);
+           deselect();
+           selecting = false;
+          }
        else
-       {
-         // Начинаем или продолжаем выделение с якорем
-         if (!selected || !selecting)
-         {
-           // Первый шаг выделения: устанавливаем якорь в текущую позицию курсора
-           anchor_frames = cur_section * frames_per_section;
-           selecting = true;
-         }
-         // Перемещаем курсор
-         set_cursor_value(new_section);
-         // Устанавливаем выделение между anchor и новым курсором
-         size_t anchor_sec = anchor_frames / frames_per_section;
-         size_t cursor_sec = new_section;
-         if (anchor_sec <= cursor_sec)
-         {
-           sel_start_frames = anchor_sec * frames_per_section;
-           sel_end_frames   = cursor_sec * frames_per_section;
-         }
-         else
-         {
-           sel_start_frames = cursor_sec * frames_per_section;
-           sel_end_frames   = anchor_sec * frames_per_section;
-         }
-         selected = true;
-         fix_selection_bounds();
-       }
+           {
+            // Начинаем или продолжаем выделение с якорем
+            if (! selected || ! selecting)
+               {
+                // Первый шаг выделения: устанавливаем якорь в текущую позицию курсора
+                anchor_frames = cur_section * frames_per_section;
+                selecting = true;
+               }
 
-       // Прокрутка при достижении края
-       if (get_cursor_position_sections() == (int) get_section_from() && scrollbar->value() != scrollbar->minimum())
+            // Перемещаем курсор
+            set_cursor_value(new_section);
+            // Устанавливаем выделение между anchor и новым курсором
+
+            size_t anchor_sec = anchor_frames / frames_per_section;
+            size_t cursor_sec = new_section;
+
+            if (anchor_sec <= cursor_sec)
+               {
+                sel_start_frames = anchor_sec * frames_per_section;
+                sel_end_frames   = cursor_sec * frames_per_section;
+               }
+            else
+                {
+                 sel_start_frames = cursor_sec * frames_per_section;
+                 sel_end_frames   = anchor_sec * frames_per_section;
+                }
+
+            selected = true;
+            fix_selection_bounds();
+           }
+
+           // Прокрутка при достижении края
+         if (get_cursor_position_sections() == (int) get_section_from() && scrollbar->value() != scrollbar->minimum())
          scrollbar->setValue(scrollbar->value() - 1);
 
        update();
@@ -548,7 +566,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
      }
 
 
-     if (event->key() == Qt::Key_Right)
+  if (event->key() == Qt::Key_Right)
      {
        int cur_section = get_cursor_position_sections();
        int new_section = cur_section + 1;
@@ -603,29 +621,32 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
        return;
      }
 
-     if (event->key() == Qt::Key_Plus)
-  {
-    scale (1);
-    event->accept();
-    return;
-  }
-  if (event->key() == Qt::Key_Minus)
-  {
-    scale (-1);
-    event->accept();
-    return;
-  }
+ if (event->key() == Qt::Key_Plus)
+    {
+     scale (1);
+     event->accept();
+     return;
+    }
+
+ if (event->key() == Qt::Key_Minus)
+    {
+     scale (-1);
+     event->accept();
+     return;
+    }
+
   if (event->text() == "[")
-  {
-    set_selstart_value (get_cursor_position_sections());
-    fix_selection_bounds();
-    selected = true;
-    update();
-    event->accept();
-    set_cursorpos_text();
-    set_statusbar_text();
-    return;
-  }
+     {
+      set_selstart_value (get_cursor_position_sections());
+      fix_selection_bounds();
+      selected = true;
+      update();
+      event->accept();
+      set_cursorpos_text();
+      set_statusbar_text();
+      return;
+     }
+
   if (event->text() == "]")
   {
     set_selend_value (get_cursor_position_sections());
@@ -639,6 +660,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
   }
   QWidget::keyPressEvent (event);
 }
+
 
 size_t CWaveform::frames_start()
 {
@@ -726,6 +748,7 @@ void CWaveform::load_color (const QString &fname)
   magic_update();
 }
 
+/*
 void CWaveform::fix_selection_bounds()
 {
   if (selection_selected == 2 && (sel_start_frames > sel_end_frames))
@@ -736,7 +759,7 @@ void CWaveform::fix_selection_bounds()
     selection_selected = 1;
   }
 }
-
+*/
 void CWaveform::select_all()
 {
   sel_start_frames = 0;
@@ -1776,11 +1799,13 @@ int CWaveform::get_selection_end_sections()
   return sel_end_frames / frames_per_section;
 }
 
+
 void CWaveform::set_cursor_by_section (size_t section)
 {
   fb->offset = section * frames_per_section;
 }
 
+/*
 void CWaveform::mouseDoubleClickEvent (QMouseEvent *event)
 {
   select_all();
@@ -2005,6 +2030,302 @@ void CWaveform::mouseReleaseEvent (QMouseEvent *event)
   selection_selected = 0;
   envelope_selected = -1;
   QWidget::mouseReleaseEvent (event);
+}
+*/
+
+
+void CWaveform::mouseDoubleClickEvent (QMouseEvent *event)
+{
+  select_all();
+  event->accept();
+}
+
+
+
+void CWaveform::mousePressEvent (QMouseEvent *event)
+{
+  if (! fb)
+  {
+    event->accept();
+    return;
+  }
+  setFocus (Qt::OtherFocusReason);
+  mouse_pressed = true;
+  #if QT_VERSION < 0x060000
+  int y = event->y();
+  #else
+  int y = event->position().y();
+  #endif
+  if (y < 0) y = 0;
+  if (y > height()) y = height();
+
+  #if QT_VERSION < 0x060000
+  int section = get_section_from() + event->x();
+  #else
+  int section = get_section_from() + event->position().x();
+  #endif
+  size_t max_section = (fb->length_frames + frames_per_section - 1) / frames_per_section;
+  if (section > (int)max_section)
+    section = (int)max_section;
+
+  if (event->button() == Qt::RightButton)
+  {
+    env_vol.insert_wise (section * frames_per_section, y, height(), fb->length_frames);
+    setFocus (Qt::OtherFocusReason);
+    recalc_view();
+    prepare_image();
+    update();
+    previous_mouse_pos_x = section;
+    return;
+  }
+  CEnvelopePoint *ep = env_vol.find (section * frames_per_section, y, height(), frames_per_section);
+  if (ep)
+  {
+    env_vol.select_point (ep);
+    envelope_selected = 0;
+    if (event->modifiers() & Qt::ShiftModifier)
+      ep->value = 50;
+    if (event->modifiers() & Qt::ControlModifier)
+    {
+      int idx = env_vol.points.indexOf (ep);
+      if (idx != 0 && idx != env_vol.points.size() - 1)
+      {
+        delete ep;
+        env_vol.points.removeAt (idx);
+      }
+    }
+    recalc_view();
+    prepare_image();
+    update();
+    previous_mouse_pos_x = section;
+    return;
+  }
+  if (! x_nearby (section, get_selection_start_sections(), 2) &&
+    ! x_nearby (section, get_selection_end_sections(), 2))
+  {
+    deselect();
+    set_cursor_value (section);
+    anchor_frames = fb->offset;
+    selecting = true;
+  }
+  else
+  {
+    if (x_nearby (section, get_selection_start_sections(), 2))
+    {
+      set_selstart_value (section);
+      selection_selected = 1;
+      set_cursor_value(section);
+    }
+    else if (x_nearby (section, get_selection_end_sections(), 2))
+    {
+      set_selend_value (section);
+      selection_selected = 2;
+      set_cursor_value(section);
+    }
+  }
+  if (! selected)
+    set_cursor_value (section);
+  update();
+  set_cursorpos_text();
+  previous_mouse_pos_x = section;
+}
+
+
+void CWaveform::mouseMoveEvent (QMouseEvent *event)
+{
+  if (! fb)
+  {
+    event->accept();
+    return;
+  }
+  if (mouse_pressed)
+  {
+    if (event->pos().x() > width())
+    {
+      if (scrollbar->value() + 16 != scrollbar->maximum())
+        scrollbar->setValue (scrollbar->value() + 16);
+    }
+    if (event->pos().x() < 0)
+    {
+      if (scrollbar->value() - 16 != 0)
+        scrollbar->setValue (scrollbar->value() - 16);
+    }
+  }
+  #if QT_VERSION < 0x060000
+  int x = event->x();
+  #else
+  int x = event->position().x();
+  #endif
+  if (x < 0) x = 0;
+  if (x > width()) x = width();
+  #if QT_VERSION < 0x060000
+  int y = event->y();
+  #else
+  int y = event->position().y();
+  #endif
+  if (y < 0) y = 0;
+  if (y > height()) y = height();
+
+  size_t current_section = get_section_from() + x;
+  size_t max_section = (fb->length_frames + frames_per_section - 1) / frames_per_section;
+  if (current_section > max_section)
+    current_section = max_section;
+
+  if (! mouse_pressed)
+  {
+    if (x_nearby (current_section, get_selection_start_sections(), 1) ||
+      x_nearby (current_section, get_selection_end_sections(), 1))
+    {
+      setCursor (Qt::SizeHorCursor);
+      normal_cursor_shape = false;
+    }
+    else
+    {
+      if (! normal_cursor_shape)
+      {
+        normal_cursor_shape = true;
+        setCursor(Qt::ArrowCursor);
+      }
+    }
+  }
+
+  if (mouse_pressed && selection_selected == 0 && envelope_selected != -1)
+  {
+    CEnvelopePoint *ep = env_vol.get_selected();
+    if (ep)
+    {
+      env_vol.point_move (ep, current_section * frames_per_section, y, height());
+      recalc_view();
+      prepare_image();
+      update();
+      return;
+    }
+  }
+
+  // ===== НОВАЯ ЛОГИКА =====
+  // Проверяем, схлопнулось ли выделение до нулевой длины
+  bool selection_is_collapsed = (selected && sel_start_frames >= sel_end_frames);
+
+  if (selection_is_collapsed)
+  {
+    // Выделение схлопнулось – сбрасываем флаги и переключаемся в режим создания нового выделения
+    selected = false;
+    selection_selected = 0;
+    // Устанавливаем anchor в текущую позицию (место схлопывания)
+    anchor_frames = sel_start_frames;
+    selecting = true;
+  }
+
+  // Создание выделения при движении мыши с зажатой кнопкой (без предварительного выделения)
+  if (! selected && mouse_pressed)
+  {
+    // Если выделения нет, но мы перетаскиваем границу (selection_selected != 0),
+    // это значит, что мы только что схлопнули выделение и начали новое
+    if (selection_selected != 0)
+    {
+      // Продолжаем перетаскивание границы, но теперь это создание нового выделения
+      size_t anchor_sec = anchor_frames / frames_per_section;
+      if (anchor_sec <= current_section)
+      {
+        sel_start_frames = anchor_sec * frames_per_section;
+        sel_end_frames = current_section * frames_per_section;
+      }
+      else
+      {
+        sel_start_frames = current_section * frames_per_section;
+        sel_end_frames = anchor_sec * frames_per_section;
+      }
+      selected = true;
+      set_cursor_value(current_section);
+      set_statusbar_text();
+      update();
+      previous_mouse_pos_x = current_section;
+      return;
+    }
+    else
+    {
+      // Обычное создание выделения от anchor
+      size_t anchor_sec = anchor_frames / frames_per_section;
+      if (anchor_sec <= current_section)
+      {
+        sel_start_frames = anchor_sec * frames_per_section;
+        sel_end_frames = current_section * frames_per_section;
+        selection_selected = 2;
+      }
+      else
+      {
+        sel_start_frames = current_section * frames_per_section;
+        sel_end_frames = anchor_sec * frames_per_section;
+        selection_selected = 1;
+      }
+      selected = true;
+      set_cursor_value(current_section);
+      set_statusbar_text();
+      update();
+      previous_mouse_pos_x = current_section;
+      return;
+    }
+  }
+
+  // Перетаскивание существующих границ выделения
+  if (mouse_pressed)
+  {
+    if (selection_selected == 1)
+    {
+      set_selstart_value (current_section);
+      set_cursor_value(current_section);
+    }
+    else if (selection_selected == 2)
+    {
+      set_selend_value (current_section);
+      set_cursor_value(current_section);
+    }
+    fix_selection_bounds();
+    set_statusbar_text();
+    update();
+  }
+
+  previous_mouse_pos_x = current_section;
+  QWidget::mouseMoveEvent (event);
+}
+
+void CWaveform::mouseReleaseEvent (QMouseEvent *event)
+{
+  if (! fb)
+  {
+    event->accept();
+    return;
+  }
+  mouse_pressed = false;
+  selection_selected = 0;
+  envelope_selected = -1;
+
+  // Если выделение схлопнулось, сбрасываем его
+  if (selected && sel_start_frames >= sel_end_frames)
+  {
+    deselect();
+  }
+
+  QWidget::mouseReleaseEvent (event);
+}
+
+
+void CWaveform::fix_selection_bounds()
+{
+  if (selection_selected == 2 && (sel_start_frames > sel_end_frames))
+  {
+    size_t t = sel_start_frames;
+    sel_start_frames = sel_end_frames;
+    sel_end_frames = t;
+    selection_selected = 1;
+  }
+
+  // Если выделение схлопнулось, сбрасываем флаг выбранности
+  if (selected && sel_start_frames >= sel_end_frames)
+  {
+    selected = false;
+    selection_selected = 0;
+  }
 }
 
 

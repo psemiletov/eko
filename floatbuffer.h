@@ -1,7 +1,7 @@
 #ifndef FLOATBUFFER_H
 #define FLOATBUFFER_H
 
-//VER 10
+//VER 11
 
 #include <cstring>
 
@@ -31,8 +31,8 @@ public:
   
   int sndfile_format;
   
-  CFloatBuffer (size_t len, size_t channels_count);
-  CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count = 1);
+  CFloatBuffer (size_t len, size_t channels_count); //create empty channel with len frames
+  CFloatBuffer (float *interleaved_buffer, size_t len, size_t channels_count = 1); //create from interleaved_buffer
     
   ~CFloatBuffer();  
   
@@ -57,7 +57,7 @@ public:
   void copy_channel_to_pos (CFloatBuffer *other, size_t ch_from, size_t ch_to,
                             size_t offset_from, size_t size, size_t offset_to); //frames
   
-  void copy_to_pos_with_rate (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to, float rate); //frames
+  //void copy_to_pos_with_rate (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to, float rate); //frames
   
   void overwrite_at (CFloatBuffer *other, size_t pos_frames);
 

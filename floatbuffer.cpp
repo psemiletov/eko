@@ -1,4 +1,4 @@
-//VER 10
+//VER 11
 
 #include <iostream>
 #include <math.h>
@@ -9,6 +9,7 @@
 #include "floatbuffer.h"
 
 using namespace std;
+
 
 CFloatBuffer::CFloatBuffer (size_t len, size_t channels_count)
 {
@@ -77,7 +78,7 @@ CFloatBuffer::CFloatBuffer (float *interleaved_buffer, size_t len, size_t channe
             }     
        }
 
-   delete [] interleaved_buffer; //we don't need it anymore
+   delete [] interleaved_buffer; //we don't need it anymore. убрать и удялять interleaved_buffer после вызова функции?
 }
   
 
@@ -187,7 +188,7 @@ void CFloatBuffer::copy_channel_to_pos (CFloatBuffer *other, size_t ch_from, siz
   memcpy (other->buffer[ch_to] + offset_to, buffer[ch_from] + offset_from, size * sizeof (float));
 }
 
-
+/*
 void CFloatBuffer::copy_to_pos_with_rate (CFloatBuffer *other, size_t offset_from, size_t size, size_t offset_to, float rate)
 {
   if (size > length_frames)
@@ -215,7 +216,7 @@ void CFloatBuffer::copy_to_pos_with_rate (CFloatBuffer *other, size_t offset_fro
              }
       }          
 }
-
+*/
 
 void CFloatBuffer::pbuffer_reset()
 {
