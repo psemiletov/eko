@@ -53,6 +53,8 @@ started at 25 July 2010
 #include "floatbuffer.h"
 #include "fxrack.h"
 
+#include "ebur128meter.h"
+
 #include "db.h"
 
 #define FM_ENTRY_MODE_NONE 0
@@ -4408,7 +4410,7 @@ void CEKO::cb_show_meterbar_in_db_changed (int value)
   documents->apply_settings();
 }
 
-
+/*
 void CEKO::fn_stat_rms()
 {
   CDocument *d = documents->get_current();
@@ -4433,6 +4435,59 @@ void CEKO::fn_stat_rms()
   float rms = 20.0f * log10 (srms / 1.0f);
 
   log->log (tr ("RMS is %1 dB").arg (rms));
+}
+*/
+
+
+void CEKO::fn_stat_rms()
+{
+  CDocument *d = documents->get_current();
+  if (!d) return;
+
+  size_t start = d->wave_edit->waveform->frames_start();
+  size_t end = d->wave_edit->waveform->frames_end();
+  size_t frames = end - start;
+  int channels = d->wave_edit->waveform->fb->channels;
+  int samplerate = d->wave_edit->waveform->fb->samplerate;
+
+  if (frames == 0) return;
+
+  // === 1. RMS ===
+  double sqr_sum = 0.0;
+  for (size_t i = start; i < end; i++)
+    for (int ch = 0; ch < channels; ch++)
+    {
+      float s = d->wave_edit->waveform->fb->buffer[ch][i];
+      sqr_sum += s * s;
+    }
+    double srms = sqrt(sqr_sum / (frames * channels));
+  float rms_db = 20.0f * log10(srms + 1e-10);
+  log->log(tr("RMS is %1 dB").arg(rms_db, 0, 'f', 2));
+
+  // === 2. LUFS-I ===
+  // ВАЖНО: используем EBUR128_MODE_ALL или комбинацию с MODE_M
+  EBUR128Meter meter(channels, samplerate, EBUR128_MODE_ALL);
+
+  std::vector<const float*> channel_buffers(channels);
+  for (int ch = 0; ch < channels; ch++)
+  {
+    channel_buffers[ch] = &d->wave_edit->waveform->fb->buffer[ch][start];
+  }
+
+  meter.addFrames(channel_buffers.data(), frames);
+
+  EBUR128Result result = meter.getResult();
+
+  if (result.integrated > -100.0 && result.blocks_processed > 0)
+  {
+    log->log(tr("LUFS-I (EBU R128) is %1 LUFS").arg(result.integrated, 0, 'f', 2));
+    if (result.true_peak > -100.0)
+      log->log(tr("True Peak is %1 dBTP").arg(result.true_peak, 0, 'f', 2));
+  }
+  else
+  {
+    log->log(tr("LUFS-I: insufficient data (blocks_processed=%1)").arg(result.blocks_processed));
+  }
 }
 
 //ПАШЕТ!

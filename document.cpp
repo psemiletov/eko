@@ -634,7 +634,7 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
      event->accept();
      return;
     }
-
+/*
   if (event->text() == "[")
      {
       set_selstart_value (get_cursor_position_sections());
@@ -658,6 +658,8 @@ void CWaveform::keyPressEvent (QKeyEvent *event)
     event->accept();
     return;
   }
+  */
+
   QWidget::keyPressEvent (event);
 }
 
