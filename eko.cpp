@@ -1046,10 +1046,8 @@ void CEKO::leaving_tune()
 
 void CEKO::closeEvent (QCloseEvent *event)
 {
-qDebug() << "---- 1";
 
-
- transport_state = STATE_EXIT;
+  transport_state = STATE_EXIT;
 
   pa_done();
 
@@ -1088,8 +1086,6 @@ qDebug() << "---- 1";
 
   event->accept();
 //  deleteLater();
-
-qDebug() << "---- 2";
 
 }
 
@@ -2446,9 +2442,6 @@ void CEKO::createOptions()
 
   QHBoxLayout *hb_soundev = new QHBoxLayout;
 
-
-  //FIXME: добавить поиск Pipewire?
-  //если найдено Pipewire, делаем его по умолчанию
 
   int default_index = get_pipewire_index();
 
