@@ -205,7 +205,7 @@ int pa_input_stream_callback (const void *input, void *output, unsigned long fra
       memcpy (p_out[1], p_in[1], sz);
      }
 
- if (rec_channels == 2)
+  if (rec_channels == 2)
     {
      fb_record->settozero();
 
@@ -471,7 +471,7 @@ int pa_stream_callback (const void *input, void *output,
      {
       transport_state = STATE_STOP;
       return paAbort;
-    }
+     }
 
   // ------ ОТЛАДОЧНЫЙ ВЫВОД (после проверки можно удалить) ------
 //  static int call_count = 0;
@@ -519,16 +519,17 @@ int pa_stream_callback (const void *input, void *output,
 
   // Правый канал (если стерео)
   if (dsp->temp_float_buffer->channels == 2)
-  {
-    if (play_r)
-      {
-       memcpy(pchannels[1], dsp->temp_float_buffer->buffer[1], bytes_processed);
-       if (frames_processed < frameCount)
-          memset((char*)pchannels[1] + bytes_processed, 0, bytes_full - bytes_processed);
-      }
-    else
-        memset(pchannels[1], 0, bytes_full);
-  }
+     {
+      if (play_r)
+         {
+          memcpy(pchannels[1], dsp->temp_float_buffer->buffer[1], bytes_processed);
+
+          if (frames_processed < frameCount)
+             memset((char*)pchannels[1] + bytes_processed, 0, bytes_full - bytes_processed);
+         }
+     else
+         memset(pchannels[1], 0, bytes_full);
+    }
 
   // Если обработали меньше, чем запросил PortAudio – значит достигнут конец файла.
   // Завершаем поток корректно (paComplete), но не раньше, чем скопировали реальные данные.
@@ -551,6 +552,33 @@ int pa_stream_callback (const void *input, void *output,
   // Всё нормально – продолжаем
   return paContinue;
 }
+
+
+
+int get_pipewire_index()
+{
+  QStringList l;
+
+  int index = -1;
+
+  PaDeviceIndex devindex = Pa_GetDeviceCount() - 1;
+
+  for (PaDeviceIndex i = 0; i < devindex; i++)
+  {
+    const PaDeviceInfo *di = Pa_GetDeviceInfo (i);
+
+    if (std::strstr(di->name, "pipewire") != nullptr)
+       {
+        index = i;
+        break;
+       }
+
+  }
+
+  return index;
+}
+
+
 
 QStringList get_sound_devices()
 {
@@ -659,31 +687,30 @@ void CEKO::create_paths()
   fname_tempfile = "/eko-temp-777.wav";
   fname_tempparamfile.append (QDir::tempPath()).append ("/ekoparam.tmp");
 
-  dir_profiles.append (dir_config).append ("/profiles");
-
+  dir_profiles = dir_config + "/profiles";
   dr.setPath (dir_profiles);
   if (! dr.exists())
      dr.mkpath (dir_profiles);
 
-  dir_sessions.append (dir_config).append ("/sessions");
+  dir_sessions = dir_config + "/sessions";
 
   dr.setPath (dir_sessions);
   if (! dr.exists())
      dr.mkpath (dir_sessions);
 
-  dir_palettes.append (dir_config).append ("/palettes");
+  dir_palettes = dir_config + "/palettes";
 
   dr.setPath (dir_palettes);
   if (! dr.exists())
      dr.mkpath (dir_palettes);
 
 
-  dir_themes.append (dir_config).append ("/themes");
+  dir_themes = dir_config + "/themes";
   dr.setPath (dir_themes);
   if (! dr.exists())
      dr.mkpath (dir_themes);
 
-  g_fxpresets_path = dir_config.append ("/fxpresets");
+  g_fxpresets_path = dir_config + "/fxpresets";
   dr.setPath (g_fxpresets_path);
   if (! dr.exists())
      dr.mkpath (g_fxpresets_path);
@@ -1073,14 +1100,14 @@ void CEKO::newFile()
 
   if (pa_stream)
      {
-       Pa_CloseStream (pa_stream);
-       pa_stream = 0;
+      Pa_CloseStream (pa_stream);
+      pa_stream = 0;
      }
 
   if (pa_stream_in)
      {
-       Pa_AbortStream (pa_stream_in);
-       pa_stream_in = 0;
+      Pa_AbortStream (pa_stream_in);
+      pa_stream_in = 0;
      }
 
   CDocument *new_document = documents->create_new();
@@ -1554,8 +1581,6 @@ void CEKO::createMenus()
   add_to_menu (tm, tr ("Remove volume envelope"), SLOT(fn_delete_vol_envelope()));
 
 
-
-
   //tm = menu_functions->addMenu (tr ("Filter"));
   //tm->setTearOffEnabled (true);
 
@@ -1962,8 +1987,6 @@ void CEKO::opt_shortcuts_find()
   int index = shortcuts->captions.indexOf (QRegularExpression (opt_shortcuts_string_to_find + ".*", QRegularExpression::CaseInsensitiveOption), from);
 #endif
 
-
-
   if (index != -1)
      lv_menuitems->setCurrentRow (index);
 }
@@ -2100,7 +2123,6 @@ void CEKO::pb_choose_temp_path_clicked()
       ed_temp_path->setText (path);
      }
 }
-
 
 
 void CEKO::createOptions()
@@ -2424,8 +2446,18 @@ void CEKO::createOptions()
 
   QHBoxLayout *hb_soundev = new QHBoxLayout;
 
-  pa_device_id_out = settings->value ("sound_dev_id_out", Pa_GetDefaultOutputDevice()).toInt();
-  pa_device_id_in = settings->value ("sound_dev_id_in", Pa_GetDefaultInputDevice()).toInt();
+
+  //FIXME: добавить поиск Pipewire?
+  //если найдено Pipewire, делаем его по умолчанию
+
+  int default_index = get_pipewire_index();
+
+  if (default_index == -1)
+     default_index = Pa_GetDefaultOutputDevice();
+
+
+  pa_device_id_out = settings->value ("sound_dev_id_out", default_index).toInt();
+  pa_device_id_in = settings->value ("sound_dev_id_in", default_index).toInt();
 
   QLabel *l_soundev = new QLabel (tr ("Output"));
 
