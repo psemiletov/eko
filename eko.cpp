@@ -487,7 +487,9 @@ int pa_stream_callback (const void *input, void *output,
 //  qDebug() << "frames_processed=" << frames_processed;
 
   // Если нет ни одного фрейма – конец файла или ошибка
-  if (frames_processed == 0)
+
+/*
+   if (frames_processed == 0)
      {
       qDebug() << "No frames processed -> stopping playback";
       transport_state = STATE_STOP;
@@ -499,6 +501,19 @@ int pa_stream_callback (const void *input, void *output,
       d->wave_edit->waveform->scrollbar->setValue(0);
       return paComplete;   // PortAudio завершит поток корректно
      }
+*/
+
+if (frames_processed == 0 ||
+  (frames_processed < frameCount && !d->wave_edit->waveform->play_looped))
+{
+  qDebug() << "End of file reached -> stopping";
+  transport_state = STATE_STOP;
+  emit documents->stopPlaybackTimers();
+  wnd_fxrack->fx_rack->set_state_all(FXS_STOP);
+  d->wave_edit->waveform->fb->offset = 0;
+  d->wave_edit->waveform->scrollbar->setValue(0);
+  return paComplete;
+}
 
   // Заполняем выходные буферы
   float** pchannels = (float**)output;
