@@ -1026,7 +1026,7 @@ CEKO::CEKO()
      QFile::remove (settings->value ("temp_path", QDir::tempPath()).toString() + fname_tempfile);
 
 
-  handle_args();
+ // handle_args();
 }
 
 
@@ -6185,3 +6185,29 @@ void CEKO::cb_zoom_to_selection()
 //  QAction *a = qobject_cast<QAction *>(sender());
  // d->wave_edit->waveform->zoom (a->text().toInt());
 }
+
+
+
+
+void CEKO::slot_open_files_from_args(const QStringList &messages)
+{
+  // Открываем каждый переданный файл
+  for (const QString &filePath : messages)
+  {
+    if (QFileInfo::exists(filePath))
+    {
+      documents->open_file(filePath);
+    }
+    else
+    {
+      log->log(tr("File not found: %1").arg(filePath));
+    }
+  }
+
+  transport_state = STATE_STOP;
+
+
+  // Переключаемся на вкладку редактора
+  main_tab_widget->setCurrentIndex(idx_tab_edit);
+}
+

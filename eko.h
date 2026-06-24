@@ -178,6 +178,10 @@ public:
   QMenu *menu_view_themes;
 
 
+
+  void handle_args();
+
+
 protected:
 
   void closeEvent (QCloseEvent *event);
@@ -536,8 +540,6 @@ prefs window widgets
   void init_styles();
 
 
-  void handle_args();
-
   void update_themes();
   void update_stylesheet (const QString &f);
 
@@ -591,6 +593,10 @@ prefs window widgets
   void show_html_data (const QString &data);
     
   void fn_ch_mono_to_stereo (bool full); 
+
+public slots:
+
+    void slot_open_files_from_args(const QStringList &messages);
 
 };
 
