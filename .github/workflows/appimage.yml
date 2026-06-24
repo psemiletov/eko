@@ -1,7 +1,6 @@
-name: Build AppImage
+name: Build AppImage (Qt6)
 
 on:
-  # Запуск только вручную через кнопку "Run workflow"
   workflow_dispatch:
     inputs:
       version:
@@ -15,13 +14,12 @@ on:
         type: boolean
         default: false
 
-  # Автоматически при создании релиза (опционально)
   release:
     types: [published]
 
 jobs:
   build-appimage:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout code
@@ -29,71 +27,32 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install system dependencies
+    - name: Install minimal dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y \
           build-essential \
           cmake \
           pkg-config \
-          qtbase5-dev \
-          qtbase5-dev-tools \
-          qttools5-dev-tools \
-          libqt5svg5-dev \
+          qt6-base-dev \
+          qt6-base-dev-tools \
+          qt6-tools-dev \
+          qt6-tools-dev-tools \
+          libqt6core5compat6-dev \
           libportaudio2 \
-          libportaudiocpp0 \
           portaudio19-dev \
           libsndfile1-dev \
           libsamplerate0-dev \
           libasound2-dev \
-          libpulse-dev \
-          libjack-jackd2-dev \
           patchelf \
-          desktop-file-utils \
-          libgl1-mesa-dev \
-          libx11-dev \
-          libxext-dev \
-          libxfixes-dev \
-          libxi-dev \
-          libxrender-dev \
-          libxcb1-dev \
-          libx11-xcb-dev \
-          libxcb-glx0-dev \
-          libxcb-icccm4-dev \
-          libxcb-image0-dev \
-          libxcb-keysyms1-dev \
-          libxcb-randr0-dev \
-          libxcb-render-util0-dev \
-          libxcb-shape0-dev \
-          libxcb-sync-dev \
-          libxcb-xfixes0-dev \
-          libxcb-xinerama0-dev \
-          libxcb-xkb-dev \
-          libxkbcommon-dev \
-          libxkbcommon-x11-dev \
-          libfontconfig1-dev \
-          libfreetype6-dev \
-          libglib2.0-dev \
-          libsm-dev \
-          libice-dev \
-          libx11-xcb-dev \
-          libxcb-util-dev \
-          libxcb-util0-dev \
-          libxcb-xv0-dev \
-          libxcb-xtest0-dev \
-          libxcb-xrm-dev \
-          libxcb-shm0-dev
+          desktop-file-utils
 
-    - name: Setup Qt6 (if needed)
+    - name: Check Qt6 installation
       run: |
-        sudo apt-get install -y qt6-base-dev qt6-base-dev-tools qt6-tools-dev qt6-tools-dev-tools || true
-
-    - name: Check dependencies
-      run: |
+        qmake6 --version || echo "qmake6 not found"
         pkg-config --modversion sndfile
         pkg-config --modversion samplerate
         pkg-config --modversion portaudio-2.0
-        qmake --version || echo "qmake not found"
 
     - name: Determine version
       id: version
@@ -108,7 +67,7 @@ jobs:
         echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
         echo "AppImage version: ${VERSION}"
 
-    - name: Configure and build
+    - name: Configure and build with Qt6
       run: |
         mkdir -p build
         cd build
@@ -130,7 +89,11 @@ jobs:
           exit 1
         fi
 
-        # Копируем .desktop файл и иконку в AppDir
+        # Проверяем зависимости бинарника
+        echo "Binary dependencies:"
+        ldd AppDir/usr/bin/eko | grep -E "portaudio|sndfile|samplerate|Qt" || true
+
+        # Копируем .desktop файл и иконку
         if [ -f ../desktop/eko.desktop ]; then
           cp ../desktop/eko.desktop AppDir/
         fi
@@ -155,25 +118,45 @@ jobs:
           EOF
         fi
 
-    - name: Download linuxdeploy
+        # Создаем простую иконку, если её нет
+        if [ ! -f AppDir/eko.png ]; then
+          # Создаем базовую иконку с помощью ImageMagick, если он установлен
+          if command -v convert &> /dev/null; then
+            convert -size 256x256 xc:blue -fill white -gravity center -font DejaVu-Sans -pointsize 40 -annotate 0 "EKO" AppDir/eko.png || true
+          else
+            # Если convert нет, создаем пустой файл
+            touch AppDir/eko.png
+          fi
+        fi
+
+        echo "AppDir contents:"
+        ls -la AppDir/
+
+    - name: Download linuxdeploy and Qt plugin
       run: |
         wget -q -c "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
         wget -q -c "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
         chmod +x linuxdeploy*.AppImage
 
-        # Проверяем, что загружено
-        file linuxdeploy-x86_64.AppImage | grep ELF || echo "linuxdeploy is not an ELF file"
+        # Проверяем скачанные файлы
+        file linuxdeploy-x86_64.AppImage | grep ELF || echo "Warning: linuxdeploy is not an ELF file"
+        file linuxdeploy-plugin-qt-x86_64.AppImage | grep ELF || echo "Warning: qt plugin is not an ELF file"
 
-    - name: Bundle with linuxdeploy
+    - name: Bundle with linuxdeploy (Qt6)
       run: |
         export VERSION="${{ steps.version.outputs.VERSION }}"
         export LDAI_OUTPUT="EKO-${VERSION}-x86_64.AppImage"
-        export QMAKE="/usr/lib/x86_64-linux-gnu/qt5/bin/qmake"
+
+        # Настройка для Qt6
+        export QMAKE="/usr/lib/qt6/bin/qmake"
         export DEPLOY_QT_PLUGIN=1
         export NO_STRIP=true
         export UNSHARE=1
 
-        echo "Creating AppImage with version: ${VERSION}"
+        export QT_PLUGIN_PATH="/usr/lib/x86_64-linux-gnu/qt6/plugins/"
+
+        echo "Creating AppImage with Qt6, version: ${VERSION}"
+        echo "QMAKE: $(which qmake6 || echo 'qmake6 not in PATH')"
 
         # Запускаем linuxdeploy
         ./linuxdeploy-x86_64.AppImage \
@@ -194,19 +177,27 @@ jobs:
             echo "✅ AppImage renamed to EKO-${VERSION}-x86_64.AppImage"
           else
             echo "❌ No AppImage found!"
+            echo "Contents of current directory:"
             ls -la .
             exit 1
           fi
         fi
 
-        # Выводим размер
         echo "AppImage size:"
         du -h "EKO-${VERSION}-x86_64.AppImage"
+
+        # Проверяем, что AppImage содержит Qt6
+        echo "Checking if AppImage contains Qt6:"
+        ./EKO-${VERSION}-x86_64.AppImage --appimage-extract 2>&1 | head -5 || true
+        if [ -d squashfs-root ]; then
+          find squashfs-root -name "libQt6*" | head -5
+          rm -rf squashfs-root
+        fi
 
     - name: Upload AppImage as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: EKO-AppImage
+        name: EKO-AppImage-Qt6
         path: |
           ./EKO-*.AppImage
           ./EKO-*.AppImage.zsync
