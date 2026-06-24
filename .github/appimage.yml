@@ -1,0 +1,226 @@
+name: Build AppImage
+
+on:
+  # Запуск только вручную через кнопку "Run workflow"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (optional)'
+        required: false
+        type: string
+        default: ''
+      release:
+        description: 'Upload to release (true/false)'
+        required: false
+        type: boolean
+        default: false
+
+  # Автоматически при создании релиза (опционально)
+  release:
+    types: [published]
+
+jobs:
+  build-appimage:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          pkg-config \
+          qtbase5-dev \
+          qtbase5-dev-tools \
+          qttools5-dev-tools \
+          libqt5svg5-dev \
+          libportaudio2 \
+          libportaudiocpp0 \
+          portaudio19-dev \
+          libsndfile1-dev \
+          libsamplerate0-dev \
+          libasound2-dev \
+          libpulse-dev \
+          libjack-jackd2-dev \
+          patchelf \
+          desktop-file-utils \
+          libgl1-mesa-dev \
+          libx11-dev \
+          libxext-dev \
+          libxfixes-dev \
+          libxi-dev \
+          libxrender-dev \
+          libxcb1-dev \
+          libx11-xcb-dev \
+          libxcb-glx0-dev \
+          libxcb-icccm4-dev \
+          libxcb-image0-dev \
+          libxcb-keysyms1-dev \
+          libxcb-randr0-dev \
+          libxcb-render-util0-dev \
+          libxcb-shape0-dev \
+          libxcb-sync-dev \
+          libxcb-xfixes0-dev \
+          libxcb-xinerama0-dev \
+          libxcb-xkb-dev \
+          libxkbcommon-dev \
+          libxkbcommon-x11-dev \
+          libfontconfig1-dev \
+          libfreetype6-dev \
+          libglib2.0-dev \
+          libsm-dev \
+          libice-dev \
+          libx11-xcb-dev \
+          libxcb-util-dev \
+          libxcb-util0-dev \
+          libxcb-xv0-dev \
+          libxcb-xtest0-dev \
+          libxcb-xrm-dev \
+          libxcb-shm0-dev
+
+    - name: Setup Qt6 (if needed)
+      run: |
+        sudo apt-get install -y qt6-base-dev qt6-base-dev-tools qt6-tools-dev qt6-tools-dev-tools || true
+
+    - name: Check dependencies
+      run: |
+        pkg-config --modversion sndfile
+        pkg-config --modversion samplerate
+        pkg-config --modversion portaudio-2.0
+        qmake --version || echo "qmake not found"
+
+    - name: Determine version
+      id: version
+      run: |
+        if [ -n "${{ github.event.inputs.version }}" ]; then
+          VERSION="${{ github.event.inputs.version }}"
+        elif [ -n "${{ github.event.release.tag_name }}" ]; then
+          VERSION="${{ github.event.release.tag_name }}"
+        else
+          VERSION="$(git describe --tags --always)-manual"
+        fi
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+        echo "AppImage version: ${VERSION}"
+
+    - name: Configure and build
+      run: |
+        mkdir -p build
+        cd build
+        cmake .. \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_CXX_FLAGS="-O2 -march=x86-64 -mtune=generic"
+        make -j$(nproc)
+
+    - name: Install to AppDir
+      run: |
+        cd build
+        make install DESTDIR=AppDir
+
+        # Проверяем, что бинарник установлен
+        if [ ! -f AppDir/usr/bin/eko ]; then
+          echo "ERROR: Binary not found in AppDir/usr/bin/"
+          ls -la AppDir/usr/bin/ || true
+          exit 1
+        fi
+
+        # Копируем .desktop файл и иконку в AppDir
+        if [ -f ../desktop/eko.desktop ]; then
+          cp ../desktop/eko.desktop AppDir/
+        fi
+
+        if [ -f ../icons/eko.png ]; then
+          cp ../icons/eko.png AppDir/
+        fi
+
+        # Создаем .desktop если его нет
+        if [ ! -f AppDir/eko.desktop ]; then
+          cat > AppDir/eko.desktop << 'EOF'
+          [Desktop Entry]
+          Version=1.0
+          Type=Application
+          Name=EKO
+          Comment=Audio editor and mixer
+          Exec=eko
+          Icon=eko
+          Terminal=false
+          Categories=Audio;AudioVideoEditing;Mixer;
+          MimeType=audio/x-wav;audio/x-mpeg;audio/ogg;audio/flac;
+          EOF
+        fi
+
+    - name: Download linuxdeploy
+      run: |
+        wget -q -c "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+        wget -q -c "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
+        chmod +x linuxdeploy*.AppImage
+
+        # Проверяем, что загружено
+        file linuxdeploy-x86_64.AppImage | grep ELF || echo "linuxdeploy is not an ELF file"
+
+    - name: Bundle with linuxdeploy
+      run: |
+        export VERSION="${{ steps.version.outputs.VERSION }}"
+        export LDAI_OUTPUT="EKO-${VERSION}-x86_64.AppImage"
+        export QMAKE="/usr/lib/x86_64-linux-gnu/qt5/bin/qmake"
+        export DEPLOY_QT_PLUGIN=1
+        export NO_STRIP=true
+        export UNSHARE=1
+
+        echo "Creating AppImage with version: ${VERSION}"
+
+        # Запускаем linuxdeploy
+        ./linuxdeploy-x86_64.AppImage \
+          --appdir build/AppDir \
+          --plugin qt \
+          --output appimage
+
+        # Переименовываем результат
+        if [ -f "EKO-${VERSION}-x86_64.AppImage" ]; then
+          echo "✅ AppImage created successfully"
+          ls -la "EKO-${VERSION}-x86_64.AppImage"
+        else
+          # Ищем любой AppImage
+          APPIMAGE=$(find . -name "*.AppImage" | head -1)
+          if [ -n "$APPIMAGE" ]; then
+            echo "Found AppImage: $APPIMAGE"
+            mv "$APPIMAGE" "EKO-${VERSION}-x86_64.AppImage"
+            echo "✅ AppImage renamed to EKO-${VERSION}-x86_64.AppImage"
+          else
+            echo "❌ No AppImage found!"
+            ls -la .
+            exit 1
+          fi
+        fi
+
+        # Выводим размер
+        echo "AppImage size:"
+        du -h "EKO-${VERSION}-x86_64.AppImage"
+
+    - name: Upload AppImage as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: EKO-AppImage
+        path: |
+          ./EKO-*.AppImage
+          ./EKO-*.AppImage.zsync
+        if-no-files-found: error
+
+    - name: Upload to release
+      if: |
+        (github.event_name == 'release' && github.event.action == 'published') ||
+        (github.event_name == 'workflow_dispatch' && github.event.inputs.release == 'true')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./EKO-*.AppImage
+          ./EKO-*.AppImage.zsync
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
