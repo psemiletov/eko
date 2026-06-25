@@ -96,9 +96,15 @@ jobs:
         if [ -n "${{ github.event.inputs.version }}" ]; then
           VERSION="${{ github.event.inputs.version }}"
         elif [ -n "${{ github.event.release.tag_name }}" ]; then
+          # Убираем 'v' из начала тега, если он есть
           VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${VERSION#v}"
         else
-          VERSION="$(git describe --tags --always)-manual"
+          # Берем только версию из git describe без хэша коммита
+          # Формат: 7.1.0-25-gf7ce17d-manual -> 7.1.0
+          GIT_VERSION="$(git describe --tags --always)"
+          # Извлекаем только номер версии (мажор.минор.патч)
+          VERSION="$(echo "$GIT_VERSION" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+' || echo "$GIT_VERSION")"
         fi
         echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
         echo "AppImage version: ${VERSION}"
@@ -167,7 +173,9 @@ jobs:
     - name: Bundle with linuxdeploy (Qt6)
       run: |
         export VERSION="${{ steps.version.outputs.VERSION }}"
-        export LDAI_OUTPUT="EKO-${VERSION}-x86_64.AppImage"
+        # Формируем имя в нижнем регистре: eko-7.1.0-x86_64.AppImage
+        export APPIMAGE_NAME="eko-${VERSION}-x86_64.AppImage"
+        export LDAI_OUTPUT="${APPIMAGE_NAME}"
 
         # Настройка для Qt6
         export QMAKE="/usr/lib/qt6/bin/qmake"
@@ -179,6 +187,7 @@ jobs:
         export Qt6_DIR="/usr/lib/x86_64-linux-gnu/cmake/Qt6"
 
         echo "Creating AppImage with Qt6, version: ${VERSION}"
+        echo "Output name: ${APPIMAGE_NAME}"
         echo "QMAKE: $(which qmake6)"
 
         # Создаем AppRun, если linuxdeploy не создал
@@ -201,16 +210,19 @@ jobs:
           --plugin qt \
           --output appimage
 
-        # Переименовываем результат
-        if [ -f "EKO-${VERSION}-x86_64.AppImage" ]; then
-          echo "✅ AppImage created successfully"
-          ls -la "EKO-${VERSION}-x86_64.AppImage"
+        # Переименовываем результат в нужный формат
+        if [ -f "${APPIMAGE_NAME}" ]; then
+          echo "✅ AppImage created successfully: ${APPIMAGE_NAME}"
+          ls -la "${APPIMAGE_NAME}"
         else
-          APPIMAGE=$(find . -name "*.AppImage" | head -1)
-          if [ -n "$APPIMAGE" ]; then
+          # Ищем любой созданный AppImage
+          APPIMAGE=$(find . -maxdepth 1 -name "*.AppImage" -not -name "${APPIMAGE_NAME}" | head -1)
+          if [ -n "$APPIMAGE" ] && [ "$APPIMAGE" != "./${APPIMAGE_NAME}" ]; then
             echo "Found AppImage: $APPIMAGE"
-            mv "$APPIMAGE" "EKO-${VERSION}-x86_64.AppImage"
-            echo "✅ AppImage renamed"
+            mv "$APPIMAGE" "${APPIMAGE_NAME}"
+            echo "✅ AppImage renamed to: ${APPIMAGE_NAME}"
+          elif [ -f "${APPIMAGE_NAME}" ]; then
+            echo "✅ AppImage already exists: ${APPIMAGE_NAME}"
           else
             echo "❌ No AppImage found!"
             ls -la .
@@ -219,15 +231,15 @@ jobs:
         fi
 
         echo "AppImage size:"
-        du -h "EKO-${VERSION}-x86_64.AppImage"
+        du -h "${APPIMAGE_NAME}"
 
     - name: Upload AppImage as artifact
       uses: actions/upload-artifact@v4
       with:
         name: EKO-AppImage-Qt6
         path: |
-          ./EKO-*.AppImage
-          ./EKO-*.AppImage.zsync
+          ./eko-*.AppImage
+          ./eko-*.AppImage.zsync
         if-no-files-found: error
 
     - name: Upload to release
@@ -237,8 +249,8 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ./EKO-*.AppImage
-          ./EKO-*.AppImage.zsync
+          ./eko-*.AppImage
+          ./eko-*.AppImage.zsync
         generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
