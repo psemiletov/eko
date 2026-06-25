@@ -53,7 +53,7 @@ started at 25 July 2010
 #include "floatbuffer.h"
 #include "fxrack.h"
 
-#include "ebur128meter.h"
+//#include "ebur128meter.h"
 
 #include "db.h"
 
@@ -4503,7 +4503,7 @@ void CEKO::fn_stat_rms()
     double srms = sqrt(sqr_sum / (frames * channels));
   float rms_db = 20.0f * log10(srms + 1e-10);
   log->log(tr("RMS is %1 dB").arg(rms_db, 0, 'f', 2));
-
+/*
   // === 2. LUFS-I ===
   // ВАЖНО: используем EBUR128_MODE_ALL или комбинацию с MODE_M
   EBUR128Meter meter(channels, samplerate, EBUR128_MODE_ALL);
@@ -4527,7 +4527,7 @@ void CEKO::fn_stat_rms()
   else
   {
     log->log(tr("LUFS-I: insufficient data (blocks_processed=%1)").arg(result.blocks_processed));
-  }
+  }*/
 }
 
 //ПАШЕТ!
