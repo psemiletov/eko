@@ -141,18 +141,18 @@ jobs:
 
         # Создаем .desktop если его нет
         if [ ! -f AppDir/eko.desktop ]; then
-          cat > AppDir/eko.desktop << 'EOF'
-          [Desktop Entry]
-          Version=1.0
-          Type=Application
-          Name=EKO
-          Comment=Audio editor and mixer
-          Exec=eko
-          Icon=eko
-          Terminal=false
-          Categories=Audio;AudioVideoEditing;Mixer;
-          MimeType=audio/x-wav;audio/x-mpeg;audio/ogg;audio/flac;
-          EOF
+          printf '%s\n' \
+            '[Desktop Entry]' \
+            'Version=1.0' \
+            'Type=Application' \
+            'Name=EKO' \
+            'Comment=Audio editor and mixer' \
+            'Exec=eko' \
+            'Icon=eko' \
+            'Terminal=false' \
+            'Categories=Audio;AudioVideoEditing;Mixer;' \
+            'MimeType=audio/x-wav;audio/x-mpeg;audio/ogg;audio/flac;' \
+            > AppDir/eko.desktop
         fi
 
         echo "AppDir contents:"
