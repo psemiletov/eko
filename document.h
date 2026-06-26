@@ -368,6 +368,7 @@ public:
   size_t position;
 
   bool ronly;
+  bool paused;
 
   CDocument (QObject *parent = 0);
   ~CDocument();

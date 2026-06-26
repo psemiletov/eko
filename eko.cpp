@@ -1578,6 +1578,12 @@ void CEKO::pageChanged (int index)
      {
       documents->current->update_title();
       cb_play_looped->setChecked (documents->current->wave_edit->waveform->play_looped);
+
+      if (documents->current->paused)
+          transport_play->setIcon (QIcon (":/icons/pause.png"));
+      else
+          transport_play->setIcon (QIcon (":/icons/play.png"));
+
      }
 
   //qDebug() << "CEKO::pageChanged end" << index;
@@ -1966,7 +1972,7 @@ void CEKO::createOptions()
 
 
   QCheckBox *cb_show_meterbar_in_db = new QCheckBox (tr ("Amplitude meter bar in dB"), tab_options);
-  cb_show_meterbar_in_db->setCheckState (Qt::CheckState (settings->value ("meterbar_show_db", "1").toInt()));
+  cb_show_meterbar_in_db->setCheckState (Qt::CheckState (settings->value ("meterbar_show_db", "2").toInt()));
   connect(cb_show_meterbar_in_db, SIGNAL(stateChanged(int)), this, SLOT(cb_show_meterbar_in_db_changed(int)));
 
   QCheckBox *cb_use_trad_dialogs = new QCheckBox (tr ("Use traditional File Save/Open dialogs"), tab_options);
@@ -2929,7 +2935,6 @@ void CEKO::fman_places_itemActivated (QListWidgetItem *item)
 void CEKO::update_places_bookmarks()
 {
   lv_places->clear();
- // QStringList sl_items;
 
   if (! file_exists (fname_places_bookmarks))
      return;
@@ -3697,11 +3702,12 @@ void CEKO::slot_transport_play()
 
  ////////////////////////////////////////////////////
 
+      d->paused = false;
       transport_state = STATE_PLAY;
 
 
-      qDebug() << "Starting stream: buffer_size_frames=" << buffer_size_frames
-      << "file length frames=" << documents->current->wave_edit->waveform->fb->length_frames;
+  //    qDebug() << "Starting stream: buffer_size_frames=" << buffer_size_frames
+    //  << "file length frames=" << documents->current->wave_edit->waveform->fb->length_frames;
 
       err = Pa_StartStream (pa_stream);
       qDebug() << Pa_GetErrorText (err);
@@ -3717,6 +3723,8 @@ void CEKO::slot_transport_play()
 
 
   transport_state = STATE_PAUSE;
+  d->paused = true;
+
 
   wnd_fxrack->fx_rack->set_state_all (FXS_PAUSE);
 
@@ -3825,7 +3833,6 @@ void CEKO::ed_copy_to_new()
 }
 
 
-//ВЫЛЕТ
 void CEKO::ed_copy_to_new_fmt()
 {
   CDocument *d = documents->get_current();
@@ -4042,8 +4049,10 @@ void CChangeFormatWindow::format_currentIndexChanged (int index)
   int f = file_formats->hformatnames.key(text);
   QList<int> values = file_formats->hformat.values(f);
   QStringList sl;
+
   for (int v : values)
-    sl.append(file_formats->hsubtype.value(v));
+      sl.append(file_formats->hsubtype.value(v));
+
   sl.sort();
   cmb_subtype->addItems(sl);
 
@@ -4053,6 +4062,7 @@ void CChangeFormatWindow::format_currentIndexChanged (int index)
   if (i == -1) i = 0;
   cmb_subtype->setCurrentIndex(i);
 }
+
 
 void CEKO::file_change_format()
 {

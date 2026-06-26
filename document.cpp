@@ -1103,7 +1103,9 @@ CDocument::CDocument (QObject *parent): QObject (parent)
   ronly = false;
   file_name = fname;
   position = 0;
+  paused = false;
 }
+
 
 CDocument::~CDocument()
 {
@@ -1130,6 +1132,7 @@ void CDocument::create_new()
   wave_edit->waveform->setFocus (Qt::OtherFocusReason);
   wave_edit->waveform->set_cursorpos_text();
 }
+
 
 int CDocument::get_tab_idx()
 {
@@ -1264,10 +1267,12 @@ void CDocumentHolder::open_recent()
   QAction *a = qobject_cast<QAction *>(sender());
   int i = recent_files.indexOf (a->data().toString());
   if (i == -1)
-    return;
+      return;
+
   open_file (recent_files[i]);
   update_recent_menu();
 }
+
 
 void CDocumentHolder::save_to_session (const QString &fileName)
 {
