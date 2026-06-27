@@ -5,6 +5,5 @@
         "libsndfile",
         "libsamplerate",
         "portaudio"
-    ],
-    "builtin-baseline": "18bd5bb0faa6f516df7f07819cdb375f9d5a7927"
+    ]
 }
