@@ -46,9 +46,7 @@ jobs:
 
       - name: Install vcpkg dependencies
         run: |
-          vcpkg install libsndfile:x64-windows
-          vcpkg install libsamplerate:x64-windows
-          vcpkg install portaudio:x64-windows
+          vcpkg install --triplet x64-windows
 
       - name: Configure CMake
         run: |
