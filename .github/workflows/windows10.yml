@@ -45,6 +45,7 @@ jobs:
         with:
           vcpkgJsonGlob: 'vcpkg.json'
           vcpkgDirectory: '${{ runner.workspace }}/vcpkg'
+          vcpkgVersion: '2026.06.24'
 
       - name: Configure CMake
         run: |
