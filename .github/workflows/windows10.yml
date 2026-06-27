@@ -40,18 +40,17 @@ jobs:
           arch: 'win64_msvc2019_64'
           cache: true
 
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgGitCommitId: '18bd5bb0faa6f516df7f07819cdb375f9d5a7927'
-          vcpkgJsonGlob: 'vcpkg.json'
-          vcpkgDirectory: '${{ runner.workspace }}/vcpkg'
+      - name: Install vcpkg dependencies
+        run: |
+          vcpkg install libsndfile:x64-windows
+          vcpkg install libsamplerate:x64-windows
+          vcpkg install portaudio:x64-windows
 
       - name: Configure CMake
         run: |
           cmake -S . -B build -G "Ninja" `
             -DCMAKE_BUILD_TYPE=${{ inputs.build_type || 'Release' }} `
-            -DCMAKE_TOOLCHAIN_FILE=${{ runner.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+            -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
 
       - name: Build
         run: |
