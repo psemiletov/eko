@@ -26,14 +26,16 @@ if (Qt6_FOUND)
     find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 endif()
 
-# qt_standard_project_setup() - убираем, т.к. она не везде доступна
-
 set(PROJECT "eko")
 add_definitions(-DVERSION_NUMBER="\\"${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}\\"")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    add_definitions(-DQ_OS_LINUX)
    add_definitions(-DQ_OS_UNIX)
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+   add_definitions(-DQ_OS_WIN32)
+   # Для Windows используем статическую линковку CRT (опционально)
+   # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
 message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
@@ -47,28 +49,67 @@ file(GLOB eko_HEADERS "*.h")
 
 add_executable(eko ${eko_SRCS} ${QT_RESOURCES})
 
-find_package(PkgConfig REQUIRED)
+# =============================================
+# ПОИСК ЗАВИСИМОСТЕЙ (универсальный)
+# =============================================
 
-pkg_check_modules(sndfile REQUIRED sndfile)
-if(sndfile_FOUND)
-  target_link_libraries(eko ${sndfile_LIBRARIES})
-  target_include_directories(eko PRIVATE ${sndfile_INCLUDE_DIRS})
-  message("+ sndfile")
+# 1. libsndfile
+find_package(SndFile CONFIG QUIET)
+if (SndFile_FOUND)
+    target_link_libraries(eko PRIVATE SndFile::sndfile)
+    target_include_directories(eko PRIVATE ${SndFile_INCLUDE_DIRS})
+    message("+ sndfile (find_package CONFIG)")
+else()
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LIBSNDFILE REQUIRED sndfile)
+    if (LIBSNDFILE_FOUND)
+        target_link_libraries(eko PRIVATE ${LIBSNDFILE_LIBRARIES})
+        target_include_directories(eko PRIVATE ${LIBSNDFILE_INCLUDE_DIRS})
+        message("+ sndfile (pkg-config fallback)")
+    else()
+        message(FATAL_ERROR "libsndfile not found! Install via: sudo apt install libsndfile-dev (Linux) or vcpkg install libsndfile (Windows)")
+    endif()
 endif()
 
-pkg_check_modules(samplerate REQUIRED samplerate)
-if(samplerate_FOUND)
-  target_link_libraries(eko ${samplerate_LIBRARIES})
-  target_include_directories(eko PRIVATE ${samplerate_INCLUDE_DIRS})
-  message("+ samplerate")
+# 2. libsamplerate
+find_package(Samplerate CONFIG QUIET)
+if (Samplerate_FOUND)
+    target_link_libraries(eko PRIVATE Samplerate::samplerate)
+    target_include_directories(eko PRIVATE ${Samplerate_INCLUDE_DIRS})
+    message("+ samplerate (find_package CONFIG)")
+else()
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LIBSAMPLERATE REQUIRED samplerate)
+    if (LIBSAMPLERATE_FOUND)
+        target_link_libraries(eko PRIVATE ${LIBSAMPLERATE_LIBRARIES})
+        target_include_directories(eko PRIVATE ${LIBSAMPLERATE_INCLUDE_DIRS})
+        message("+ samplerate (pkg-config fallback)")
+    else()
+        message(FATAL_ERROR "libsamplerate not found! Install via: sudo apt install libsamplerate-dev (Linux) or vcpkg install libsamplerate (Windows)")
+    endif()
 endif()
 
-pkg_check_modules(portaudio2 REQUIRED portaudio-2.0)
-if(portaudio2_FOUND)
-  target_link_libraries(eko ${portaudio2_LIBRARIES})
-  target_include_directories(eko PRIVATE ${portaudio2_INCLUDE_DIRS})
-  message("+ portaudio")
+# 3. PortAudio
+find_package(PortAudio CONFIG QUIET)
+if (PortAudio_FOUND)
+    target_link_libraries(eko PRIVATE PortAudio::portaudio)
+    target_include_directories(eko PRIVATE ${PortAudio_INCLUDE_DIRS})
+    message("+ portaudio (find_package CONFIG)")
+else()
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LIBPORTAUDIO REQUIRED portaudio-2.0)
+    if (LIBPORTAUDIO_FOUND)
+        target_link_libraries(eko PRIVATE ${LIBPORTAUDIO_LIBRARIES})
+        target_include_directories(eko PRIVATE ${LIBPORTAUDIO_INCLUDE_DIRS})
+        message("+ portaudio (pkg-config fallback)")
+    else()
+        message(FATAL_ERROR "portaudio not found! Install via: sudo apt install portaudio19-dev (Linux) or vcpkg install portaudio (Windows)")
+    endif()
 endif()
+
+# =============================================
+# ДОПОЛНИТЕЛЬНЫЕ НАСТРОЙКИ
+# =============================================
 
 set(eko_ICONPNG64
     ./icons/eko.png
@@ -88,12 +129,23 @@ if (EXISTS "/usr/include/linux/joystick.h")
    add_definitions(-DJOYSTICK_SUPPORTED)
 endif()
 
+# =============================================
+# ЛИНКОВКА QT (все с PRIVATE)
+# =============================================
+
 if (Qt6_FOUND)
-target_link_libraries(eko Qt::Core5Compat)
+    target_link_libraries(eko PRIVATE Qt::Core5Compat)
 endif()
 
-target_link_libraries(eko Qt::Widgets Qt::Core)
+target_link_libraries(eko PRIVATE Qt::Widgets Qt::Core)
+
+# =============================================
+# УСТАНОВКА
+# =============================================
 
 install (TARGETS eko DESTINATION bin)
-install (FILES ${eko_ICONPNG64} DESTINATION share/icons/hicolor/64x64/apps)
-install (FILES ${eko_DESKTOP} DESTINATION share/applications)
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    install (FILES ${eko_ICONPNG64} DESTINATION share/icons/hicolor/64x64/apps)
+    install (FILES ${eko_DESKTOP} DESTINATION share/applications)
+endif()

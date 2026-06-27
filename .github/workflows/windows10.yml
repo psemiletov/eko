@@ -1,0 +1,89 @@
+name: Windows Build with Installer
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Тип сборки'
+        required: false
+        default: 'Release'
+        type: choice
+        options:
+          - Release
+          - Debug
+      qt_version:
+        description: 'Версия Qt'
+        required: false
+        default: '6.5.3'
+        type: string
+      create_installer:
+        description: 'Создать инсталлятор Inno Setup'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ inputs.qt_version || '6.5.3' }}
+          host: 'windows'
+          arch: 'win64_msvc2019_64'
+          cache: true
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgJsonGlob: 'vcpkg.json'
+          vcpkgDirectory: '${{ runner.workspace }}/vcpkg'
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build -G "Ninja" `
+            -DCMAKE_BUILD_TYPE=${{ inputs.build_type || 'Release' }} `
+            -DCMAKE_TOOLCHAIN_FILE=${{ runner.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+      - name: Build
+        run: |
+          cmake --build build --config ${{ inputs.build_type || 'Release' }}
+
+      - name: Deploy Qt
+        run: |
+          windeployqt --release build/eko.exe
+
+      - name: Create ZIP archive
+        run: |
+          Compress-Archive -Path build\* -DestinationPath eko-win-x64-${{ inputs.build_type || 'Release' }}.zip
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: eko-win-x64-${{ inputs.build_type || 'Release' }}
+          path: eko-win-x64-${{ inputs.build_type || 'Release' }}.zip
+
+      - name: Download Inno Setup
+        if: ${{ inputs.create_installer == true }}
+        run: |
+          curl -L -o innosetup.exe https://jrsoftware.org/download.php/is.exe
+          .\innosetup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
+
+      - name: Build Inno Setup installer
+        if: ${{ inputs.create_installer == true }}
+        run: |
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+
+      - name: Upload Inno Setup installer
+        if: ${{ inputs.create_installer == true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: eko-setup-${{ inputs.build_type || 'Release' }}
+          path: eko-setup.exe

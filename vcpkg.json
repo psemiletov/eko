@@ -1,0 +1,10 @@
+json
+{
+    "name": "eko",
+    "version": "7.1.0",
+    "dependencies": [
+        "libsndfile",
+        "libsamplerate",
+        "portaudio"
+    ]
+}
