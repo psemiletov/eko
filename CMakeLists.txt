@@ -4,26 +4,18 @@ cmake_minimum_required(VERSION 3.21.1)
 # project() ДОЛЖЕН быть вызван ДО enable_language()
 project(eko VERSION 7.1.0 LANGUAGES CXX C)
 
-set(QT_MIN_VERSION "5.4.0")
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-# Добавляем путь к Qt6
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/usr/lib/x86_64-linux-gnu/cmake/Qt6")
-
-find_package(Qt6 COMPONENTS Core Widgets)
-if (NOT Qt6_FOUND)
-    find_package(Qt5 5.15 REQUIRED COMPONENTS Core Widgets)
-endif()
+# Находим Qt6 (только Core и Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 
 if (Qt6_FOUND)
     message("+ Qt6 found")
     set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
-    find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 endif()
 
 set(PROJECT "eko")
@@ -34,8 +26,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    add_definitions(-DQ_OS_UNIX)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
    add_definitions(-DQ_OS_WIN32)
-   # Для Windows используем статическую линковку CRT (опционально)
-   # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
 message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
@@ -50,7 +40,7 @@ file(GLOB eko_HEADERS "*.h")
 add_executable(eko ${eko_SRCS} ${QT_RESOURCES})
 
 # =============================================
-# ПОИСК ЗАВИСИМОСТЕЙ (универсальный)
+# ПОИСК ЗАВИСИМОСТЕЙ
 # =============================================
 
 # 1. libsndfile
@@ -67,7 +57,7 @@ else()
         target_include_directories(eko PRIVATE ${LIBSNDFILE_INCLUDE_DIRS})
         message("+ sndfile (pkg-config fallback)")
     else()
-        message(FATAL_ERROR "libsndfile not found! Install via: sudo apt install libsndfile-dev (Linux) or vcpkg install libsndfile (Windows)")
+        message(FATAL_ERROR "libsndfile not found!")
     endif()
 endif()
 
@@ -85,7 +75,7 @@ else()
         target_include_directories(eko PRIVATE ${LIBSAMPLERATE_INCLUDE_DIRS})
         message("+ samplerate (pkg-config fallback)")
     else()
-        message(FATAL_ERROR "libsamplerate not found! Install via: sudo apt install libsamplerate-dev (Linux) or vcpkg install libsamplerate (Windows)")
+        message(FATAL_ERROR "libsamplerate not found!")
     endif()
 endif()
 
@@ -103,7 +93,7 @@ else()
         target_include_directories(eko PRIVATE ${LIBPORTAUDIO_INCLUDE_DIRS})
         message("+ portaudio (pkg-config fallback)")
     else()
-        message(FATAL_ERROR "portaudio not found! Install via: sudo apt install portaudio19-dev (Linux) or vcpkg install portaudio (Windows)")
+        message(FATAL_ERROR "portaudio not found!")
     endif()
 endif()
 
@@ -130,12 +120,8 @@ if (EXISTS "/usr/include/linux/joystick.h")
 endif()
 
 # =============================================
-# ЛИНКОВКА QT (все с PRIVATE)
+# ЛИНКОВКА QT
 # =============================================
-
-#if (Qt6_FOUND)
-#    target_link_libraries(eko PRIVATE Qt::Core5Compat)
-#endif()
 
 target_link_libraries(eko PRIVATE Qt::Widgets Qt::Core)
 
