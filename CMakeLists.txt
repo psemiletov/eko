@@ -133,9 +133,9 @@ endif()
 # ЛИНКОВКА QT (все с PRIVATE)
 # =============================================
 
-if (Qt6_FOUND)
-    target_link_libraries(eko PRIVATE Qt::Core5Compat)
-endif()
+#if (Qt6_FOUND)
+#    target_link_libraries(eko PRIVATE Qt::Core5Compat)
+#endif()
 
 target_link_libraries(eko PRIVATE Qt::Widgets Qt::Core)
 
