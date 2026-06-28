@@ -9,7 +9,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-# Находим Qt6 (только Core и Widgets)
+# =============================================
+# ПОИСК QT6 (только Qt6)
+# =============================================
+
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 
 if (Qt6_FOUND)
@@ -40,60 +43,60 @@ file(GLOB eko_HEADERS "*.h")
 add_executable(eko ${eko_SRCS} ${QT_RESOURCES})
 
 # =============================================
-# ПОИСК ЗАВИСИМОСТЕЙ
+# ПОИСК ЗАВИСИМОСТЕЙ (Linux-first)
 # =============================================
 
+find_package(PkgConfig REQUIRED)
+
 # 1. libsndfile
-find_package(SndFile CONFIG QUIET)
-if (SndFile_FOUND)
-    target_link_libraries(eko PRIVATE SndFile::sndfile)
-    target_include_directories(eko PRIVATE ${SndFile_INCLUDE_DIRS})
-    message("+ sndfile (find_package CONFIG)")
+pkg_check_modules(LIBSNDFILE REQUIRED sndfile)
+if (LIBSNDFILE_FOUND)
+    target_link_libraries(eko PRIVATE ${LIBSNDFILE_LIBRARIES})
+    target_include_directories(eko PRIVATE ${LIBSNDFILE_INCLUDE_DIRS})
+    message("+ sndfile (pkg-config)")
 else()
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(LIBSNDFILE REQUIRED sndfile)
-    if (LIBSNDFILE_FOUND)
-        target_link_libraries(eko PRIVATE ${LIBSNDFILE_LIBRARIES})
-        target_include_directories(eko PRIVATE ${LIBSNDFILE_INCLUDE_DIRS})
-        message("+ sndfile (pkg-config fallback)")
+    # Fallback для Windows (Vcpkg)
+    find_package(SndFile CONFIG QUIET)
+    if (SndFile_FOUND)
+        target_link_libraries(eko PRIVATE SndFile::sndfile)
+        target_include_directories(eko PRIVATE ${SndFile_INCLUDE_DIRS})
+        message("+ sndfile (find_package CONFIG)")
     else()
-        message(FATAL_ERROR "libsndfile not found!")
+        message(FATAL_ERROR "libsndfile not found! Install via: sudo apt install libsndfile-dev (Linux) or vcpkg install libsndfile (Windows)")
     endif()
 endif()
 
 # 2. libsamplerate
-find_package(Samplerate CONFIG QUIET)
-if (Samplerate_FOUND)
-    target_link_libraries(eko PRIVATE Samplerate::samplerate)
-    target_include_directories(eko PRIVATE ${Samplerate_INCLUDE_DIRS})
-    message("+ samplerate (find_package CONFIG)")
+pkg_check_modules(LIBSAMPLERATE REQUIRED samplerate)
+if (LIBSAMPLERATE_FOUND)
+    target_link_libraries(eko PRIVATE ${LIBSAMPLERATE_LIBRARIES})
+    target_include_directories(eko PRIVATE ${LIBSAMPLERATE_INCLUDE_DIRS})
+    message("+ samplerate (pkg-config)")
 else()
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(LIBSAMPLERATE REQUIRED samplerate)
-    if (LIBSAMPLERATE_FOUND)
-        target_link_libraries(eko PRIVATE ${LIBSAMPLERATE_LIBRARIES})
-        target_include_directories(eko PRIVATE ${LIBSAMPLERATE_INCLUDE_DIRS})
-        message("+ samplerate (pkg-config fallback)")
+    find_package(SampleRate CONFIG QUIET)
+    if (SampleRate_FOUND)
+        target_link_libraries(eko PRIVATE SampleRate::samplerate)
+        target_include_directories(eko PRIVATE ${SampleRate_INCLUDE_DIRS})
+        message("+ samplerate (find_package CONFIG)")
     else()
-        message(FATAL_ERROR "libsamplerate not found!")
+        message(FATAL_ERROR "libsamplerate not found! Install via: sudo apt install libsamplerate-dev (Linux) or vcpkg install libsamplerate (Windows)")
     endif()
 endif()
 
 # 3. PortAudio
-find_package(PortAudio CONFIG QUIET)
-if (PortAudio_FOUND)
-    target_link_libraries(eko PRIVATE PortAudio::portaudio)
-    target_include_directories(eko PRIVATE ${PortAudio_INCLUDE_DIRS})
-    message("+ portaudio (find_package CONFIG)")
+pkg_check_modules(LIBPORTAUDIO REQUIRED portaudio-2.0)
+if (LIBPORTAUDIO_FOUND)
+    target_link_libraries(eko PRIVATE ${LIBPORTAUDIO_LIBRARIES})
+    target_include_directories(eko PRIVATE ${LIBPORTAUDIO_INCLUDE_DIRS})
+    message("+ portaudio (pkg-config)")
 else()
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(LIBPORTAUDIO REQUIRED portaudio-2.0)
-    if (LIBPORTAUDIO_FOUND)
-        target_link_libraries(eko PRIVATE ${LIBPORTAUDIO_LIBRARIES})
-        target_include_directories(eko PRIVATE ${LIBPORTAUDIO_INCLUDE_DIRS})
-        message("+ portaudio (pkg-config fallback)")
+    find_package(portaudio CONFIG QUIET)
+    if (portaudio_FOUND)
+        target_link_libraries(eko PRIVATE portaudio)
+        target_include_directories(eko PRIVATE ${portaudio_INCLUDE_DIRS})
+        message("+ portaudio (find_package CONFIG)")
     else()
-        message(FATAL_ERROR "portaudio not found!")
+        message(FATAL_ERROR "portaudio not found! Install via: sudo apt install portaudio19-dev (Linux) or vcpkg install portaudio (Windows)")
     endif()
 endif()
 
@@ -120,7 +123,7 @@ if (EXISTS "/usr/include/linux/joystick.h")
 endif()
 
 # =============================================
-# ЛИНКОВКА QT
+# ЛИНКОВКА QT6
 # =============================================
 
 target_link_libraries(eko PRIVATE Qt::Widgets Qt::Core)

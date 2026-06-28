@@ -9,12 +9,18 @@ Peter Semiletov
 #include <QDir>
 #include <QImageReader>
 #include <QImage>
-#include <QTextCodec>
+//#include <QTextCodec>
 #include <QByteArray>
 #include <QMap>
 
 #include "gui_utils.h"
 #include "utils.h"
+
+
+
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
 
 
 QString qstring_clear (const QString &s)
@@ -49,32 +55,38 @@ bool qstring_save (const QString &fileName, const QString &data)
 }
 
 /*
-QString string_between (const QString &source,
-                        const QString &sep1,
-                        const QString &sep2)
-{
-  QString result;
-  int pos1 = source.indexOf (sep1);
-  if (pos1 == -1)
-     return result;
-
-  int pos2 = source.indexOf (sep2, pos1 + sep1.size());
-  if (pos2 == -1)
-     return result;
-
-  pos1 += sep1.size();
-
-  result = source.mid (pos1, pos2 - pos1);
-  return result;
-}
-*/
-
 QString str_from_locale (const char *s)
 {
   QTextCodec *cd = QTextCodec::codecForLocale();
   QByteArray encodedString = s;
 
   return cd->toUnicode(encodedString);
+}
+*/
+
+
+QString str_from_locale(const char *s)
+{
+  if (!s || *s == '\0')
+    return QString();
+
+  #ifdef Q_OS_WIN
+  // Используем Windows API для преобразования из ANSI (системная кодировка)
+  // CP_ACP = текущая ANSI-кодировка системы (Windows-1251 для русской Windows)
+  int len = MultiByteToWideChar(CP_ACP, 0, s, -1, NULL, 0);
+  if (len > 0)
+  {
+    wchar_t *wide = new wchar_t[len];
+    MultiByteToWideChar(CP_ACP, 0, s, -1, wide, len);
+    QString result = QString::fromWCharArray(wide);
+    delete[] wide;
+    return result;
+  }
+  return QString::fromLatin1(s);
+  #else
+  // Linux/Unix: просто UTF-8
+  return QString::fromUtf8(s);
+  #endif
 }
 
 
