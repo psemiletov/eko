@@ -14,7 +14,7 @@ on:
       qt_version:
         description: 'Версия Qt'
         required: false
-        default: '6.5.3'
+        default: '6.7.2'
         type: string
       create_installer:
         description: 'Создать инсталлятор Inno Setup'
@@ -37,12 +37,12 @@ jobs:
         with:
           arch: x64
 
-      - name: Install Qt (MSVC version)
+      - name: Install Qt (MSVC 2022 version)
         uses: jurplel/install-qt-action@v4
         with:
-          version: ${{ inputs.qt_version || '6.5.3' }}
+          version: ${{ inputs.qt_version || '6.7.2' }}
           host: 'windows'
-          arch: 'win64_msvc2019_64'
+          arch: 'win64_msvc2022_64'
           cache: true
 
       - name: Add vcpkg to PATH
