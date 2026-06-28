@@ -32,81 +32,27 @@ jobs:
         with:
           arch: x64
 
-      - name: Find and setup Qt
+      - name: Install Qt via Chocolatey
         run: |
-          # Ищем Qt в стандартных местах на GitHub Actions
-          $qtPaths = @()
-
-          # Проверяем C:\Qt (обычно тут устанавливается Qt)
-          if (Test-Path "C:\Qt") {
-            $qtPaths += Get-ChildItem -Path "C:\Qt" -Directory | Where-Object {
-              (Test-Path "$($_.FullName)\msvc2019_64\bin\qmake.exe") -or
-              (Test-Path "$($_.FullName)\msvc2022_64\bin\qmake.exe")
-            }
-          }
-
-          # Проверяем C:\hostedtoolcache\windows\Qt
-          if (Test-Path "C:\hostedtoolcache\windows\Qt") {
-            $qtPaths += Get-ChildItem -Path "C:\hostedtoolcache\windows\Qt" -Directory | Where-Object {
-              (Test-Path "$($_.FullName)\msvc2019_64\bin\qmake.exe") -or
-              (Test-Path "$($_.FullName)\msvc2022_64\bin\qmake.exe")
-            }
-          }
-
-          if ($qtPaths.Count -gt 0) {
-            # Сортируем по версии и берём самую новую
-            $qtPath = $qtPaths | Sort-Object Name -Descending | Select-Object -First 1
-
-            # Определяем архитектуру
-            if (Test-Path "$($qtPath.FullName)\msvc2022_64\bin\qmake.exe") {
-              $qtArch = "msvc2022_64"
-            } elseif (Test-Path "$($qtPath.FullName)\msvc2019_64\bin\qmake.exe") {
-              $qtArch = "msvc2019_64"
-            } else {
-              Write-Host "ERROR: No valid Qt architecture found!"
-              exit 1
-            }
-
-            $qtFullPath = "$($qtPath.FullName)\$qtArch"
-            Write-Host "Found Qt at: $qtFullPath"
-
-            # Устанавливаем переменные для CMake
-            $qtCMakePath = "$qtFullPath\lib\cmake\Qt6"
-            if (Test-Path $qtCMakePath) {
-              echo "Qt6_DIR=$qtCMakePath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-              Write-Host "Qt6_DIR set to: $qtCMakePath"
-            } else {
-              Write-Host "WARNING: Qt6 CMake config not found at $qtCMakePath"
-            }
-
-            # Добавляем bin в PATH
-            echo "$qtFullPath\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-            echo "CMAKE_PREFIX_PATH=$qtFullPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
-            Write-Host "Qt setup completed successfully!"
-          } else {
-            Write-Host "ERROR: Qt not found!"
-            Write-Host "Available directories in C:\Qt:"
-            if (Test-Path "C:\Qt") {
-              dir C:\Qt
-            }
-            exit 1
-          }
+          choco install qt6 --version=6.6.3 --force --no-progress
+          echo "C:\Qt\6.6.3\msvc2022_64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "Qt6_DIR=C:\Qt\6.6.3\msvc2022_64\lib\cmake\Qt6" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "CMAKE_PREFIX_PATH=C:\Qt\6.6.3\msvc2022_64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Add vcpkg to PATH
         run: |
           echo "C:\vcpkg" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Install vcpkg dependencies (from vcpkg.json)
+      - name: Install vcpkg dependencies
         run: |
           vcpkg install --triplet x64-windows
 
-      - name: Configure CMake with MSVC
+      - name: Configure CMake
         run: |
           cmake -S . -B build -G "Ninja" `
             -DCMAKE_BUILD_TYPE=${{ inputs.build_type || 'Release' }} `
             -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
-            -DCMAKE_PREFIX_PATH="$env:CMAKE_PREFIX_PATH"
+            -DCMAKE_PREFIX_PATH=C:/Qt/6.6.3/msvc2022_64
 
       - name: Build
         run: |
