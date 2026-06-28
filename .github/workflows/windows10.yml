@@ -32,13 +32,49 @@ jobs:
         with:
           arch: x64
 
-      - name: Use preinstalled Qt
+      - name: Find and setup Qt
         run: |
-          # Добавляем Qt в PATH для CMake
-          echo "C:\Qt\6.6.3\msvc2022_64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          echo "C:\Qt\6.6.3\msvc2022_64\lib\cmake" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          # Устанавливаем CMAKE_PREFIX_PATH
-          echo "CMAKE_PREFIX_PATH=C:\Qt\6.6.3\msvc2022_64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          # Ищем все установленные Qt версии
+          $qtRoot = "C:\Qt"
+          $qtPaths = Get-ChildItem -Path $qtRoot -Directory -Recurse -Depth 2 | Where-Object {
+            $_.Name -match 'msvc' -and (Test-Path "$($_.FullName)\bin\qmake.exe")
+          }
+
+          # Сортируем по версии (выбираем самую новую)
+          $qtPaths = $qtPaths | Sort-Object {
+            [version]($_.Name -replace 'msvc.*', '' -replace '_.*', '')
+          } -Descending
+
+          $qtPath = $qtPaths | Select-Object -First 1
+
+          if ($qtPath) {
+            Write-Host "Found Qt at: $($qtPath.FullName)"
+            $qtVersion = Split-Path -Path $qtPath.FullName -Parent | Split-Path -Leaf
+            Write-Host "Qt Version: $qtVersion"
+
+            # Проверяем наличие CMake конфигов
+            $qtCMakePath = "$($qtPath.FullName)\lib\cmake\Qt6"
+            if (Test-Path $qtCMakePath) {
+              Write-Host "Qt6 CMake config found at: $qtCMakePath"
+              echo "Qt6_DIR=$qtCMakePath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            } else {
+              Write-Host "WARNING: Qt6 CMake config not found!"
+              # Пробуем альтернативный путь
+              $qtCMakePath = "$($qtPath.FullName)\lib\cmake\Qt6"
+              if (Test-Path $qtCMakePath) {
+                echo "Qt6_DIR=$qtCMakePath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+              }
+            }
+
+            # Добавляем bin в PATH для windeployqt
+            echo "$($qtPath.FullName)\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+            # Устанавливаем CMAKE_PREFIX_PATH
+            echo "CMAKE_PREFIX_PATH=$($qtPath.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          } else {
+            Write-Host "ERROR: No Qt installation found!"
+            exit 1
+          }
 
       - name: Add vcpkg to PATH
         run: |
@@ -53,7 +89,7 @@ jobs:
           cmake -S . -B build -G "Ninja" `
             -DCMAKE_BUILD_TYPE=${{ inputs.build_type || 'Release' }} `
             -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
-            -DCMAKE_PREFIX_PATH=C:/Qt/6.6.3/msvc2022_64
+            -DCMAKE_PREFIX_PATH="$env:CMAKE_PREFIX_PATH"
 
       - name: Build
         run: |
