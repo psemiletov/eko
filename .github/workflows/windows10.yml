@@ -42,18 +42,16 @@ jobs:
         with:
           version: ${{ inputs.qt_version || '6.5.3' }}
           host: 'windows'
-          arch: 'win64_msvc2019_64'  # MSVC, не MinGW
+          arch: 'win64_msvc2019_64'
           cache: true
 
       - name: Add vcpkg to PATH
         run: |
           echo "C:\vcpkg" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Install vcpkg dependencies (MSVC triplet)
+      - name: Install vcpkg dependencies (from vcpkg.json)
         run: |
-          vcpkg install libsndfile:x64-windows
-          vcpkg install libsamplerate:x64-windows
-          vcpkg install portaudio:x64-windows
+          vcpkg install --triplet x64-windows
 
       - name: Configure CMake with MSVC
         run: |
