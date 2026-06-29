@@ -31,7 +31,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
    add_definitions(-DQ_OS_WIN32)
 
    # =============================================
-   # ИСПРАВЛЕНИЯ ДЛЯ MSVC + Qt 6.x
+   # ИСПРАВЛЕНИЯ ДЛЯ WINDOWS
    # =============================================
    add_compile_definitions(_HAS_STD_BYTE=0)
    add_compile_definitions(_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
@@ -39,11 +39,13 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
    add_compile_definitions(_ENABLE_EXTENDED_ALIGNED_STORAGE)
    add_compile_definitions(_HAS_FEATURES_ANALYSIS=0)
 
-   # Добавляем флаги компилятора для совместимости
-   add_compile_options(/std:c++17)
-   add_compile_options(/Zc:__cplusplus)
-   add_compile_options(/Zc:preprocessor-)
-   add_compile_options(/permissive-)
+   # Флаги компилятора ТОЛЬКО для MSVC
+   if (MSVC)
+       add_compile_options(/std:c++17)
+       add_compile_options(/Zc:__cplusplus)
+       add_compile_options(/Zc:preprocessor-)
+       add_compile_options(/permissive-)
+   endif()
 endif()
 
 message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
