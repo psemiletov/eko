@@ -33,7 +33,10 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
    # =============================================
    # ИСПРАВЛЕНИЯ ДЛЯ WINDOWS
    # =============================================
-   add_compile_definitions(_HAS_STD_BYTE=0)
+   # _HAS_STD_BYTE=0 НЕЛЬЗЯ использовать с Qt6!
+   # Qt6 требует std::byte, поэтому убираем это определение
+
+   # Эти определения безопасны для всех компиляторов:
    add_compile_definitions(_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
    add_compile_definitions(_ENABLE_EXTENDED_ALIGNED_STORAGE)
