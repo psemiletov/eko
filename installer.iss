@@ -15,8 +15,7 @@ Compression=lzma2
 SolidCompression=yes
 OutputDir=.
 OutputBaseFilename=eko-setup
-; Убираем иконку установщика, чтобы избежать ошибки
-; SetupIconFile=icons\eko.ico
+SetupIconFile=icons\eko.ico
 WizardStyle=modern
 PrivilegesRequired=admin
 AllowNoIcons=yes
@@ -31,7 +30,8 @@ Source: "installer_files\*.dll"; DestDir: "{app}"; Flags: recursesubdirs
 Source: "installer_files\platforms\*"; DestDir: "{app}\platforms"
 Source: "installer_files\styles\*"; DestDir: "{app}\styles"
 Source: "installer_files\imageformats\*"; DestDir: "{app}\imageformats"
-Source: "installer_files\iconengines\*"; DestDir: "{app}\iconengines"
+; iconengines обычно не нужен для простого приложения
+; Source: "installer_files\iconengines\*"; DestDir: "{app}\iconengines"
 
 [Icons]
 Name: "{group}\EKO"; Filename: "{app}\eko.exe"; WorkingDir: "{app}"
