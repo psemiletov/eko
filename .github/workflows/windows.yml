@@ -1,0 +1,106 @@
+name: Windows Build (MinGW-w64)
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Тип сборки'
+        required: false
+        default: 'Release'
+        type: choice
+        options:
+          - Release
+          - Debug
+      create_installer:
+        description: 'Создать инсталлятор Inno Setup'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup MinGW-w64
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: |
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-qt6-base
+            mingw-w64-ucrt-x86_64-qt6-tools
+            mingw-w64-ucrt-x86_64-libsndfile
+            mingw-w64-ucrt-x86_64-libsamplerate
+            mingw-w64-ucrt-x86_64-portaudio
+
+      - name: Build with MSYS2
+        shell: msys2 {0}
+        run: |
+          # Настройка окружения
+          export PATH=/ucrt64/bin:$PATH
+
+          # Создаём директорию для сборки
+          mkdir -p build
+          cd build
+
+          # Конфигурируем CMake
+          cmake .. -G "Ninja" \
+            -DCMAKE_BUILD_TYPE=${{ inputs.build_type || 'Release' }} \
+            -DCMAKE_INSTALL_PREFIX=/usr/local \
+            -DCMAKE_CXX_STANDARD=17 \
+            -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+            -DQT_QMAKE_EXECUTABLE=/ucrt64/bin/qmake.exe
+
+          # Сборка
+          ninja
+
+      - name: Deploy Qt (windeployqt)
+        shell: msys2 {0}
+        run: |
+          cd build
+          windeployqt --release eko.exe
+
+      - name: Create ZIP archive
+        shell: msys2 {0}
+        run: |
+          cd build
+          zip -r eko-win-x64-${{ inputs.build_type || 'Release' }}.zip eko.exe *.dll
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: eko-win-x64-${{ inputs.build_type || 'Release' }}
+          path: build/eko-win-x64-${{ inputs.build_type || 'Release' }}.zip
+
+      - name: Download Inno Setup
+        if: ${{ inputs.create_installer == true }}
+        run: |
+          curl -L -o innosetup.exe https://jrsoftware.org/download.php/is.exe
+          .\innosetup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
+
+      - name: Build Inno Setup installer
+        if: ${{ inputs.create_installer == true }}
+        shell: msys2 {0}
+        run: |
+          # Копируем собранные файлы в отдельную папку для установщика
+          mkdir -p installer_files
+          cp -r build/* installer_files/
+
+          # Запускаем Inno Setup (нужно добавить путь к ISCC)
+          "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" installer.iss
+
+      - name: Upload Inno Setup installer
+        if: ${{ inputs.create_installer == true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: eko-setup-${{ inputs.build_type || 'Release' }}
+          path: eko-setup.exe

@@ -1,5 +1,5 @@
 ; installer.iss
-; Inno Setup Script for EKO Audio Editor
+; Inno Setup Script for EKO Audio Editor (MinGW build)
 
 [Setup]
 AppName=EKO
@@ -25,13 +25,12 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 
 [Files]
-Source: "build\eko.exe"; DestDir: "{app}"
-Source: "build\*.dll"; DestDir: "{app}"; Flags: recursesubdirs
-Source: "build\platforms\*"; DestDir: "{app}\platforms"
-Source: "build\styles\*"; DestDir: "{app}\styles"
-Source: "build\imageformats\*"; DestDir: "{app}\imageformats"
-Source: "build\iconengines\*"; DestDir: "{app}\iconengines"
-Source: "build\audio\*"; DestDir: "{app}\audio"
+Source: "installer_files\eko.exe"; DestDir: "{app}"
+Source: "installer_files\*.dll"; DestDir: "{app}"; Flags: recursesubdirs
+Source: "installer_files\platforms\*"; DestDir: "{app}\platforms"
+Source: "installer_files\styles\*"; DestDir: "{app}\styles"
+Source: "installer_files\imageformats\*"; DestDir: "{app}\imageformats"
+Source: "installer_files\iconengines\*"; DestDir: "{app}\iconengines"
 
 [Icons]
 Name: "{group}\EKO"; Filename: "{app}\eko.exe"; WorkingDir: "{app}"
