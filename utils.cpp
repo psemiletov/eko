@@ -4,8 +4,8 @@ Peter Semiletov
 */
 
 
-#include <QTextStream>
 #include <QDebug>
+#include <QTextStream>
 #include <QDir>
 #include <QImageReader>
 #include <QImage>
@@ -64,18 +64,16 @@ QString str_from_locale (const char *s)
 }
 */
 
-
+// utils.cpp или где у вас определена функция
 QString str_from_locale(const char *s)
 {
   if (!s || *s == '\0')
     return QString();
 
   #ifdef Q_OS_WIN
-  // Используем Windows API для преобразования из ANSI (системная кодировка)
-  // CP_ACP = текущая ANSI-кодировка системы (Windows-1251 для русской Windows)
+  // На Windows: используем системную кодировку
   int len = MultiByteToWideChar(CP_ACP, 0, s, -1, NULL, 0);
-  if (len > 0)
-  {
+  if (len > 0) {
     wchar_t *wide = new wchar_t[len];
     MultiByteToWideChar(CP_ACP, 0, s, -1, wide, len);
     QString result = QString::fromWCharArray(wide);
@@ -84,11 +82,15 @@ QString str_from_locale(const char *s)
   }
   return QString::fromLatin1(s);
   #else
-  // Linux/Unix: просто UTF-8
-  return QString::fromUtf8(s);
+  // Linux/Unix: пробуем UTF-8, затем системную локаль
+  QString result = QString::fromUtf8(s);
+  if (result.isEmpty() && *s != '\0') {
+    // Если UTF-8 не сработал, пробуем Latin1
+    result = QString::fromLatin1(s);
+  }
+  return result;
   #endif
 }
-
 
 QString get_value_with_default (const QString &val, const QString &def)
 {
