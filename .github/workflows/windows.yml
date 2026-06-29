@@ -45,32 +45,43 @@ jobs:
       - name: Build with MSYS2
         shell: msys2 {0}
         run: |
-          # Настройка окружения
           export PATH=/ucrt64/bin:$PATH
-
-          # Создаём директорию для сборки
           mkdir -p build
           cd build
-
-          # Конфигурируем CMake
           cmake .. -G "Ninja" \
             -DCMAKE_BUILD_TYPE=${{ inputs.build_type || 'Release' }} \
             -DCMAKE_INSTALL_PREFIX=/ucrt64 \
             -DCMAKE_CXX_STANDARD=17 \
             -DCMAKE_CXX_STANDARD_REQUIRED=ON
-
-          # Сборка
           ninja
 
-      - name: Deploy Qt and prepare installer files
+      - name: Deploy Qt
         shell: msys2 {0}
         run: |
           cd build
           windeployqt --release eko.exe
 
+      - name: Prepare installer files
+        shell: msys2 {0}
+        run: |
           # Создаём папку для установщика
           mkdir -p installer_files
-          cp -r eko.exe *.dll platforms styles imageformats iconengines installer_files/ 2>/dev/null || true
+
+          # Копируем EXE и все DLL
+          cp build/eko.exe installer_files/
+          cp build/*.dll installer_files/ 2>/dev/null || true
+
+          # Копируем папки с плагинами Qt
+          cp -r build/platforms installer_files/ 2>/dev/null || true
+          cp -r build/styles installer_files/ 2>/dev/null || true
+          cp -r build/imageformats installer_files/ 2>/dev/null || true
+          cp -r build/iconengines installer_files/ 2>/dev/null || true
+
+          # Создаём папку, если её нет (для Inno Setup)
+          mkdir -p installer_files/platforms
+          mkdir -p installer_files/styles
+          mkdir -p installer_files/imageformats
+          mkdir -p installer_files/iconengines
 
       - name: Download Inno Setup
         if: ${{ inputs.create_installer == true }}
@@ -82,10 +93,6 @@ jobs:
         if: ${{ inputs.create_installer == true }}
         shell: msys2 {0}
         run: |
-          # Копируем собранные файлы в папку для установщика
-          cp -r build/installer_files/* installer_files/
-
-          # Запускаем Inno Setup
           "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" installer.iss
 
       - name: Upload Inno Setup installer
