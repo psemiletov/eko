@@ -29,6 +29,12 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
    add_definitions(-DQ_OS_UNIX)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
    add_definitions(-DQ_OS_WIN32)
+
+   # =============================================
+   # ИСПРАВЛЕНИЕ ДЛЯ MSVC + Qt 6.5.3
+   # =============================================
+   add_compile_definitions(_HAS_STD_BYTE=0)
+   add_compile_definitions(_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
 endif()
 
 message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
