@@ -15,7 +15,8 @@ Compression=lzma2
 SolidCompression=yes
 OutputDir=.
 OutputBaseFilename=eko-setup
-SetupIconFile=icons\eko.ico
+; Убираем иконку установщика, чтобы избежать ошибки
+; SetupIconFile=icons\eko.ico
 WizardStyle=modern
 PrivilegesRequired=admin
 AllowNoIcons=yes
