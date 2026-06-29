@@ -65,31 +65,22 @@ QString str_from_locale (const char *s)
 */
 
 // utils.cpp или где у вас определена функция
+
+
 QString str_from_locale(const char *s)
 {
   if (!s || *s == '\0')
     return QString();
 
-  #ifdef Q_OS_WIN
-  // На Windows: используем системную кодировку
-  int len = MultiByteToWideChar(CP_ACP, 0, s, -1, NULL, 0);
-  if (len > 0) {
-    wchar_t *wide = new wchar_t[len];
-    MultiByteToWideChar(CP_ACP, 0, s, -1, wide, len);
-    QString result = QString::fromWCharArray(wide);
-    delete[] wide;
-    return result;
-  }
-  return QString::fromLatin1(s);
-  #else
-  // Linux/Unix: пробуем UTF-8, затем системную локаль
-  QString result = QString::fromUtf8(s);
-  if (result.isEmpty() && *s != '\0') {
-    // Если UTF-8 не сработал, пробуем Latin1
-    result = QString::fromLatin1(s);
-  }
-  return result;
-  #endif
+  QByteArray ba(s);                      // сохраняем исходные байты
+  QString utf8 = QString::fromUtf8(ba);  // пробуем UTF-8
+
+  // Если при обратном преобразовании получаем те же байты — это корректный UTF-8
+  if (!utf8.isEmpty() && utf8.toUtf8() == ba)
+    return utf8;
+
+  // Иначе считаем, что строка в локальной 8-битной кодировке (ANSI/CP on Windows, locale on Unix)
+  return QString::fromLocal8Bit(ba);
 }
 
 QString get_value_with_default (const QString &val, const QString &def)
