@@ -55,31 +55,22 @@ jobs:
           # Конфигурируем CMake
           cmake .. -G "Ninja" \
             -DCMAKE_BUILD_TYPE=${{ inputs.build_type || 'Release' }} \
-            -DCMAKE_INSTALL_PREFIX=/usr/local \
+            -DCMAKE_INSTALL_PREFIX=/ucrt64 \
             -DCMAKE_CXX_STANDARD=17 \
-            -DCMAKE_CXX_STANDARD_REQUIRED=ON \
-            -DQT_QMAKE_EXECUTABLE=/ucrt64/bin/qmake.exe
+            -DCMAKE_CXX_STANDARD_REQUIRED=ON
 
           # Сборка
           ninja
 
-      - name: Deploy Qt (windeployqt)
+      - name: Deploy Qt and prepare installer files
         shell: msys2 {0}
         run: |
           cd build
           windeployqt --release eko.exe
 
-      - name: Create ZIP archive
-        shell: msys2 {0}
-        run: |
-          cd build
-          zip -r eko-win-x64-${{ inputs.build_type || 'Release' }}.zip eko.exe *.dll
-
-      - name: Upload ZIP artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: eko-win-x64-${{ inputs.build_type || 'Release' }}
-          path: build/eko-win-x64-${{ inputs.build_type || 'Release' }}.zip
+          # Создаём папку для установщика
+          mkdir -p installer_files
+          cp -r eko.exe *.dll platforms styles imageformats iconengines installer_files/ 2>/dev/null || true
 
       - name: Download Inno Setup
         if: ${{ inputs.create_installer == true }}
@@ -91,11 +82,10 @@ jobs:
         if: ${{ inputs.create_installer == true }}
         shell: msys2 {0}
         run: |
-          # Копируем собранные файлы в отдельную папку для установщика
-          mkdir -p installer_files
-          cp -r build/* installer_files/
+          # Копируем собранные файлы в папку для установщика
+          cp -r build/installer_files/* installer_files/
 
-          # Запускаем Inno Setup (нужно добавить путь к ISCC)
+          # Запускаем Inno Setup
           "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" installer.iss
 
       - name: Upload Inno Setup installer
