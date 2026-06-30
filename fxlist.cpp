@@ -21,12 +21,12 @@ CFxList::CFxList()
 
 
   classnames["CFxSimpleAmp"] = CFxSimpleAmp::create_self;
-  classnames["CFxSimpleOverdrive"] = CFxSimpleOverdrive::create_self;
+  //classnames["CFxSimpleOverdrive"] = CFxSimpleOverdrive::create_self;
   classnames["CFxDelay"] = CFxDelay::create_self;
-  classnames["CFxSimpleFilter"] = CFxSimpleFilter::create_self;
+  //classnames["CFxSimpleFilter"] = CFxSimpleFilter::create_self;
   classnames["CFxVynil"] = CFxVynil::create_self;
-  classnames["CFxMetaluga"] = CFxMetaluga::create_self;
-  classnames["CFxJest"] = CFxJest::create_self;
+  //classnames["CFxMetaluga"] = CFxMetaluga::create_self;
+  //classnames["CFxJest"] = CFxJest::create_self;
   
 }
 

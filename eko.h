@@ -600,7 +600,7 @@ public slots:
 
 };
 
-
+/*
 class CApplication: public QApplication
 {
   Q_OBJECT
@@ -612,6 +612,6 @@ public:
 
   void saveState (QSessionManager &manager);
 };
-
+*/
 
 #endif

@@ -2616,12 +2616,12 @@ void CEKO::dropEvent (QDropEvent *event)
   event->acceptProposedAction();
 }
 
-
+/*
 void CApplication::saveState (QSessionManager &manager)
 {
   manager.setRestartHint (QSessionManager::RestartIfRunning);
 }
-
+*/
 
 void CEKO::nav_goto_right_tab()
 {
