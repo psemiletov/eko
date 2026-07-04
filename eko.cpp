@@ -5763,14 +5763,14 @@ void CEKO::help_system_check()
   else
       log->log (tr ("FFMPEG is installed, video files and MP3 import: enabled"));
 
-
+/*
   if (! is_app_installed ("mplayer.exe"))
      {
       log->log (tr ("Mplayer is not installed"));
      }
   else
       log->log (tr ("Mplayer is installed, video files and MP3 import: enabled"));
-
+*/
 #else
 
 
@@ -5781,14 +5781,14 @@ void CEKO::help_system_check()
   else
       log->log (tr ("FFMPEG is installed, video files and MP3 import: enabled"));
 
-
+/*
   if (! is_app_installed ("mplayer"))
      {
       log->log (tr ("Mplayer is not installed"));
      }
   else
       log->log (tr ("Mplayer is installed, video files and MP3 import: enabled"));
-
+*/
 #endif
 
   CDocument *d = documents->get_current();
@@ -5816,9 +5816,6 @@ void CEKO::help_system_check()
          }
      }
 }
-
-
-
 
 
 
@@ -5989,7 +5986,7 @@ void CEKO::cb_zoom_to_selection()
 
 
 
-void CEKO::slot_open_files_from_args(const QStringList &messages)
+void CEKO::slot_open_files_from_args (const QStringList &messages)
 {
   // Открываем каждый переданный файл
   for (const QString &filePath : messages)

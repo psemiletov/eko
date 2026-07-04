@@ -1,295 +1,65 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<link href="eko.css" rel="stylesheet" type="text/css">
-
-<title>EKO</title>
-
-<script data-ad-client="ca-pub-9989349988088827" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EKO — Sound Editor</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<h1>EKO: звуковой редактор / audio editor</h1>
-
-<hr>
-
-<p style="text-align:center;"><a href="#about">О программе/About</a> - <a href="#downloads">Скачать/Download</a> - 
-<a href="https://github.com/psemiletov/eko">Github</a> - 
-<a href="#donate">Поддержать/Donate</a><hr></p>
-
-<a id="news"></a>
-
-<table>
-
-<tr>
-
-<td class="table_top_cell">
-<h3>Новости:</h3>
-
-
-<p><b>8 марта 2024</b> - выпущена 
-<a href="#downloads">версия 7.1.0</a>. Важные исправления для Qt6.</p>
-
-<p><b>20 января 2022</b> - выпущена 
-<a href="#downloads">версия 7.0.0</a>. Эко портирован на Qt6.</p>
-
-
-<p><b>23 мая 2019</b> - выпущена 
-<a href="#downloads">версия 6.0.0</a>.    После двухлетнего перерыва - шестая версия, призванная стать надежной основой для дальнейшего развития программы. Исправлена подсистема ввода-вывода, добавлено меню Масштаб, много чего еще исправлено.
-</p>
-
-
-<p><b>8 марта 2017</b> - выпущена 
-<a href="#downloads">версия 5.3.3</a>.  Добавлена настройка ресэмплера на страницу Наладки - Общие. Вместо режима "только чтение" для форматов, сохранять в которые Эко не умеет, теперь при попытке сохранить - сохраняется в ВАВ. Для скачивания доступны исходник, AppImage и сборка для Windows.
-</p>
-
-
-<p><b>5 марта 2017</b> - выпущена 
-<a href="#downloads">версия 5.3.2</a>. Исправлено сохранение в выбранном формате, ускорен ресэмплер. Для скачивания доступны исходник, AppImage и сборка для Windows.
-</p>
-
-<p><b>27 февраля 2017</b> - выложен AppImage EKO, версия из гитхаба. Вот <a href="https://transfer.sh/LnsGe/eko-git.84cbdfd-x86-64.appimage">откуда скачать</a>.</p>
-
-
-<p><b>20 января 2017</b> - выложен EKO 5.3.1. Вот <a href="./dloads/eko-5.3.1.tar.bz2">исходник</a>, который снова стал компилироваться под Qt4.</p>
-
-<p><b>27 сентября 2016</b> - выложен EKO 5.3.0. Вот <a href="./dloads/eko-5.3.0.tar.bz2">исходник</a>, а вот <a href="./dloads/eko-5.3.0-qt5-install.exe">сборка под Windows</a>. В этой версии подправлен интерфейс Настроек, чтобы лучше выглядеть при низких разрешениях экрана. Небольшие изменения в названиях вкладок справа.</p>
-
-
-<p><b>22 июня 2016</b> - выложен EKO 5.2.0. Вот <a href="./dloads/eko-5.2.0.tar.bz2">исходник</a>, а вот <a href="./dloads/eko-5.2.0-qt5-install.exe">сборка под Windows</a>. В этой версии - исправления ошибок, связанных с обработкой отдельных каналов. Также добавлены некоторые красивости, например волновая форма пустого нового файла теперь выглядит как перечеркнутый прямоугольник.</p>
-
-<p><b>13 апреля 2016</b> - выложен EKO 5.1.0. Вот <a href="./dloads/eko-5.1.0.tar.bz2">исходник</a>, а вот <a href="./dloads/eko-5.1.0-qt5-install.exe">сборка под Windows</a>. В этой версии - механизм пресетов для эффектов, а также новый эффект - Вкус винила - эмулирующий шум и царапины виниловой пластинки.</p>
-
-<p><b>15 января 2016</b> - выпущен EKO 5.0.0. Вот <a href="./dloads/eko-5.0.0.tar.bz2">исходник</a>, а вот <a href="./dloads/eko-5.0.0-qt5-install.exe">сборка под Windows</a>.</p>
-
-<p>  Пятая версия. Я снова переписал программу почти с нуля, но пользователям это не должно быть заметно. Изменения больше внутренние, потому что часть исходного кода Эко используется теперь в исходнике моего нового проекта, минималистической DAW Wavylon (Вавилон).</p>
-<p>   А что же нового для пользователя? Более надёжная работа всей программы. Несколько новых эффектов реального времени - фильтр, задержка, и две гитарные примочки (Жесть и Металюга), которые разработаны более для Вавилона, нежели для Эко. 
-</p><p>   Основные изменения в Эко произошли внутри и позволят мне развивать редактор дальше.
-</p>
-
-<p><b>6 ноября 2015</b> - выпущен EKO 4.0.0. Вот <a href="./dloads/eko-4.0.0.tar.bz2">исходник</a>, а вот <a href="./dloads/eko-4.0.0-qt5-install.exe">сборка под Windows</a>.</p>
-
-<p>  Ой-ой-ой! Он снова выложил новую "большую" версию! Что же? </p>
-<p>   В ней я исправил ошибок больше, чем звезд на небе. Так стыдно за них! В коде выделения областей, обработки каналов более двух, да много было.
-</p><p>   Функция нормализации звука теперь принимает параметр, можно задать децибелы. При записи звука, доступна опция мониторинга, это чтобы слышать то, что поступает на вход. 
-</p><p>   Почти как во солидных программах, появилась огибающая, правда пока только одна, для управления громкостью. Ну и меню "Функции - Динамика" к этому прилагается. Подробности читайте в документации, тут лень писать.
-</p><p>   Наконец, самый стрёмный для меня момент - с выпуском четвертой версии я выкладываю первую сборку под Windows. Я ее почти не тестировал, так что того.
-</p>
-
-<p><b>12 октября 2015</b> - выпущен <a href="./dloads/eko-3.0.0.tar.bz2">EKO 3.0.0</a>.</p>
-
-<p>Эта версия подарит вам много новых ошибок. Однако другие новшества стоят того.</p>
-<p>    Эко научился читать MP3 и видеофайлы посредством внешних утилит, FFMPEG и Mplayer (на ваше усмотрение). Экспорт в MP3 при помощи LAME. Стойка эффектов превратилась в Микшер (я едва удержался от соблазна назвать его Сводником) с громкостью и панорамой.
-</p><p>   Много чего переписано и сильно улучшено - код выделения области, механизм отмен, и прочее. 
-   Всему этому нужно утрястись, исправиться в следующих версиях.
-</p>
-
-
-<p><b>21 июля 2015</b> - выпущен <a href="./dloads/eko-2.1.0.tar.bz2">EKO 2.1.0</a>, с разными исправлениями.
-</p>
-
-
-<p><b>27 апреля 2015</b> - вышел <a href="./dloads/eko-2.0.0.tar.bz2">EKO 2.0.0</a>. Спустя почти год молчания - новая версия, да еще какая! Поддержка JACK убрана, вместо этого Эко использует для звукового ввода-вывода библиотеку Portaudio, как Audacity. Внутренний звуковой движок переписан, добавлена возможность записи, поддержка тем оформления.
-   Исправлены многочисленные старые ошибки и добавлены новые.
-</p>
-
-</td>
-
-<td class="table_top_cell">
-<h3>News:</h3>
-
-
-<p><b>March 08 2024</b> - <a href="#downloads">version 7.1.0</a> Fixes for Qt6!</p>
-
-
-<p><b>Jan 20 2022</b> - <a href="#downloads">version 7.0.0</a> Meet the Qt6 port!</p>
-
-
-<p><b>May 32 2019</b> - <a href="#downloads">version 6.0.0</a> is out. This version is a basis for further improvements. IO subsystem has been fixed. New Zoom menu, code cleanup.</p>
-
-
-
-<p><b>March 8 2017</b> - <a href="#downloads">version 5.3.3</a> is out as source, AppImage and Windows build. More fixes. Resampler options has been added to the settings "Common" page. No "read-only" mode now - when the saving to the original format is not supported, EKO will save to WAV.</p>
-
-
-<p><b>March 5 2017</b> - <a href="#downloads">version 5.3.2</a> is out as source, AppImage and Windows build. Some fixes of saving in the different format behavior, and the resampler is faster now.</p>
-
-
-
-<p><b>January 20 2017</b> - EKO appimage is out. Here is <a href="https://transfer.sh/LnsGe/eko-git.84cbdfd-x86-64.appimage">AppImage</a>.</p>
-
-
-<p><b>January 20 2017</b> - EKO 5.3.1 is out. Here is <a href="./dloads/eko-5.3.1.tar.bz2">the source</a> with Qt4-compatibility fixes.</p>
-
-<p><b>September 27 2016</b> - EKO 5.3.0 is out. Here is <a href="./dloads/eko-5.3.0.tar.bz2">the source</a>, and <a href="./dloads/eko-5.3.0-qt5-install.exe">the Windows build</a>. Some GUI improvements.</p>
-
-<p><b>June 22 2016</b> - EKO 5.2.0 is out. Here is <a href="./dloads/eko-5.2.0.tar.bz2">the source</a>, and <a href="./dloads/eko-5.2.0-qt5-install.exe">the Windows build</a>. Channel handling fixes, some GUI improvements.</p>
-
-<p><b>April 13 2016</b> - EKO 5.1.0 is out. Here is <a href="./dloads/eko-5.1.0.tar.bz2">the source</a>, and <a href="./dloads/eko-5.1.0-qt5-install.exe">the Windows build</a>. This release features FX presets engine, and the new effect Vynil Taste that simulates vynil plate noises.</p>
-
-
-<p><b>January 15 2016</b> - EKO 5.0.0 is out. Here is <a href="./dloads/eko-5.0.0.tar.bz2">the source</a>, and <a href="./dloads/eko-5.0.0-qt5-install.exe">the Windows build</a>.</p>
-
-
-<p>   Hello! The fifth EKO's code has been heavy rewritten to share the codebase with my new project, the minimalistic DAW - Wavylon. Also there are many errors were fixed, and limitations eliminated. But what is changed for the user?</p>
-<p>   EKO becomes more stable. Some new realtime FX - two guitar pedals emulators, the filter and the delay module. But they are will be more useful with Wavylon. 
-</p><p>   So there is not so much visible and audible changes but the inner changes allows me to move EKO forward.
-</p>
-<p><b>November 6 2015</b> - EKO 4.0.0 is out. Here is <a href="./dloads/eko-4.0.0.tar.bz2">the source</a>, and <a href="./dloads/eko-4.0.0-qt5-install.exe">the Windows build</a>.</p>
-
-  <p> First of all, this release fixes all bugs those I knew. It includes the multilply (more than 2) channels processing, fading, selections and many more.</p>
-<p>   The "Normalize" function now takes the parameter in dB.
-</p><p>   Now you can monitor the input signal (Tune - Sound devices - Monitor input option).
-</p><p>   The volume can be adjusted dynamically using the volume (or dynamics) automation envelope and "Functions - Dynamics" menu.
-</p><p>
-   With the 4.0.0 I'm afraid (yes) to introduce the initial Win32 build that I didn't test much.
-</p>
-<p><b>October 12, 2015</b> - <a href="./dloads/eko-3.0.0.tar.bz2">EKO 3.0.0</a> is out!</p>
-
-<p>Many new bugs are presented to you with the new major release!
-</p><p>   But new features are worth that.
-</p><p>   Now EKO is able to open MP3 and videofiles (as audio) using external command line tools FFMPEG or Mplayer. MP3 export via LAME. FXRack has been modified to the Mixer. Undo engine has been improved. A lot of internals has been rewritten, including the selection and looping code.
-</p>
-
-<p><b>July 21, 2015</b> - <a href="./dloads/eko-2.1.0.tar.bz2">EKO 2.1.0</a> is out! Misc fixes.</p>
-
-
-<p><b>April 27, 2015</b> - <a href="./dloads/eko-2.0.0.tar.bz2">EKO 2.0.0</a> is out!</p>
-
-<p> Major release. Too good to be described properly. JACK support has been dropped. Now EKO works with sound using Portaudio (as Audacity). Inner sound engine has been rewritten, adding the recording suppord and GUI themes. Bugfixes, new bugs introducing, etc.
-</p>
-
-</td>
-</tr>
-
-</table>
-
-
-<a id="about"></a>
-<table>
-<tr>
-<td class="table_top_cell">
-<h3>О программе, глюки, возможности</h3>
-
-<h3>О программе:</h3>
-
-<p>Эко - простой звуковой редактор для Linux и Windows.</p>
-
-<p>Для его установки из исходника вам понадобятся Qt 4 или 5, portaudio, libsndfile, libsamplerate и компилятор GCC. Внешние, необязательные утилиты для поддержки MP3 и видеофайлов: FFMPEG или Mplayer, а также LAME.</p>
-
-<p>EKO понимает все популярные форматы и удобен для правки/нарезки небольших файлов. Внешние эффекты пока не поддерживаются, а встроенных мало.</p>
-
-<h3>Возможности:</h3>
-
-<ul>
-
-<li>эффекты реального времени</li>
-<li>генератор синусоиды и шума</li>
-<li>конвертор каналов</li>
-<li>анализ RMS и уровня</li>
-<li>сдвиг DC</li>
-<li>реверс</li>
-<li>удобная "нарезка"</li>
-<li>смена палитр</li>
-<li>настройка горячих клавиш</li>
-
-</ul>
-
-
-</td>
-
-<td class="table_top_cell">
-<h3>About, Issues, Features</h3>
-
-
-<h3>About:</h3>
-
-
-<p>EKO is a simple sound editor with the mixer.</p>
-
-
-<p>To install EKO from the source, you need just a modern version of Qt 4 or 5, portaudio, libsndfile, libsamplerate and of course GCC or Clang. For MP3 and video decoding EKO uses external FFMPEG or Mplayer, and LAME for the MP3 encoding.</p>
-
-<p>EKO understands all popular sound formats and useful in simple editing (cut/copy/paste) with a minimum FX processing. External fx currently are not supported.</p>
-
-
-<h3>Features:</h3>
-
-<ul>
-
-<li>real-time FX rack</li>
-<li>generators of sine, noise</li>
-<li>channel converter</li>
-<li>RMS and level analysis</li>
-<li>DC offset corrector</li>
-<li>reverese</li>
-<li>handy editing</li>
-<li>color palettes</li>
-<li>hotkeys customizations</li>
-
-</ul>
-</td>
-
-</tr>
-</table>
-
-
-<a id="downloads"></a>
-
-<table>
-
-<tr>
-
-<td class="table_top_cell">
-<h3>Скачать</h3>
-
-<a href="https://github.com/psemiletov/eko/archive/refs/tags/7.1.0.tar.gz">EKO 7.1.0</a> - исходник<br>
-
-<a href="./dloads/eko-6.0.0-qt5-install.exe">EKO 6.0.0</a> - сборка под Windows<br>
-
-<a href="https://github.com/psemiletov/eko">EKO на Гитхабе</a>
-
-</td>
-
-<td class="table_top_cell">
-<h3>Download</h3>
-
-<a href="https://github.com/psemiletov/eko/archive/refs/tags/7.1.0.tar.gz">EKO 7.1.0</a> - source code tarball<br>
-<a href="./dloads/eko-6.0.0-qt5-install.exe">EKO 6.0.0</a> - Windows build<br>
-<a href="https://github.com/psemiletov/eko">EKO on Github</a><br>
-
-</td>
-
-</tr>
-</table>
-
-
-<a id="donate"></a>
-
-<table>
-
-<tr>
-
-<td class="table_top_cell">
-<h3>Поддержать</h3>
-
-PayPal: peter.semiletov@gmail.com<br>
-BuyMeACoffee - <a href="https://www.buymeacoffee.com/semiletov">https://www.buymeacoffee.com/semiletov</a>
-</td>
-
-
-<td class="table_top_cell">
-<h3>Donate</h3>
-
-PayPal: peter.semiletov@gmail.com<br>
-BuyMeACoffee - <a href="https://www.buymeacoffee.com/semiletov">https://www.buymeacoffee.com/semiletov</a>
-</td>
-
-</tr>
-</table>
-
+  <header>
+    <h1>EKO</h1>
+    <p class="tagline">simple, fast, lightweight sound editor for Windows and Linux</p>
+  </header>
+
+  <section class="downloads">
+    <a href="#" class="btn">Download AppImage</a>
+    <a href="#" class="btn">Download Windows Installer</a>
+     <a href="https://github.com/psemiletov/eko/archive/refs/tags/8.0.0.tar.gz" class="btn">Source Code tarball</a>
+    <a href="https://github.com/psemiletov/eko" class="btn">GitHub page</a>
+  </section>
+
+  <section class="news">
+    <h2>News</h2>
+    <ul>
+      <li><span class="date">2026-07-03</span> — EKO v1.2 released with improved FFMPEG support</li>
+      <li><span class="date">2026-06-15</span> — New loop playback mode added</li>
+      <li><span class="date">2026-05-28</span> — Initial public release</li>
+    </ul>
+  </section>
+
+    <section class="features">
+    <h2>Features</h2>
+    <ul>
+      <li>Supports WAV, AIFF, FLAC, OGG and many more</li>
+      <li>MP3 and video file import via FFMPEG</li>
+      <li>Real-time effects rack with mixer</li>
+      <li>Volume envelope automation</li>
+      <li>Built-in file manager with bookmarks</li>
+      <li>Session management</li>
+      <li>Customizable themes and hotkeys</li>
+      <li>Lightweight — no disk caching, all in memory</li>
+      <li>Rich set of tools for audio slicing, editing, and channel handling</li>
+    </ul>
+  </section>
+
+
+  <section class="donate">
+    <div class="container">
+      <p>If you like EKO and want to support further development, you can make a donation via PayPal.</p>
+      <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=peter.semiletov@gmail.com&item_name=Support%20EKO%20development&currency_code=USD"
+         class="paypal-button" target="_blank" rel="noopener">
+        Donate with PayPal
+      </a>
+      <p class="paypal-email">PayPal email: peter.semiletov@gmail.com</p>
+      <p>Thank you for your support!</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 EKO — free and open source</p>
+  </footer>
 
 </body>
 </html>

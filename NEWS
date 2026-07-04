@@ -1,13 +1,24 @@
-_____________________________________________________
-       ===== NEWS ABOUT EKO ====                 
+===========
+EKO 8, July 2026                         
+===========
 
-                   EKO 7.1.0, March 2024                         
-_____________________________________________________
+Version 8 of EKO is an attempt to clean up and modernize the code, whose foundation was written 16 years ago. At some point, I lost interest in the project, occasionally making minor fixes, but overall EKO was gathering dust.
 
-http://psemiletov.github.io/eko/
-_____________________________________________________
+What's new in this version?
 
-   Important fixes for Qt6!
+Qt5 support has been removed, only Qt6 remains, and the minimum Windows version is now 10 instead of 7. For Linux, an AppImage and source code are provided; for Windows, an installer based on InnoSetup.
+
+EKO now runs in single-instance mode.
+
+Selection handling is now more convenient and predictable.
+
+Waveform display and playback of very short files have been fixed.
+
+Many minor issues have been fixed.
+
+Real-time effects that were not polished enough at the time of this release have been temporarily removed.
+
+The documentation has been substantially revised.
 
    
    Stay tuned.

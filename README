@@ -9,22 +9,9 @@ BTC donate: 1PCo2zznEGMFJey4qFKGQ8CoFK2nzNnJJf
 
 ===INSTALLATION===
 
-You need devel packages of Qt 5 or Qt6, portaudio, libsndfile and libsamplerate.
-C++ 11 compatible version of GCC or Clang.
+You need devel packages of Qt6, portaudio, libsndfile and libsamplerate. C++ 17 compatible version of GCC or Clang.
 
-To build EKO from source using cmake (Qt5/Qt6 build):
-
-mkdir b
-cd b
-cmake ..
-make
-make install
-
-To build EKO from source using qmake (Qt5 build):
-
-qmake
-make
-make install
+To build EKO from source using cmake:
 
 
 ===NOTE FOR PACKAGE MAINTAINERS===

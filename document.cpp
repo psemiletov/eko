@@ -1068,8 +1068,11 @@ bool CDocument::save_with_name (const QString &fileName)
   QString fext = file_formats->hextensions.value(fmt);
 
   // Добавляем расширение, если его нет (без учёта регистра)
-  if (!fname.endsWith("." + fext, Qt::CaseInsensitive))
-    fname += "." + fext;
+  //и если оно не входит еще в имя файла. То есть если формат другой, чем был, то добавляется
+  //еще одно расширение. было test.wav, стало test.wav.flac
+
+  if (! fname.endsWith ("." + fext, Qt::CaseInsensitive))
+     fname += "." + fext;
 
   CTio *tio = holder->tio_handler.get_for_fname(fname);
   if (!tio)

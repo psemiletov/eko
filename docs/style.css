@@ -1,0 +1,275 @@
+/* Minimalistic EKO website — soft green & rose palette */
+
+:root {
+    --bg: #f0f4ed;        /* soft sage green background */
+    --text: #1e2a1e;      /* deep forest green for text */
+    --muted: #4a5a4a;     /* muted green-grey */
+    --card: #fafcfa;      /* very light creamy green */
+    --card-border: #dce6d8;
+    --accent-rose: #e8b4b8;   /* soft rose */
+    --accent-rose-light: #f5d6d8;
+    --accent-green: #8aaa7a;  /* soft sage */
+    --btn-bg: #4a6a3a;    /* deeper green for buttons */
+    --btn-text: #f8faf5;
+    --btn-hover: #2d4a20;
+    --paypal: #0070ba;
+    --paypal-hover: #005a8c;
+    --shadow: 0 2px 16px rgba(60, 80, 50, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #121812;
+        --text: #e8ede5;
+        --muted: #a8b8a0;
+        --card: #1e281e;
+        --card-border: #2d3a2a;
+        --accent-rose: #c49094;
+        --accent-rose-light: #5a4042;
+        --btn-bg: #7a9a6a;
+        --btn-text: #121812;
+        --btn-hover: #9aba8a;
+        --shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 2rem 1rem;
+    max-width: 760px;
+    margin: 0 auto;
+    transition: background 0.3s, color 0.3s;
+}
+
+header {
+    text-align: center;
+    padding: 2rem 0 1rem;
+}
+
+header h1 {
+    font-size: 4rem;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.15rem;
+    color: var(--text);
+}
+
+.tagline {
+    font-size: 1.1rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+}
+
+section {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 1.8rem 2rem;
+    margin-top: 1.8rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--card-border);
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Rose accent for section headers */
+h2 {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+    border-bottom: 2px solid var(--accent-rose);
+    padding-bottom: 0.5rem;
+    color: var(--text);
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    padding: 0.3rem 0;
+    padding-left: 1.3rem;
+    position: relative;
+}
+
+ul li::before {
+    content: "·";
+    position: absolute;
+    left: 0;
+    color: var(--accent-rose);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* Downloads */
+.downloads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+    padding: 1.8rem 1.5rem;
+}
+
+.btn {
+    display: inline-block;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    padding: 0.6rem 1.8rem;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 8px rgba(60, 80, 50, 0.15);
+}
+
+.btn:hover {
+    background: var(--btn-hover);
+    transform: scale(1.03);
+    box-shadow: 0 4px 14px rgba(60, 80, 50, 0.25);
+}
+
+/* News */
+.news ul li {
+    padding: 0.5rem 0;
+    padding-left: 1.4rem;
+}
+
+.date {
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: var(--bg);
+    padding: 0.1rem 0.7rem;
+    border-radius: 14px;
+    display: inline-block;
+    margin-right: 0.5rem;
+    border: 1px solid var(--card-border);
+}
+
+/* Features */
+.features ul {
+    columns: 2 240px;
+    column-gap: 2rem;
+}
+
+.features ul li {
+    break-inside: avoid;
+    padding: 0.35rem 0;
+    padding-left: 1.3rem;
+}
+
+/* Donate */
+.donate {
+    text-align: center;
+}
+
+.donate .container {
+    max-width: 540px;
+    margin: 0 auto;
+}
+
+.donate p {
+    margin: 0.6rem 0;
+}
+
+.paypal-button {
+    display: inline-block;
+    background: var(--paypal);
+    color: #fff;
+    padding: 0.7rem 2.8rem;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0.8rem 0 0.4rem;
+    transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
+    border: none;
+    box-shadow: 0 2px 12px rgba(0, 112, 186, 0.25);
+}
+
+.paypal-button:hover {
+    background: var(--paypal-hover);
+    transform: scale(1.03);
+    box-shadow: 0 4px 18px rgba(0, 112, 186, 0.35);
+}
+
+.paypal-email {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+}
+
+footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 1.5rem 0 0.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    border-top: 1px solid var(--card-border);
+}
+
+/* Responsive */
+@media (max-width: 540px) {
+    body {
+        padding: 1rem 0.8rem;
+    }
+
+    header h1 {
+        font-size: 3rem;
+    }
+
+    .tagline {
+        font-size: 1rem;
+    }
+
+    section {
+        padding: 1.4rem 1.2rem;
+        border-radius: 14px;
+    }
+
+    .downloads {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 1.4rem 0.8rem;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+        padding: 0.7rem 1rem;
+    }
+
+    .features ul {
+        columns: 1;
+    }
+
+    .paypal-button {
+        width: 100%;
+        text-align: center;
+        padding: 0.7rem 1.2rem;
+    }
+}
+
+@media (max-width: 380px) {
+    header h1 {
+        font-size: 2.4rem;
+    }
+
+    .date {
+        display: block;
+        margin-bottom: 0.2rem;
+        margin-right: 0;
+    }
+}

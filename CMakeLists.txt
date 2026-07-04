@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.21.1)
 
 # project() ДОЛЖЕН быть вызван ДО enable_language()
-project(eko VERSION 7.1.0 LANGUAGES CXX C)
+project(eko VERSION 8.0.0 LANGUAGES CXX C)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
