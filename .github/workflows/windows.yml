@@ -41,6 +41,7 @@ jobs:
             mingw-w64-ucrt-x86_64-libsndfile
             mingw-w64-ucrt-x86_64-libsamplerate
             mingw-w64-ucrt-x86_64-portaudio
+            mingw-w64-ucrt-x86_64-binutils  # Добавляем для objdump
 
       - name: Build with MSYS2
         shell: msys2 {0}
@@ -61,7 +62,7 @@ jobs:
           cd build
           windeployqt --release eko.exe
 
-      - name: Prepare installer files
+      - name: Find and copy all dependencies
         shell: msys2 {0}
         run: |
           # Создаём папку для установщика
@@ -70,50 +71,63 @@ jobs:
           # Копируем EXE
           cp build/eko.exe installer_files/
 
-          # Копируем DLL, которые уже скопировал windeployqt
+          # Копируем все DLL, которые уже скопировал windeployqt
           cp build/*.dll installer_files/ 2>/dev/null || true
 
-          # ============ ФИКСИРОВАННЫЙ СПИСОК DLL ============
+          # === АВТОМАТИЧЕСКОЕ ОПРЕДЕЛЕНИЕ ЗАВИСИМОСТЕЙ ===
+          echo "=== Поиск зависимостей для eko.exe ==="
 
-          # Базовые библиотеки MinGW
-          cp /ucrt64/bin/libgcc_s_seh-1.dll installer_files/
-          cp /ucrt64/bin/libstdc++-6.dll installer_files/
-          cp /ucrt64/bin/libwinpthread-1.dll installer_files/
+          # Создаём временный файл для хранения всех DLL
+          temp_deps=$(mktemp)
 
-          # PortAudio (ищем оба варианта имени)
-          cp /ucrt64/bin/libportaudio-2.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libportaudio-2.dll installer_files/libportaudio.dll 2>/dev/null || true
+          # Функция для рекурсивного поиска зависимостей
+          find_deps() {
+            local file="$1"
+            if [ ! -f "$file" ]; then
+              return
+            fi
+            # Используем objdump для поиска зависимостей
+            objdump -p "$file" | grep "DLL Name" | awk '{print $3}' | while read -r dll; do
+              # Проверяем, есть ли такая DLL в MSYS2
+              if [ -f "/ucrt64/bin/$dll" ]; then
+                echo "$dll" >> "$temp_deps"
+                # Рекурсивно проверяем зависимости найденной DLL
+                find_deps "/ucrt64/bin/$dll"
+              fi
+            done
+          }
 
-          # libsndfile
-          cp /ucrt64/bin/libsndfile-1.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libsndfile-1.dll installer_files/libsndfile.dll 2>/dev/null || true
+          # Начинаем поиск с eko.exe
+          find_deps "build/eko.exe"
 
-          # libsamplerate
-          cp /ucrt64/bin/libsamplerate-0.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libsamplerate-0.dll installer_files/libsamplerate.dll 2>/dev/null || true
+          # Копируем все найденные уникальные DLL
+          echo "=== Копирование найденных DLL ==="
+          sort -u "$temp_deps" | while read -r dll; do
+            if [ -f "/ucrt64/bin/$dll" ]; then
+              echo "  Копируем: $dll"
+              cp "/ucrt64/bin/$dll" installer_files/
+            else
+              echo "  НЕ НАЙДЕНА: $dll"
+            fi
+          done
 
-          # Дополнительные библиотеки, которые могут понадобиться
-          # (добавляйте по мере необходимости)
-          cp /ucrt64/bin/libwinmm.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libws2_32.dll installer_files/ 2>/dev/null || true
+          rm -f "$temp_deps"
 
-          # ===================================================
-
-          # Копируем папки с плагинами Qt
+          # === Копирование папок с плагинами Qt ===
           cp -r build/platforms installer_files/ 2>/dev/null || true
           cp -r build/styles installer_files/ 2>/dev/null || true
           cp -r build/imageformats installer_files/ 2>/dev/null || true
           cp -r build/iconengines installer_files/ 2>/dev/null || true
 
-          # Создаём папки, если их нет
           mkdir -p installer_files/platforms
           mkdir -p installer_files/styles
           mkdir -p installer_files/imageformats
           mkdir -p installer_files/iconengines
 
-          # Выводим список скопированных DLL для проверки
-          echo "=== Скопированные DLL ==="
-          ls -la installer_files/*.dll 2>/dev/null || echo "Нет DLL"
+          # Выводим список скопированных DLL
+          echo "=== ИТОГОВЫЙ СПИСОК DLL ==="
+          ls -la installer_files/*.dll 2>/dev/null | wc -l
+          ls -la installer_files/*.dll 2>/dev/null
 
       - name: Download Inno Setup
         if: ${{ inputs.create_installer == true }}
