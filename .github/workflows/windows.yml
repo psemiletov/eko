@@ -73,11 +73,16 @@ jobs:
           # Копируем все DLL, которые уже скопировал windeployqt
           cp build/*.dll installer_files/ 2>/dev/null || true
 
-          # === ФИКСИРОВАННЫЙ СПИСОК НЕОБХОДИМЫХ DLL ===
+          # === ПОИСК ПРАВИЛЬНЫХ ИМЁН DLL ===
+          echo "=== Searching for DLLs in /ucrt64/bin ==="
+          ls -la /ucrt64/bin/*portaudio* 2>/dev/null || echo "No portaudio found"
+          ls -la /ucrt64/bin/*sndfile* 2>/dev/null || echo "No sndfile found"
+          ls -la /ucrt64/bin/*samplerate* 2>/dev/null || echo "No samplerate found"
+
           # Базовые библиотеки MinGW
-          cp /ucrt64/bin/libgcc_s_seh-1.dll installer_files/
-          cp /ucrt64/bin/libstdc++-6.dll installer_files/
-          cp /ucrt64/bin/libwinpthread-1.dll installer_files/
+          cp /ucrt64/bin/libgcc_s_seh-1.dll installer_files/ 2>/dev/null || echo "libgcc_s_seh-1.dll not found"
+          cp /ucrt64/bin/libstdc++-6.dll installer_files/ 2>/dev/null || echo "libstdc++-6.dll not found"
+          cp /ucrt64/bin/libwinpthread-1.dll installer_files/ 2>/dev/null || echo "libwinpthread-1.dll not found"
 
           # Qt6 дополнительные библиотеки
           cp /ucrt64/bin/libicuin78.dll installer_files/ 2>/dev/null || true
@@ -87,19 +92,44 @@ jobs:
           cp /ucrt64/bin/libharfbuzz-0.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libpng16-16.dll installer_files/ 2>/dev/null || true
 
-          # PortAudio
-          cp /ucrt64/bin/libportaudio-2.dll installer_files/
-          cp /ucrt64/bin/libportaudio-2.dll installer_files/libportaudio.dll
+          # PortAudio — пробуем разные варианты
+          cp /ucrt64/bin/libportaudio-2.dll installer_files/ 2>/dev/null || \
+          cp /ucrt64/bin/libportaudio.dll installer_files/ 2>/dev/null || \
+          cp /ucrt64/bin/portaudio.dll installer_files/ 2>/dev/null || \
+          echo "PortAudio DLL not found!"
 
-          # libsndfile
-          cp /ucrt64/bin/libsndfile-1.dll installer_files/
-          cp /ucrt64/bin/libsndfile-1.dll installer_files/libsndfile.dll
+          # Если нашли libportaudio-2.dll, создаём копию с именем libportaudio.dll
+          if [ -f "/ucrt64/bin/libportaudio-2.dll" ]; then
+            cp /ucrt64/bin/libportaudio-2.dll installer_files/
+            cp /ucrt64/bin/libportaudio-2.dll installer_files/libportaudio.dll
+          elif [ -f "/ucrt64/bin/libportaudio.dll" ]; then
+            cp /ucrt64/bin/libportaudio.dll installer_files/
+            cp /ucrt64/bin/libportaudio.dll installer_files/libportaudio-2.dll
+          fi
 
-          # libsamplerate
-          cp /ucrt64/bin/libsamplerate-0.dll installer_files/
-          cp /ucrt64/bin/libsamplerate-0.dll installer_files/libsamplerate.dll
+          # libsndfile — пробуем разные варианты
+          cp /ucrt64/bin/libsndfile-1.dll installer_files/ 2>/dev/null || \
+          cp /ucrt64/bin/libsndfile.dll installer_files/ 2>/dev/null || \
+          echo "libsndfile not found!"
 
-          # Дополнительные системные и вспомогательные библиотеки
+          if [ -f "/ucrt64/bin/libsndfile-1.dll" ]; then
+            cp /ucrt64/bin/libsndfile-1.dll installer_files/libsndfile.dll
+          elif [ -f "/ucrt64/bin/libsndfile.dll" ]; then
+            cp /ucrt64/bin/libsndfile.dll installer_files/libsndfile-1.dll
+          fi
+
+          # libsamplerate — пробуем разные варианты
+          cp /ucrt64/bin/libsamplerate-0.dll installer_files/ 2>/dev/null || \
+          cp /ucrt64/bin/libsamplerate.dll installer_files/ 2>/dev/null || \
+          echo "libsamplerate not found!"
+
+          if [ -f "/ucrt64/bin/libsamplerate-0.dll" ]; then
+            cp /ucrt64/bin/libsamplerate-0.dll installer_files/libsamplerate.dll
+          elif [ -f "/ucrt64/bin/libsamplerate.dll" ]; then
+            cp /ucrt64/bin/libsamplerate.dll installer_files/libsamplerate-0.dll
+          fi
+
+          # Дополнительные библиотеки
           cp /ucrt64/bin/libwinmm.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libws2_32.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libole32.dll installer_files/ 2>/dev/null || true
@@ -116,7 +146,6 @@ jobs:
           cp -r build/imageformats installer_files/ 2>/dev/null || true
           cp -r build/iconengines installer_files/ 2>/dev/null || true
 
-          # Создаём папки, если их нет
           mkdir -p installer_files/platforms
           mkdir -p installer_files/styles
           mkdir -p installer_files/imageformats
