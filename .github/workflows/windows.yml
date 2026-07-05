@@ -42,11 +42,14 @@ jobs:
             mingw-w64-ucrt-x86_64-libsamplerate
             mingw-w64-ucrt-x86_64-portaudio
             mingw-w64-ucrt-x86_64-binutils
+            mingw-w64-ucrt-x86_64-ldd
 
       - name: Build with MSYS2
         shell: msys2 {0}
         run: |
           export PATH=/ucrt64/bin:$PATH
+          # Проверяем, что binutils установлен
+          which objdump || echo "objdump not found!"
           mkdir -p build
           cd build
           cmake .. -G "Ninja" \
@@ -65,6 +68,16 @@ jobs:
       - name: Find and copy all dependencies
         shell: msys2 {0}
         run: |
+          # Проверяем, что objdump доступен
+          echo "=== Checking tools ==="
+          which objdump || echo "objdump not found, installing..."
+
+          # Если objdump не найден, пробуем установить вручную
+          if ! command -v objdump &> /dev/null; then
+            echo "=== Installing binutils manually ==="
+            pacman -S --noconfirm mingw-w64-ucrt-x86_64-binutils
+          fi
+
           # Создаём папку для установщика
           mkdir -p installer_files
 
@@ -87,7 +100,7 @@ jobs:
               return
             fi
             # Используем objdump для поиска зависимостей
-            objdump -p "$file" | grep "DLL Name" | awk '{print $3}' | while read -r dll; do
+            objdump -p "$file" 2>/dev/null | grep "DLL Name" | awk '{print $3}' | while read -r dll; do
               # Проверяем, есть ли такая DLL в MSYS2
               if [ -f "/ucrt64/bin/$dll" ]; then
                 echo "$dll" >> "$temp_deps"
