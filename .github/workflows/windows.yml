@@ -1,180 +1,107 @@
-name: Windows Build (MinGW-w64)
+- name: Prepare installer files
+  shell: msys2 {0}
+  run: |
+    # Создаём папку для установщика
+    mkdir -p installer_files
 
-on:
-  workflow_dispatch:
-    inputs:
-      build_type:
-        description: 'Тип сборки'
-        required: false
-        default: 'Release'
-        type: choice
-        options:
-          - Release
-          - Debug
-      create_installer:
-        description: 'Создать инсталлятор Inno Setup'
-        required: false
-        default: true
-        type: boolean
+    # Копируем EXE
+    cp build/eko.exe installer_files/
 
-jobs:
-  build-windows:
-    runs-on: windows-latest
+    # Копируем все DLL, которые уже скопировал windeployqt
+    cp build/*.dll installer_files/ 2>/dev/null || true
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
+    echo "=== Searching for DLLs in /ucrt64/bin ==="
+    ls -la /ucrt64/bin/*portaudio* 2>/dev/null || echo "No portaudio found"
+    ls -la /ucrt64/bin/*sndfile* 2>/dev/null || echo "No sndfile found"
+    ls -la /ucrt64/bin/*samplerate* 2>/dev/null || echo "No samplerate found"
+    ls -la /ucrt64/bin/zlib* 2>/dev/null || echo "No zlib found"
 
-      - name: Setup MinGW-w64
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          update: true
-          install: |
-            mingw-w64-ucrt-x86_64-gcc
-            mingw-w64-ucrt-x86_64-cmake
-            mingw-w64-ucrt-x86_64-ninja
-            mingw-w64-ucrt-x86_64-qt6-base
-            mingw-w64-ucrt-x86_64-qt6-tools
-            mingw-w64-ucrt-x86_64-libsndfile
-            mingw-w64-ucrt-x86_64-libsamplerate
-            mingw-w64-ucrt-x86_64-portaudio
+    # Базовые библиотеки MinGW
+    cp /ucrt64/bin/libgcc_s_seh-1.dll installer_files/ 2>/dev/null || echo "libgcc_s_seh-1.dll not found"
+    cp /ucrt64/bin/libstdc++-6.dll installer_files/ 2>/dev/null || echo "libstdc++-6.dll not found"
+    cp /ucrt64/bin/libwinpthread-1.dll installer_files/ 2>/dev/null || echo "libwinpthread-1.dll not found"
 
-      - name: Build with MSYS2
-        shell: msys2 {0}
-        run: |
-          export PATH=/ucrt64/bin:$PATH
-          mkdir -p build
-          cd build
-          cmake .. -G "Ninja" \
-            -DCMAKE_BUILD_TYPE=${{ inputs.build_type || 'Release' }} \
-            -DCMAKE_INSTALL_PREFIX=/ucrt64 \
-            -DCMAKE_CXX_STANDARD=17 \
-            -DCMAKE_CXX_STANDARD_REQUIRED=ON
-          ninja
+    # Дополнительные библиотеки MinGW
+    cp /ucrt64/bin/libunwind.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libc++.dll installer_files/ 2>/dev/null || true
 
-      - name: Deploy Qt
-        shell: msys2 {0}
-        run: |
-          cd build
-          windeployqt --release eko.exe
+    # Qt6 дополнительные библиотеки
+    cp /ucrt64/bin/libicuin78.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libicuuc78.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libicudt78.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libfreetype-6.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libharfbuzz-0.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libpng16-16.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libb2-1.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libjpeg-8.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libdouble-conversion.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libpcre2-16-0.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libiconv-2.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libintl-8.dll installer_files/ 2>/dev/null || true
 
-      - name: Prepare installer files
-        shell: msys2 {0}
-        run: |
-          # Создаём папку для установщика
-          mkdir -p installer_files
+    # zlib — пробуем разные варианты
+    cp /ucrt64/bin/zlib1.dll installer_files/ 2>/dev/null || \
+    cp /ucrt64/bin/libzlib-1.dll installer_files/ 2>/dev/null || \
+    cp /ucrt64/bin/libz.dll installer_files/ 2>/dev/null || \
+    echo "zlib not found!"
 
-          # Копируем EXE
-          cp build/eko.exe installer_files/
+    # PortAudio
+    cp /ucrt64/bin/libportaudio-2.dll installer_files/ 2>/dev/null || \
+    cp /ucrt64/bin/libportaudio.dll installer_files/ 2>/dev/null || \
+    echo "PortAudio DLL not found!"
 
-          # Копируем все DLL, которые уже скопировал windeployqt
-          cp build/*.dll installer_files/ 2>/dev/null || true
+    if [ -f "/ucrt64/bin/libportaudio-2.dll" ]; then
+      cp /ucrt64/bin/libportaudio-2.dll installer_files/
+      cp /ucrt64/bin/libportaudio-2.dll installer_files/libportaudio.dll
+    elif [ -f "/ucrt64/bin/libportaudio.dll" ]; then
+      cp /ucrt64/bin/libportaudio.dll installer_files/
+      cp /ucrt64/bin/libportaudio.dll installer_files/libportaudio-2.dll
+    fi
 
-          echo "=== Searching for DLLs in /ucrt64/bin ==="
-          ls -la /ucrt64/bin/*portaudio* 2>/dev/null || echo "No portaudio found"
-          ls -la /ucrt64/bin/*sndfile* 2>/dev/null || echo "No sndfile found"
-          ls -la /ucrt64/bin/*samplerate* 2>/dev/null || echo "No samplerate found"
+    # libsndfile
+    cp /ucrt64/bin/libsndfile-1.dll installer_files/ 2>/dev/null || \
+    cp /ucrt64/bin/libsndfile.dll installer_files/ 2>/dev/null || \
+    echo "libsndfile not found!"
 
-          # Базовые библиотеки MinGW
-          cp /ucrt64/bin/libgcc_s_seh-1.dll installer_files/ 2>/dev/null || echo "libgcc_s_seh-1.dll not found"
-          cp /ucrt64/bin/libstdc++-6.dll installer_files/ 2>/dev/null || echo "libstdc++-6.dll not found"
-          cp /ucrt64/bin/libwinpthread-1.dll installer_files/ 2>/dev/null || echo "libwinpthread-1.dll not found"
+    if [ -f "/ucrt64/bin/libsndfile-1.dll" ]; then
+      cp /ucrt64/bin/libsndfile-1.dll installer_files/libsndfile.dll
+    elif [ -f "/ucrt64/bin/libsndfile.dll" ]; then
+      cp /ucrt64/bin/libsndfile.dll installer_files/libsndfile-1.dll
+    fi
 
-          # Дополнительные библиотеки MinGW
-          cp /ucrt64/bin/libunwind.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libc++.dll installer_files/ 2>/dev/null || true
+    # libsamplerate
+    cp /ucrt64/bin/libsamplerate-0.dll installer_files/ 2>/dev/null || \
+    cp /ucrt64/bin/libsamplerate.dll installer_files/ 2>/dev/null || \
+    echo "libsamplerate not found!"
 
-          # Qt6 дополнительные библиотеки
-          cp /ucrt64/bin/libicuin78.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libicuuc78.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libicudt78.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libfreetype-6.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libharfbuzz-0.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libpng16-16.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libb2-1.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libjpeg-8.dll installer_files/ 2>/dev/null || true
+    if [ -f "/ucrt64/bin/libsamplerate-0.dll" ]; then
+      cp /ucrt64/bin/libsamplerate-0.dll installer_files/libsamplerate.dll
+    elif [ -f "/ucrt64/bin/libsamplerate.dll" ]; then
+      cp /ucrt64/bin/libsamplerate.dll installer_files/libsamplerate-0.dll
+    fi
 
-          # PortAudio
-          cp /ucrt64/bin/libportaudio-2.dll installer_files/ 2>/dev/null || \
-          cp /ucrt64/bin/libportaudio.dll installer_files/ 2>/dev/null || \
-          echo "PortAudio DLL not found!"
+    # Дополнительные библиотеки
+    cp /ucrt64/bin/libwinmm.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libws2_32.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libole32.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libshell32.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libuser32.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libgdi32.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libadvapi32.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libbz2-1.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libzstd-1.dll installer_files/ 2>/dev/null || true
 
-          if [ -f "/ucrt64/bin/libportaudio-2.dll" ]; then
-            cp /ucrt64/bin/libportaudio-2.dll installer_files/
-            cp /ucrt64/bin/libportaudio-2.dll installer_files/libportaudio.dll
-          elif [ -f "/ucrt64/bin/libportaudio.dll" ]; then
-            cp /ucrt64/bin/libportaudio.dll installer_files/
-            cp /ucrt64/bin/libportaudio.dll installer_files/libportaudio-2.dll
-          fi
+    # Копируем папки с плагинами Qt
+    cp -r build/platforms installer_files/ 2>/dev/null || true
+    cp -r build/styles installer_files/ 2>/dev/null || true
+    cp -r build/imageformats installer_files/ 2>/dev/null || true
+    cp -r build/iconengines installer_files/ 2>/dev/null || true
 
-          # libsndfile
-          cp /ucrt64/bin/libsndfile-1.dll installer_files/ 2>/dev/null || \
-          cp /ucrt64/bin/libsndfile.dll installer_files/ 2>/dev/null || \
-          echo "libsndfile not found!"
+    mkdir -p installer_files/platforms
+    mkdir -p installer_files/styles
+    mkdir -p installer_files/imageformats
+    mkdir -p installer_files/iconengines
 
-          if [ -f "/ucrt64/bin/libsndfile-1.dll" ]; then
-            cp /ucrt64/bin/libsndfile-1.dll installer_files/libsndfile.dll
-          elif [ -f "/ucrt64/bin/libsndfile.dll" ]; then
-            cp /ucrt64/bin/libsndfile.dll installer_files/libsndfile-1.dll
-          fi
-
-          # libsamplerate
-          cp /ucrt64/bin/libsamplerate-0.dll installer_files/ 2>/dev/null || \
-          cp /ucrt64/bin/libsamplerate.dll installer_files/ 2>/dev/null || \
-          echo "libsamplerate not found!"
-
-          if [ -f "/ucrt64/bin/libsamplerate-0.dll" ]; then
-            cp /ucrt64/bin/libsamplerate-0.dll installer_files/libsamplerate.dll
-          elif [ -f "/ucrt64/bin/libsamplerate.dll" ]; then
-            cp /ucrt64/bin/libsamplerate.dll installer_files/libsamplerate-0.dll
-          fi
-
-          # Дополнительные библиотеки
-          cp /ucrt64/bin/libwinmm.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libws2_32.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libole32.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libshell32.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libuser32.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libgdi32.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libadvapi32.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libbz2-1.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libzstd-1.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/zlib1.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libdouble-conversion.dll installer_files/ 2>/dev/null || true
-
-          # Копируем папки с плагинами Qt
-          cp -r build/platforms installer_files/ 2>/dev/null || true
-          cp -r build/styles installer_files/ 2>/dev/null || true
-          cp -r build/imageformats installer_files/ 2>/dev/null || true
-          cp -r build/iconengines installer_files/ 2>/dev/null || true
-
-          mkdir -p installer_files/platforms
-          mkdir -p installer_files/styles
-          mkdir -p installer_files/imageformats
-          mkdir -p installer_files/iconengines
-
-          echo "=== FINAL DLL LIST ==="
-          ls -la installer_files/*.dll 2>/dev/null | wc -l
-          ls -la installer_files/*.dll 2>/dev/null
-
-      - name: Download Inno Setup
-        if: ${{ inputs.create_installer == true }}
-        run: |
-          curl -L -o innosetup.exe https://jrsoftware.org/download.php/is.exe
-          .\innosetup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
-
-      - name: Build Inno Setup installer
-        if: ${{ inputs.create_installer == true }}
-        shell: msys2 {0}
-        run: |
-          "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" installer.iss
-
-      - name: Upload Inno Setup installer
-        if: ${{ inputs.create_installer == true }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: eko-setup-${{ inputs.build_type || 'Release' }}
-          path: eko-setup.exe
+    echo "=== FINAL DLL LIST ==="
+    ls -la installer_files/*.dll 2>/dev/null | wc -l
+    ls -la installer_files/*.dll 2>/dev/null
