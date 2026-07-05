@@ -101,6 +101,10 @@ jobs:
           cp /ucrt64/bin/libpcre2-16-0.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libiconv-2.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libintl-8.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libgraphite2.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libglib-2.0-0.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libbrotlidec.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libbrotlicommon.dll installer_files/ 2>/dev/null || true
 
           # zlib — пробуем разные варианты
           cp /ucrt64/bin/zlib1.dll installer_files/ 2>/dev/null || \
@@ -118,6 +122,7 @@ jobs:
           cp /ucrt64/bin/libogg-0.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libopus-0.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libvorbis-0.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libvorbisenc-2.dll installer_files/ 2>/dev/null || true
 
           # PortAudio
           cp /ucrt64/bin/libportaudio-2.dll installer_files/ 2>/dev/null || \
