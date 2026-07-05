@@ -42,7 +42,6 @@ jobs:
             mingw-w64-ucrt-x86_64-libsamplerate
             mingw-w64-ucrt-x86_64-portaudio
             mingw-w64-ucrt-x86_64-binutils
-            mingw-w64-ucrt-x86_64-ldd
 
       - name: Build with MSYS2
         shell: msys2 {0}
