@@ -108,6 +108,13 @@ jobs:
           cp /ucrt64/bin/libz.dll installer_files/ 2>/dev/null || \
           echo "zlib not found!"
 
+          # Дополнительные библиотеки
+          cp /ucrt64/bin/libzstd-1.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libzstd.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libmd4c.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libFLAC.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libmp3lame-0.dll installer_files/ 2>/dev/null || true
+
           # PortAudio
           cp /ucrt64/bin/libportaudio-2.dll installer_files/ 2>/dev/null || \
           cp /ucrt64/bin/libportaudio.dll installer_files/ 2>/dev/null || \
@@ -143,7 +150,7 @@ jobs:
             cp /ucrt64/bin/libsamplerate.dll installer_files/libsamplerate-0.dll
           fi
 
-          # Дополнительные библиотеки
+          # Дополнительные системные библиотеки
           cp /ucrt64/bin/libwinmm.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libws2_32.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libole32.dll installer_files/ 2>/dev/null || true
@@ -152,7 +159,6 @@ jobs:
           cp /ucrt64/bin/libgdi32.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libadvapi32.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libbz2-1.dll installer_files/ 2>/dev/null || true
-          cp /ucrt64/bin/libzstd-1.dll installer_files/ 2>/dev/null || true
 
           # Копируем папки с плагинами Qt
           cp -r build/platforms installer_files/ 2>/dev/null || true
