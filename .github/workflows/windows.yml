@@ -114,6 +114,10 @@ jobs:
           cp /ucrt64/bin/libmd4c.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libFLAC.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libmp3lame-0.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libmpg123-0.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libogg-0.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libopus-0.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libvorbis-0.dll installer_files/ 2>/dev/null || true
 
           # PortAudio
           cp /ucrt64/bin/libportaudio-2.dll installer_files/ 2>/dev/null || \
