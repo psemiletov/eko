@@ -67,9 +67,22 @@ jobs:
           # Создаём папку для установщика
           mkdir -p installer_files
 
-          # Копируем EXE и все DLL
+          # Копируем EXE
           cp build/eko.exe installer_files/
+
+          # Копируем все необходимые DLL из MSYS2
+          # Базовые библиотеки MinGW (ОБЯЗАТЕЛЬНО!)
+          cp /ucrt64/bin/libgcc_s_seh-1.dll installer_files/
+          cp /ucrt64/bin/libstdc++-6.dll installer_files/
+          cp /ucrt64/bin/libwinpthread-1.dll installer_files/
+
+          # Библиотеки Qt (windeployqt уже скопировал их в build/)
           cp build/*.dll installer_files/ 2>/dev/null || true
+
+          # Дополнительные библиотеки (PortAudio, libsndfile, libsamplerate)
+          cp /ucrt64/bin/libportaudio-2.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libsndfile-1.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libsamplerate-0.dll installer_files/ 2>/dev/null || true
 
           # Копируем папки с плагинами Qt
           cp -r build/platforms installer_files/ 2>/dev/null || true
@@ -77,7 +90,7 @@ jobs:
           cp -r build/imageformats installer_files/ 2>/dev/null || true
           cp -r build/iconengines installer_files/ 2>/dev/null || true
 
-          # Создаём папку, если её нет (для Inno Setup)
+          # Создаём папки, если их нет
           mkdir -p installer_files/platforms
           mkdir -p installer_files/styles
           mkdir -p installer_files/imageformats
