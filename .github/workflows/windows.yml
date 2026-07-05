@@ -1,161 +1,63 @@
-name: Windows Build (MinGW-w64)
+- name: Prepare installer files
+  shell: msys2 {0}
+  run: |
+    # Создаём папку для установщика
+    mkdir -p installer_files
 
-on:
-  workflow_dispatch:
-    inputs:
-      build_type:
-        description: 'Тип сборки'
-        required: false
-        default: 'Release'
-        type: choice
-        options:
-          - Release
-          - Debug
-      create_installer:
-        description: 'Создать инсталлятор Inno Setup'
-        required: false
-        default: true
-        type: boolean
+    # Копируем EXE
+    cp build/eko.exe installer_files/
 
-jobs:
-  build-windows:
-    runs-on: windows-latest
+    # Копируем все DLL, которые уже скопировал windeployqt
+    cp build/*.dll installer_files/ 2>/dev/null || true
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
+    # === ФИКСИРОВАННЫЙ СПИСОК НЕОБХОДИМЫХ DLL ===
+    # Базовые библиотеки MinGW
+    cp /ucrt64/bin/libgcc_s_seh-1.dll installer_files/
+    cp /ucrt64/bin/libstdc++-6.dll installer_files/
+    cp /ucrt64/bin/libwinpthread-1.dll installer_files/
 
-      - name: Setup MinGW-w64
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          update: true
-          install: |
-            mingw-w64-ucrt-x86_64-gcc
-            mingw-w64-ucrt-x86_64-cmake
-            mingw-w64-ucrt-x86_64-ninja
-            mingw-w64-ucrt-x86_64-qt6-base
-            mingw-w64-ucrt-x86_64-qt6-tools
-            mingw-w64-ucrt-x86_64-libsndfile
-            mingw-w64-ucrt-x86_64-libsamplerate
-            mingw-w64-ucrt-x86_64-portaudio
-            mingw-w64-ucrt-x86_64-binutils
+    # Qt6 дополнительные библиотеки
+    cp /ucrt64/bin/libicuin78.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libicuuc78.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libicudt78.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libfreetype-6.dll installer_files/ 2>/dev/null || true      # <-- ДОБАВЛЕНО
+    cp /ucrt64/bin/libharfbuzz-0.dll installer_files/ 2>/dev/null || true     # <-- часто нужна вместе с freetype
+    cp /ucrt64/bin/libpng16-16.dll installer_files/ 2>/dev/null || true       # <-- тоже часто нужна
 
-      - name: Build with MSYS2
-        shell: msys2 {0}
-        run: |
-          export PATH=/ucrt64/bin:$PATH
-          # Проверяем, что binutils установлен
-          which objdump || echo "objdump not found!"
-          mkdir -p build
-          cd build
-          cmake .. -G "Ninja" \
-            -DCMAKE_BUILD_TYPE=${{ inputs.build_type || 'Release' }} \
-            -DCMAKE_INSTALL_PREFIX=/ucrt64 \
-            -DCMAKE_CXX_STANDARD=17 \
-            -DCMAKE_CXX_STANDARD_REQUIRED=ON
-          ninja
+    # PortAudio
+    cp /ucrt64/bin/libportaudio-2.dll installer_files/
+    cp /ucrt64/bin/libportaudio-2.dll installer_files/libportaudio.dll
 
-      - name: Deploy Qt
-        shell: msys2 {0}
-        run: |
-          cd build
-          windeployqt --release eko.exe
+    # libsndfile
+    cp /ucrt64/bin/libsndfile-1.dll installer_files/
+    cp /ucrt64/bin/libsndfile-1.dll installer_files/libsndfile.dll
 
-      - name: Find and copy all dependencies
-        shell: msys2 {0}
-        run: |
-          # Проверяем, что objdump доступен
-          echo "=== Checking tools ==="
-          which objdump || echo "objdump not found, installing..."
+    # libsamplerate
+    cp /ucrt64/bin/libsamplerate-0.dll installer_files/
+    cp /ucrt64/bin/libsamplerate-0.dll installer_files/libsamplerate.dll
 
-          # Если objdump не найден, пробуем установить вручную
-          if ! command -v objdump &> /dev/null; then
-            echo "=== Installing binutils manually ==="
-            pacman -S --noconfirm mingw-w64-ucrt-x86_64-binutils
-          fi
+    # Дополнительные системные библиотеки
+    cp /ucrt64/bin/libwinmm.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libws2_32.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libole32.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libshell32.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libuser32.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libgdi32.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libadvapi32.dll installer_files/ 2>/dev/null || true
+    cp /ucrt64/bin/libbz2-1.dll installer_files/ 2>/dev/null || true          # <-- часто нужна
+    cp /ucrt64/bin/libzstd-1.dll installer_files/ 2>/dev/null || true         # <-- часто нужна
 
-          # Создаём папку для установщика
-          mkdir -p installer_files
+    # Копируем папки с плагинами Qt
+    cp -r build/platforms installer_files/ 2>/dev/null || true
+    cp -r build/styles installer_files/ 2>/dev/null || true
+    cp -r build/imageformats installer_files/ 2>/dev/null || true
+    cp -r build/iconengines installer_files/ 2>/dev/null || true
 
-          # Копируем EXE
-          cp build/eko.exe installer_files/
+    mkdir -p installer_files/platforms
+    mkdir -p installer_files/styles
+    mkdir -p installer_files/imageformats
+    mkdir -p installer_files/iconengines
 
-          # Копируем все DLL, которые уже скопировал windeployqt
-          cp build/*.dll installer_files/ 2>/dev/null || true
-
-          # === АВТОМАТИЧЕСКОЕ ОПРЕДЕЛЕНИЕ ЗАВИСИМОСТЕЙ ===
-          echo "=== Finding dependencies for eko.exe ==="
-
-          # Создаём временный файл для хранения всех DLL
-          temp_deps=$(mktemp)
-
-          # Функция для рекурсивного поиска зависимостей
-          find_deps() {
-            local file="$1"
-            if [ ! -f "$file" ]; then
-              return
-            fi
-            # Используем objdump для поиска зависимостей
-            objdump -p "$file" 2>/dev/null | grep "DLL Name" | awk '{print $3}' | while read -r dll; do
-              # Проверяем, есть ли такая DLL в MSYS2
-              if [ -f "/ucrt64/bin/$dll" ]; then
-                echo "$dll" >> "$temp_deps"
-                # Рекурсивно проверяем зависимости найденной DLL
-                find_deps "/ucrt64/bin/$dll"
-              fi
-            done
-          }
-
-          # Начинаем поиск с eko.exe
-          find_deps "build/eko.exe"
-
-          # Копируем все найденные уникальные DLL
-          echo "=== Copying found DLLs ==="
-          sort -u "$temp_deps" | while read -r dll; do
-            if [ -f "/ucrt64/bin/$dll" ]; then
-              echo "  Copying: $dll"
-              cp "/ucrt64/bin/$dll" installer_files/
-            else
-              echo "  NOT FOUND: $dll"
-            fi
-          done
-
-          rm -f "$temp_deps"
-
-          # === Копирование папок с плагинами Qt ===
-          cp -r build/platforms installer_files/ 2>/dev/null || true
-          cp -r build/styles installer_files/ 2>/dev/null || true
-          cp -r build/imageformats installer_files/ 2>/dev/null || true
-          cp -r build/iconengines installer_files/ 2>/dev/null || true
-
-          mkdir -p installer_files/platforms
-          mkdir -p installer_files/styles
-          mkdir -p installer_files/imageformats
-          mkdir -p installer_files/iconengines
-
-          # Выводим список скопированных DLL
-          echo "=== FINAL DLL LIST ==="
-          ls -la installer_files/*.dll 2>/dev/null | wc -l
-          ls -la installer_files/*.dll 2>/dev/null
-
-      - name: Download Inno Setup
-        if: ${{ inputs.create_installer == true }}
-        run: |
-          curl -L -o innosetup.exe https://jrsoftware.org/download.php/is.exe
-          .\innosetup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
-
-      - name: Build Inno Setup installer
-        if: ${{ inputs.create_installer == true }}
-        shell: msys2 {0}
-        run: |
-          "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" installer.iss
-
-      - name: Upload Inno Setup installer
-        if: ${{ inputs.create_installer == true }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: eko-setup-${{ inputs.build_type || 'Release' }}
-          path: eko-setup.exe
+    echo "=== FINAL DLL LIST ==="
+    ls -la installer_files/*.dll 2>/dev/null | wc -l
+    ls -la installer_files/*.dll 2>/dev/null
