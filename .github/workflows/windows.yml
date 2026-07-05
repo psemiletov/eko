@@ -41,7 +41,7 @@ jobs:
             mingw-w64-ucrt-x86_64-libsndfile
             mingw-w64-ucrt-x86_64-libsamplerate
             mingw-w64-ucrt-x86_64-portaudio
-            mingw-w64-ucrt-x86_64-binutils  # Добавляем для objdump
+            mingw-w64-ucrt-x86_64-binutils
 
       - name: Build with MSYS2
         shell: msys2 {0}
@@ -75,7 +75,7 @@ jobs:
           cp build/*.dll installer_files/ 2>/dev/null || true
 
           # === АВТОМАТИЧЕСКОЕ ОПРЕДЕЛЕНИЕ ЗАВИСИМОСТЕЙ ===
-          echo "=== Поиск зависимостей для eko.exe ==="
+          echo "=== Finding dependencies for eko.exe ==="
 
           # Создаём временный файл для хранения всех DLL
           temp_deps=$(mktemp)
@@ -101,13 +101,13 @@ jobs:
           find_deps "build/eko.exe"
 
           # Копируем все найденные уникальные DLL
-          echo "=== Копирование найденных DLL ==="
+          echo "=== Copying found DLLs ==="
           sort -u "$temp_deps" | while read -r dll; do
             if [ -f "/ucrt64/bin/$dll" ]; then
-              echo "  Копируем: $dll"
+              echo "  Copying: $dll"
               cp "/ucrt64/bin/$dll" installer_files/
             else
-              echo "  НЕ НАЙДЕНА: $dll"
+              echo "  NOT FOUND: $dll"
             fi
           done
 
@@ -125,7 +125,7 @@ jobs:
           mkdir -p installer_files/iconengines
 
           # Выводим список скопированных DLL
-          echo "=== ИТОГОВЫЙ СПИСОК DLL ==="
+          echo "=== FINAL DLL LIST ==="
           ls -la installer_files/*.dll 2>/dev/null | wc -l
           ls -la installer_files/*.dll 2>/dev/null
 
