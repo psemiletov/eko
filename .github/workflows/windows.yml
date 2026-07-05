@@ -143,6 +143,7 @@ jobs:
           cp /ucrt64/bin/libbz2-1.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libzstd-1.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/zlib1.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libdouble-conversion.dll installer_files/ 2>/dev/null || true
 
           # Копируем папки с плагинами Qt
           cp -r build/platforms installer_files/ 2>/dev/null || true
