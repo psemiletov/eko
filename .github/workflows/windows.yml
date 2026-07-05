@@ -99,6 +99,7 @@ jobs:
           cp /ucrt64/bin/libjpeg-8.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libdouble-conversion.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libpcre2-16-0.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libpcre2-8-0.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libiconv-2.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libintl-8.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libgraphite2.dll installer_files/ 2>/dev/null || true
