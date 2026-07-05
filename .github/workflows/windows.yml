@@ -73,7 +73,6 @@ jobs:
           # Копируем все DLL, которые уже скопировал windeployqt
           cp build/*.dll installer_files/ 2>/dev/null || true
 
-          # === ПОИСК ПРАВИЛЬНЫХ ИМЁН DLL ===
           echo "=== Searching for DLLs in /ucrt64/bin ==="
           ls -la /ucrt64/bin/*portaudio* 2>/dev/null || echo "No portaudio found"
           ls -la /ucrt64/bin/*sndfile* 2>/dev/null || echo "No sndfile found"
@@ -84,6 +83,10 @@ jobs:
           cp /ucrt64/bin/libstdc++-6.dll installer_files/ 2>/dev/null || echo "libstdc++-6.dll not found"
           cp /ucrt64/bin/libwinpthread-1.dll installer_files/ 2>/dev/null || echo "libwinpthread-1.dll not found"
 
+          # Дополнительные библиотеки MinGW
+          cp /ucrt64/bin/libunwind.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libc++.dll installer_files/ 2>/dev/null || true
+
           # Qt6 дополнительные библиотеки
           cp /ucrt64/bin/libicuin78.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libicuuc78.dll installer_files/ 2>/dev/null || true
@@ -91,14 +94,14 @@ jobs:
           cp /ucrt64/bin/libfreetype-6.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libharfbuzz-0.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libpng16-16.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libb2-1.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/libjpeg-8.dll installer_files/ 2>/dev/null || true
 
-          # PortAudio — пробуем разные варианты
+          # PortAudio
           cp /ucrt64/bin/libportaudio-2.dll installer_files/ 2>/dev/null || \
           cp /ucrt64/bin/libportaudio.dll installer_files/ 2>/dev/null || \
-          cp /ucrt64/bin/portaudio.dll installer_files/ 2>/dev/null || \
           echo "PortAudio DLL not found!"
 
-          # Если нашли libportaudio-2.dll, создаём копию с именем libportaudio.dll
           if [ -f "/ucrt64/bin/libportaudio-2.dll" ]; then
             cp /ucrt64/bin/libportaudio-2.dll installer_files/
             cp /ucrt64/bin/libportaudio-2.dll installer_files/libportaudio.dll
@@ -107,7 +110,7 @@ jobs:
             cp /ucrt64/bin/libportaudio.dll installer_files/libportaudio-2.dll
           fi
 
-          # libsndfile — пробуем разные варианты
+          # libsndfile
           cp /ucrt64/bin/libsndfile-1.dll installer_files/ 2>/dev/null || \
           cp /ucrt64/bin/libsndfile.dll installer_files/ 2>/dev/null || \
           echo "libsndfile not found!"
@@ -118,7 +121,7 @@ jobs:
             cp /ucrt64/bin/libsndfile.dll installer_files/libsndfile-1.dll
           fi
 
-          # libsamplerate — пробуем разные варианты
+          # libsamplerate
           cp /ucrt64/bin/libsamplerate-0.dll installer_files/ 2>/dev/null || \
           cp /ucrt64/bin/libsamplerate.dll installer_files/ 2>/dev/null || \
           echo "libsamplerate not found!"
@@ -139,6 +142,7 @@ jobs:
           cp /ucrt64/bin/libadvapi32.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libbz2-1.dll installer_files/ 2>/dev/null || true
           cp /ucrt64/bin/libzstd-1.dll installer_files/ 2>/dev/null || true
+          cp /ucrt64/bin/zlib1.dll installer_files/ 2>/dev/null || true
 
           # Копируем папки с плагинами Qt
           cp -r build/platforms installer_files/ 2>/dev/null || true
