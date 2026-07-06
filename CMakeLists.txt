@@ -177,3 +177,17 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install (FILES ${eko_ICONPNG64} DESTINATION share/icons/hicolor/64x64/apps)
     install (FILES ${eko_DESKTOP} DESTINATION share/applications)
 endif()
+
+# =============================================
+# УБИРАЕМ КОНСОЛЬНОЕ ОКНО ДЛЯ WINDOWS
+# =============================================
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    if (MINGW)
+        # Для MinGW (GCC) - используем флаг -mwindows
+        target_link_options(eko PRIVATE -mwindows)
+    elseif(MSVC)
+        # Для MSVC - используем /SUBSYSTEM:WINDOWS
+        set_target_properties(eko PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+    endif()
+endif()

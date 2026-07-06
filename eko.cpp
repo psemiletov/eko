@@ -3099,10 +3099,10 @@ void CEKO::update_palettes()
 }
 
 
-void CEKO::fman_drives_changed (const QString & path)
+void CEKO::fman_drives_changed (int i)
 {
   if (! ui_update)
-     fman->nav (path);
+     fman->nav (cb_fman_drives->currentText());
 }
 
 
