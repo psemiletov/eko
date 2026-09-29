@@ -4316,6 +4316,7 @@ void CEKO::fn_stat_rms()
 }
 
 //ПАШЕТ!
+/*
 void CEKO::fn_fade_out()
 {
   CDocument *d = documents->get_current();
@@ -4346,7 +4347,47 @@ void CEKO::fn_fade_out()
 
   d->wave_edit->waveform->magic_update();
 }
+*/
+/*
+void CEKO::fn_fade_out()
+{
+  CDocument *d = documents->get_current();
+  if (! d || ! d->wave_edit || ! d->wave_edit->waveform || ! d->wave_edit->waveform->fb)
+    return;
 
+  auto *wf = d->wave_edit->waveform;
+  auto *fb = wf->fb;
+
+  size_t start = wf->frames_start();
+  size_t end   = wf->frames_end();
+
+  if (end <= start)
+    return;
+
+  wf->undo_take_shot (UNDO_MODIFY);
+
+  const size_t len = end - start;
+
+  // защита от деления/модуля на ноль
+  const size_t frames_per_step = std::max<size_t>(1, len / 100);
+
+  for (size_t ch = 0; ch < static_cast<size_t>(fb->channels); ch++)
+  {
+    int vol = 0;
+
+    // строго i < end, никаких выходов за буфер
+    for (size_t i = start; i < end; i++)
+    {
+      if ((i - start) % frames_per_step == 0 && vol < 100)
+        ++vol;
+
+      float cur = fb->buffer[ch][i];
+      fb->buffer[ch][i] = cur - get_fvalue(cur, vol);
+    }
+  }
+
+  wf->magic_update();
+}
 
 //ПАШЕТ, но проверить как звучит!
 void CEKO::fn_fade_in()
@@ -4380,6 +4421,110 @@ void CEKO::fn_fade_in()
 
   d->wave_edit->waveform->magic_update();
 }
+*/
+
+
+// Общий хелпер для fade in / fade out.
+// fade_in == true  -> плавное нарастание (vol от -100 до 0)
+// fade_in == false -> плавное затухание  (vol от 0 до 100)
+static void apply_fade (CFloatBuffer *fb,
+                        size_t start,
+                        size_t end,
+                        bool fade_in)
+{
+  if (! fb || ! fb->buffer)
+    return;
+
+  if (end <= start)
+    return;
+
+  const size_t len = end - start;
+
+  // Защита от деления/модуля на ноль на коротких фрагментах
+  const size_t frames_per_step = std::max<size_t> (1, len / 100);
+
+  for (int ch = 0; ch < fb->channels; ++ch)
+  {
+    int vol = fade_in ? -100 : 0;
+
+    // Строго i < end — не выходим за пределы буфера
+    for (size_t i = start; i < end; ++i)
+    {
+      // Считаем шаг относительно start, а не абсолютного i
+      if ((i - start) % frames_per_step == 0)
+      {
+        if (fade_in)
+        {
+          if (vol < 0)
+            ++vol;
+        }
+        else
+        {
+          if (vol < 100)
+            ++vol;
+        }
+      }
+
+      float cur = fb->buffer[ch][i];
+
+      if (fade_in)
+        fb->buffer[ch][i] = cur + get_fvalue (cur, vol);
+      else
+        fb->buffer[ch][i] = cur - get_fvalue (cur, vol);
+    }
+  }
+}
+
+
+void CEKO::fn_fade_out()
+{
+  CDocument *d = documents->get_current();
+  if (! d)
+    return;
+
+  if (! d->wave_edit || ! d->wave_edit->waveform || ! d->wave_edit->waveform->fb)
+    return;
+
+  CWaveform *wf = d->wave_edit->waveform;
+
+  size_t start = wf->frames_start();
+  size_t end   = wf->frames_end();
+
+  if (end <= start)
+    return;
+
+  wf->undo_take_shot (UNDO_MODIFY);
+
+  apply_fade (wf->fb, start, end, /*fade_in=*/false);
+
+  wf->magic_update();
+}
+
+
+void CEKO::fn_fade_in()
+{
+  CDocument *d = documents->get_current();
+  if (! d)
+    return;
+
+  if (! d->wave_edit || ! d->wave_edit->waveform || ! d->wave_edit->waveform->fb)
+    return;
+
+  CWaveform *wf = d->wave_edit->waveform;
+
+  size_t start = wf->frames_start();
+  size_t end   = wf->frames_end();
+
+  if (end <= start)
+    return;
+
+  wf->undo_take_shot (UNDO_MODIFY);
+
+  apply_fade (wf->fb, start, end, /*fade_in=*/true);
+
+  wf->magic_update();
+}
+
 
 
 /*
