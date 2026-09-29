@@ -843,6 +843,7 @@ void CWaveform::select_all()
   update();
 }
 
+/*
 void CWaveform::undo_take_shot (int type, int param)
 {
   CUndoElement *el = new CUndoElement;
@@ -876,6 +877,43 @@ void CWaveform::undo_take_shot (int type, int param)
   undos.prepend (el);
 }
 
+*/
+
+void CWaveform::undo_take_shot (int type, int param)
+{
+  CUndoElement *el = new CUndoElement;
+
+  if (undos.count() == max_undos)
+  {
+    delete undos.at (undos.count() - 1);
+    undos.removeAt (undos.count() - 1);
+  }
+
+  el->type               = type;
+  el->selected           = selected;
+  el->start_frames       = frames_start();
+  el->end_frames         = frames_end();
+  el->cursor_frames      = fb->offset;
+  el->frames_per_section = frames_per_section;
+
+  if (type == UNDO_WHOLE || type == UNDO_PASTE || type == UNDO_INSERT)
+  {
+    // Полный снимок буфера. Параметры (samplerate, sndfile_format,
+    // channels, offset) копируются внутри copy() через copy_params().
+    el->fb = fb->copy (0, fb->length_frames);
+  }
+  else if (type == UNDO_DELETE)
+  {
+    el->fb = fb->copy (frames_start(), frames_end() - frames_start());
+  }
+  else if (type == UNDO_MODIFY)
+  {
+    el->fb = fb->copy (frames_start(), frames_end() - frames_start());
+  }
+
+  undos.prepend (el);
+}
+
 void CWaveform::delete_selected()
 {
   if (! selected)
@@ -895,6 +933,7 @@ void CWaveform::redo()
   // пустая заглушка
 }
 
+/*
 void CWaveform::undo_top()
 {
   if (undos.count() == 0)
@@ -932,6 +971,47 @@ void CWaveform::undo_top()
   prepare_image();
   timeruler->update();
   update();
+  undos.removeAt (0);
+  delete el;
+}
+*/
+
+void CWaveform::undo_top()
+{
+  if (undos.count() == 0)
+    return;
+
+  CUndoElement *el = undos.at (0);
+  if (el->type == UNDO_UNDEFINED)
+    return;
+
+  if (el->type == UNDO_WHOLE || el->type == UNDO_PASTE || el->type == UNDO_INSERT)
+  {
+    delete fb;
+    fb = el->fb->copy (0, el->fb->length_frames);
+  }
+  else if (el->type == UNDO_DELETE)
+  {
+    fb->paste_at (el->fb, el->start_frames);
+  }
+  else if (el->type == UNDO_MODIFY)
+  {
+    fb->overwrite_at (el->fb, el->start_frames);
+  }
+
+  recalc_view();
+
+  selected         = el->selected;
+  sel_start_frames = el->start_frames;
+  sel_end_frames   = el->end_frames;
+
+  if (fb)
+    fb->offset = el->cursor_frames;
+
+  prepare_image();
+  timeruler->update();
+  update();
+
   undos.removeAt (0);
   delete el;
 }

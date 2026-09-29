@@ -175,6 +175,11 @@ void CFloatBuffer::copy_to_pos (CFloatBuffer *other, size_t offset_from, size_t 
 void CFloatBuffer::copy_channel_to_pos (CFloatBuffer *other, size_t ch_from, size_t ch_to,
                                         size_t offset_from, size_t size, size_t offset_to)
 {
+  if (! other) return;
+  if (ch_to >= other->channels) return;
+  if (offset_to + size > other->length_frames) return;
+
+
   if (size > length_frames)
      return;
       
@@ -185,6 +190,7 @@ void CFloatBuffer::copy_channel_to_pos (CFloatBuffer *other, size_t ch_from, siz
   if (reminder < size)
      return;
   
+
   memcpy (other->buffer[ch_to] + offset_to, buffer[ch_from] + offset_from, size * sizeof (float));
 }
 
@@ -428,7 +434,7 @@ void CFloatBuffer::copy_params (CFloatBuffer *fb)
 
 
 //copy all data from "other" to this buffer, including the data parameters
-void CFloatBuffer::copy_from (CFloatBuffer *other)
+/*void CFloatBuffer::copy_from (CFloatBuffer *other)
 {
   if (! other)
     return;
@@ -447,7 +453,28 @@ void CFloatBuffer::copy_from (CFloatBuffer *other)
 
   other->copy_to_pos (this, 0, other->length_frames, 0);
 }
+*/
 
+void CFloatBuffer::copy_from (CFloatBuffer *other)
+{
+  if (! other)
+    return;
+
+  const size_t old_channels = channels;
+
+  for (size_t ch = 0; ch < old_channels; ch++)
+    delete [] buffer[ch];
+
+  copy_params (other);
+
+  for (size_t ch = 0; ch < channels; ch++)
+  {
+    buffer[ch] = new float [length_frames];
+    memset (buffer[ch], 0, length_frames * sizeof (float));
+  }
+
+  other->copy_to_pos (this, 0, other->length_frames, 0);
+}
 
 void CFloatBuffer::copy_from_w_resample (CFloatBuffer *other, int resampler)
 {
