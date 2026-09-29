@@ -4479,52 +4479,36 @@ static void apply_fade (CFloatBuffer *fb,
 void CEKO::fn_fade_out()
 {
   CDocument *d = documents->get_current();
-  if (! d)
-    return;
-
-  if (! d->wave_edit || ! d->wave_edit->waveform || ! d->wave_edit->waveform->fb)
-    return;
+  if (! d) return;
+  if (! d->wave_edit || ! d->wave_edit->waveform || ! d->wave_edit->waveform->fb) return;
 
   CWaveform *wf = d->wave_edit->waveform;
 
   size_t start = wf->frames_start();
   size_t end   = wf->frames_end();
-
-  if (end <= start)
-    return;
+  if (end <= start) return;
 
   wf->undo_take_shot (UNDO_MODIFY);
-
   apply_fade (wf->fb, start, end, /*fade_in=*/false);
-
   wf->magic_update();
 }
-
 
 void CEKO::fn_fade_in()
 {
   CDocument *d = documents->get_current();
-  if (! d)
-    return;
-
-  if (! d->wave_edit || ! d->wave_edit->waveform || ! d->wave_edit->waveform->fb)
-    return;
+  if (! d) return;
+  if (! d->wave_edit || ! d->wave_edit->waveform || ! d->wave_edit->waveform->fb) return;
 
   CWaveform *wf = d->wave_edit->waveform;
 
   size_t start = wf->frames_start();
   size_t end   = wf->frames_end();
-
-  if (end <= start)
-    return;
+  if (end <= start) return;
 
   wf->undo_take_shot (UNDO_MODIFY);
-
   apply_fade (wf->fb, start, end, /*fade_in=*/true);
-
   wf->magic_update();
 }
-
 
 
 /*

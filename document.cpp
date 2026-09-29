@@ -290,9 +290,14 @@ void CWaveform::timer_timeout()
 CWaveform::CWaveform (QWidget *parent): QWidget (parent)
 {
 
+  last_length_frames = 0;
+  last_scale_factor  = 1.0f;
+  last_width         = 0;
+  fit_to_width       = false;
+
   anchor_frames = 0;
   selecting = false;
-
+  last_length_frames = 0;
   play_looped = false;
   show_db = true;
   envelope_selected = -1;
@@ -349,7 +354,7 @@ void CWaveform::deselect()
   selection_selected = 0;
 }
 
-
+/*
 void CWaveform::recalc_view()
 {
   if (! fb)
@@ -367,6 +372,69 @@ void CWaveform::recalc_view()
   scrollbar->setMinimum (0);
   scrollbar->setMaximum (sections_total - width());
 }
+*/
+
+void CWaveform::recalc_view()
+{
+  if (! fb)
+    return;
+
+  int w = width();
+  if (w <= 0)
+    return;
+
+  const bool length_changed = (fb->length_frames != last_length_frames);
+  const bool scale_changed  = (scale_factor != last_scale_factor);
+  const bool width_changed  = (w != last_width);
+
+  // Ни длина, ни scale_factor, ни ширина не менялись — не трогаем
+  // frames_per_section, выставленный вручную (autoScaleToFit) или уже корректный.
+  if (! length_changed && ! scale_changed && ! width_changed && frames_per_section != 0)
+  {
+    sections_total = (fb->length_frames + frames_per_section - 1) / frames_per_section;
+    if (sections_total == 0)
+      sections_total = w;
+
+    scrollbar->setMinimum (0);
+    scrollbar->setMaximum (sections_total > (size_t)w ? (int)(sections_total - w) : 0);
+    return;
+  }
+
+  last_length_frames = fb->length_frames;
+  last_scale_factor  = scale_factor;
+  last_width         = w;
+
+  // Режим «вписать в ширину» (autoScaleToFit) — учитываем изменение ширины
+  if (fit_to_width && ! scale_changed)
+  {
+    size_t target_fps = (fb->length_frames + w - 1) / w;
+    if (target_fps < 1)
+      target_fps = 1;
+
+    frames_per_section = target_fps;
+    sections_total     = (fb->length_frames + frames_per_section - 1) / frames_per_section;
+    if (sections_total == 0)
+      sections_total = w;
+
+    scrollbar->setMinimum (0);
+    scrollbar->setMaximum (sections_total > (size_t)w ? (int)(sections_total - w) : 0);
+    return;
+  }
+
+  // Обычный пересчёт от scale_factor (zoom / scale / scalef / смена длины)
+  sections_total = w * scale_factor;
+  if (sections_total == 0)
+    return;
+
+  frames_per_section = ceil (fb->length_frames / sections_total);
+
+  if (frames_per_section < FRAMES_PER_SECT_MAX)
+    frames_per_section = FRAMES_PER_SECT_MAX;
+
+  scrollbar->setMinimum (0);
+  scrollbar->setMaximum (sections_total - w);
+}
+
 
 
 void CWaveform::zoom (int factor)
@@ -376,6 +444,8 @@ void CWaveform::zoom (int factor)
 
   int old_frame_from = get_section_from() * frames_per_section;
   scale_factor = factor;
+
+  fit_to_width = false; //новое
 
   if ((width() * scale_factor) >= fb->length_frames - 1)
     return;
@@ -404,6 +474,9 @@ void CWaveform::scale (int delta)
 
   if (scale_factor < 1.0f)
     scale_factor = 1.0f;
+
+
+   fit_to_width = false; //нов
 
   if ((width() * scale_factor) >= fb->length_frames - 1)
      return;
@@ -1773,11 +1846,15 @@ size_t CWaveform::get_section_to()
   return width() + scrollbar->value();
 }
 
+
 void CWaveform::scalef (float factor, size_t start_frm)
 {
   if (! fb || frames_per_section == 0)
     return;
   int old_frame_from = start_frm;
+
+    fit_to_width = false;          // ← ДОБАВИТЬ
+
   scale_factor = factor;
   if (scale_factor < 1.0f)
     scale_factor = 1.0f;
@@ -2512,6 +2589,7 @@ void CWaveform::prepare_image()
     waveform_image = img;
 }
 
+/*
 void CWaveform::autoScaleToFit()
 {
   if (!fb || width() <= 0) return;
@@ -2552,7 +2630,44 @@ void CWaveform::autoScaleToFit()
     timeruler->update();
   }
 }
+*/
 
+
+void CWaveform::autoScaleToFit()
+{
+  if (! fb || width() <= 0)
+    return;
+
+  int w = width();
+  size_t total_frames = fb->length_frames;
+
+  if (total_frames == 0)
+    return;
+
+  fit_to_width = true;           // ← запоминаем намерение «вписать в ширину»
+  last_width   = w;              // ← чтобы recalc_view не подумал, что ширина изменилась
+
+  size_t target_fps = (total_frames + w - 1) / w;
+  if (target_fps < 1)
+    target_fps = 1;
+
+  frames_per_section = target_fps;
+  scale_factor       = 1.0f;
+  last_length_frames = total_frames;
+  last_scale_factor  = scale_factor;
+
+  sections_total = (total_frames + frames_per_section - 1) / frames_per_section;
+  if (sections_total == 0)
+    sections_total = w;
+
+  scrollbar->setMinimum (0);
+  scrollbar->setMaximum (sections_total > (size_t)w ? (int)(sections_total - w) : 0);
+  scrollbar->setValue (0);
+
+  prepare_image();
+  update();
+  timeruler->update();
+}
 
 void CDocumentHolder::doStopPlaybackTimers()
 {

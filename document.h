@@ -179,6 +179,11 @@ class CWaveform: public QWidget
 
 public:
 
+  float  last_scale_factor;
+  int    last_width;
+  bool   fit_to_width;
+
+
   //top-level link:
   CWaveEdit *wave_edit;
   
@@ -186,6 +191,8 @@ public:
   CTimeRuler *timeruler;
 
   CEnvelope env_vol;
+
+   size_t last_length_frames;   // ← добавить
 
   size_t anchor_frames;   // позиция якоря в фреймах (начало выделения)
   bool selecting;         // флаг, что процесс выделения активен (зажат Shift при движении)
