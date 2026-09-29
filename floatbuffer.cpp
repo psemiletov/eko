@@ -344,9 +344,9 @@ CFloatBuffer* CFloatBuffer::convert_to_mono()
   
   for (size_t i = 0; i < length_frames; i++)
       {
-       float l = buffer [0][i] * 0.5;
-       float r = buffer [0][i] * 0.5;
-       tfb->buffer[0][i] = l + r;     
+        float l = buffer[0][i] * 0.5f;
+        float r = buffer[1][i] * 0.5f;
+        tfb->buffer[0][i] = l + r;
       }
   
   tfb->copy_params (this);
